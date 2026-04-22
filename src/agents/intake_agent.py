@@ -150,15 +150,10 @@ class IntakeAgent:
         return _TELEFON.sub("[TEL_ENTFERNT]", text)
 
     def _remove_kunden_zeile(self, text: str, log: list[str]) -> str:
-        lines = text.splitlines()
-        cleaned_lines = []
-        for line in lines:
-            if _KUNDEN_ZEILE.match(line.strip()):
-                log.append("Kundenzeile entfernt")
-                cleaned_lines.append("[KUNDE_ENTFERNT]")
-            else:
-                cleaned_lines.append(line)
-        return "\n".join(cleaned_lines)
+        def replacer(m: re.Match) -> str:
+            log.append("Kundenzeile entfernt")
+            return "[KUNDE_ENTFERNT]"
+        return _KUNDEN_ZEILE.sub(replacer, text)
 
     # ------------------------------------------------------------------
     # Type Detection

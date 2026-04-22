@@ -1,13 +1,5 @@
 """
 Daimler Buses – Datenmodelle für die Prozessautomatisierung.
-
-Abdeckung:
-  - Fahrzeugdaten & FIN
-  - Wartungsprotokoll (Werkstattauftrag)
-  - OBD-Fehlercode
-  - QA-Prüfbericht
-  - Produktionsauftrag
-  - Analyseergebnis (LLM-Output)
 """
 
 from __future__ import annotations
@@ -18,14 +10,10 @@ from enum import Enum
 from typing import Any
 
 
-# ---------------------------------------------------------------------------
-# Enums
-# ---------------------------------------------------------------------------
-
 class ProcessPriority(str, Enum):
-    P1_KRITISCH = "P1_KRITISCH"    # Sicherheitsrelevant / Produktionsstopp
-    P2_DRINGEND = "P2_DRINGEND"    # Qualitätsproblem / Wartung überfällig
-    P3_ROUTINE  = "P3_ROUTINE"     # Planmäßige Wartung / Dokumentation
+    P1_KRITISCH = "P1_KRITISCH"  # Sicherheitsrelevant / Produktionsstopp
+    P2_DRINGEND = "P2_DRINGEND"  # Qualitätsproblem / Wartung überfällig
+    P3_ROUTINE  = "P3_ROUTINE"   # Planmäßige Wartung / Dokumentation
 
 
 class DocumentType(str, Enum):
@@ -39,20 +27,29 @@ class DocumentType(str, Enum):
 
 
 class FahrzeugStatus(str, Enum):
-    IN_BETRIEB         = "IN_BETRIEB"
-    IN_WERKSTATT       = "IN_WERKSTATT"
-    AUSSER_BETRIEB     = "AUSSER_BETRIEB"
-    NEUPRODUKTION      = "NEUPRODUKTION"
+    IN_BETRIEB     = "IN_BETRIEB"
+    IN_WERKSTATT   = "IN_WERKSTATT"
+    AUSSER_BETRIEB = "AUSSER_BETRIEB"
+    NEUPRODUKTION  = "NEUPRODUKTION"
 
 
-# ---------------------------------------------------------------------------
-# Fahrzeug
-# ---------------------------------------------------------------------------
+class QABewertung(str, Enum):
+    OK         = "OK"
+    NACHARBEIT = "NACHARBEIT"
+    SPERRUNG   = "SPERRUNG"
+
+
+class ProduktionsStatus(str, Enum):
+    OFFEN         = "OFFEN"
+    IN_ARBEIT     = "IN_ARBEIT"
+    ABGESCHLOSSEN = "ABGESCHLOSSEN"
+    GESPERRT      = "GESPERRT"
+
 
 @dataclass
 class Fahrzeugdaten:
-    fin: str                          # Fahrzeug-Identifikationsnummer (VIN)
-    modell: str                       # z. B. "Tourismo M", "Citaro G"
+    fin: str
+    modell: str
     baujahr: int
     kilometerstand: int
     status: FahrzeugStatus = FahrzeugStatus.IN_BETRIEB
@@ -64,23 +61,15 @@ class Fahrzeugdaten:
         return f"{self.modell} ({self.baujahr}) | {self.kilometerstand:,} km"
 
 
-# ---------------------------------------------------------------------------
-# OBD-Fehlercode
-# ---------------------------------------------------------------------------
-
 @dataclass
 class OBDFehlercode:
-    code: str           # z. B. "P0300", "U0100"
+    code: str
     beschreibung: str
     schweregrad: ProcessPriority
-    steuergeraet: str   # z. B. "Motor", "Getriebe", "Bremse"
+    steuergeraet: str
     ersterfasst: datetime = field(default_factory=datetime.now)
     behoben: bool = False
 
-
-# ---------------------------------------------------------------------------
-# Wartungsprotokoll
-# ---------------------------------------------------------------------------
 
 @dataclass
 class Wartungsprotokoll:
@@ -89,7 +78,7 @@ class Wartungsprotokoll:
     fehler_codes: list[OBDFehlercode] = field(default_factory=list)
     arbeitsschritte: list[str] = field(default_factory=list)
     verwendete_teile: list[str] = field(default_factory=list)
-    techniker_kuerzel: str = ""        # Anonymisiert via IntakeAgent
+    techniker_kuerzel: str = ""  # anonymised by IntakeAgent before storage
     beginn: datetime = field(default_factory=datetime.now)
     abschluss: datetime | None = None
     prioritaet: ProcessPriority = ProcessPriority.P3_ROUTINE
@@ -100,25 +89,17 @@ class Wartungsprotokoll:
         return self.abschluss is not None
 
 
-# ---------------------------------------------------------------------------
-# QA-Prüfbericht
-# ---------------------------------------------------------------------------
-
 @dataclass
 class QAPruefbericht:
     pruef_id: str
     fahrzeug_fin: str
     pruefpunkte: list[dict[str, Any]] = field(default_factory=list)
     beanstandungen: list[str] = field(default_factory=list)
-    gesamt_bewertung: str = "OK"       # "OK" | "NACHARBEIT" | "SPERRUNG"
+    gesamt_bewertung: QABewertung = QABewertung.OK
     pruefer_kuerzel: str = ""
     pruef_datum: datetime = field(default_factory=datetime.now)
     prioritaet: ProcessPriority = ProcessPriority.P3_ROUTINE
 
-
-# ---------------------------------------------------------------------------
-# Produktionsauftrag
-# ---------------------------------------------------------------------------
 
 @dataclass
 class Produktionsauftrag:
@@ -127,15 +108,11 @@ class Produktionsauftrag:
     arbeitsstation: str
     soll_takt_minuten: float
     ist_takt_minuten: float | None = None
-    status: str = "OFFEN"              # "OFFEN" | "IN_ARBEIT" | "ABGESCHLOSSEN" | "GESPERRT"
+    status: ProduktionsStatus = ProduktionsStatus.OFFEN
     abweichungen: list[str] = field(default_factory=list)
     prioritaet: ProcessPriority = ProcessPriority.P3_ROUTINE
     erstellt: datetime = field(default_factory=datetime.now)
 
-
-# ---------------------------------------------------------------------------
-# Generisches Eingabedokument (für den IntakeAgent)
-# ---------------------------------------------------------------------------
 
 @dataclass
 class EingabeDokument:
@@ -146,10 +123,6 @@ class EingabeDokument:
     eingabe_zeitstempel: datetime = field(default_factory=datetime.now)
 
 
-# ---------------------------------------------------------------------------
-# Analyseergebnis (Output des AnalysisAgent)
-# ---------------------------------------------------------------------------
-
 @dataclass
 class Analyseergebnis:
     eingabe_checksum: str
@@ -157,7 +130,7 @@ class Analyseergebnis:
     zusammenfassung: str
     massnahmen: list[str] = field(default_factory=list)
     erkannte_fehlercodes: list[str] = field(default_factory=list)
-    konfidenz: float = 0.0             # 0.0 – 1.0
+    konfidenz: float = 0.0
     modell_id: str = ""
     latenz_ms: float = 0.0
     rohausgabe: str = ""

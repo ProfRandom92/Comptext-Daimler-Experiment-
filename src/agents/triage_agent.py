@@ -73,46 +73,33 @@ class TriageAgent:
 
     def classify(self, dokument: EingabeDokument) -> TriageResult:
         text = dokument.raw_text
-        ausgeloeste: list[str] = []
 
-        # P1-Check
+        # P1: early-return on first hit (fix: was collecting all hits before checking)
         for p in _P1_PATTERNS:
-            match = p.search(text)
-            if match:
-                ausgeloeste.append(f"P1-Regel: '{match.group(0)}'")
+            m = p.search(text)
+            if m:
+                return TriageResult(
+                    prioritaet=ProcessPriority.P1_KRITISCH,
+                    begruendung="Sicherheitskritisches Muster erkannt",
+                    ausgeloeste_regeln=[f"P1-Regel: '{m.group(0)}'"],
+                    eskalations_hinweis="Sofortige Eskalation an Werkstattleitung / Produktionsleiter",
+                )
 
-        if ausgeloeste:
-            return TriageResult(
-                prioritaet=ProcessPriority.P1_KRITISCH,
-                begruendung="Sicherheitskritisches Muster erkannt",
-                ausgeloeste_regeln=ausgeloeste,
-                eskalations_hinweis="Sofortige Eskalation an Werkstattleitung / Produktionsleiter",
-            )
-
-        # P2-Check
-        for p in _P2_PATTERNS:
-            match = p.search(text)
-            if match:
-                ausgeloeste.append(f"P2-Regel: '{match.group(0)}'")
-
-        # Kilometerstand-Prüfung
+        p2_hits = [f"P2-Regel: '{m.group(0)}'" for p in _P2_PATTERNS if (m := p.search(text))]
         km_hinweis = self._check_km_faelligkeit(text)
         if km_hinweis:
-            ausgeloeste.append(km_hinweis)
+            p2_hits.append(km_hinweis)
 
-        # Dokumenttyp-basierte Basis-Priorität
-        type_prio = self._type_based_priority(dokument.doc_type)
-
-        if ausgeloeste:
+        if p2_hits:
             return TriageResult(
                 prioritaet=ProcessPriority.P2_DRINGEND,
                 begruendung="Dringendes Muster oder Fälligkeit erkannt",
-                ausgeloeste_regeln=ausgeloeste,
+                ausgeloeste_regeln=p2_hits,
                 eskalations_hinweis="Einplanung innerhalb 24h empfohlen",
             )
 
         return TriageResult(
-            prioritaet=type_prio,
+            prioritaet=self._type_based_priority(dokument.doc_type),
             begruendung="Keine kritischen Muster – Routineverarbeitung",
             ausgeloeste_regeln=[],
             eskalations_hinweis="",

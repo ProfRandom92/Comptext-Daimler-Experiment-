@@ -4,40 +4,38 @@ Entspricht dem DoctorAgent aus MedGemma-CompText.
 
 Modell-Unterstützung:
   - Gemma 2B / 7B via Ollama (lokaler Edge-Betrieb, kein Cloud-Zwang)
-  - Claude Sonnet/Haiku via Anthropic API (höhere Qualität)
+  - Claude Haiku/Sonnet via Anthropic API (höhere Qualität)
   - Mock-Modus für Tests und Demos
-
-Input:  KVTCResult (komprimiertes Frame) + TriageResult (Priorität)
-Output: Analyseergebnis (Zusammenfassung, Maßnahmen, Konfidenz)
 """
 
 from __future__ import annotations
 
 import json
+import re
 import time
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any
 
 from src.core.kvtc import KVTCResult
-from src.models.schemas import Analyseergebnis, DocumentType, EingabeDokument, ProcessPriority
+from src.models.schemas import Analyseergebnis, EingabeDokument, ProcessPriority
 from src.agents.triage_agent import TriageResult
 
 
 class ModelBackend(str, Enum):
-    OLLAMA_GEMMA  = "ollama_gemma"
-    ANTHROPIC     = "anthropic"
-    MOCK          = "mock"
+    OLLAMA_GEMMA = "ollama_gemma"
+    ANTHROPIC    = "anthropic"
+    MOCK         = "mock"
 
 
 @dataclass
 class AnalysisConfig:
     backend: ModelBackend = ModelBackend.MOCK
-    model_id: str = "gemma2:2b"           # Ollama-Modellname
+    model_id: str = "gemma2:2b"
     anthropic_model: str = "claude-haiku-4-5-20251001"
     ollama_base_url: str = "http://localhost:11434"
     max_tokens: int = 512
-    temperature: float = 0.1              # Niedrig = deterministischer Output
+    temperature: float = 0.1  # low = deterministic; LLMs for process docs should not hallucinate
 
 
 _SYSTEM_PROMPT = """\
@@ -57,19 +55,24 @@ Fokus: Predictive Maintenance, Qualitätssicherung, Produktionsoptimierung.
 Keine Kundendaten, keine persönlichen Informationen im Output.
 """
 
+# Module-level compiled patterns (fix: was compiled inside _parse_output per call)
+_JSON_BLOCK = re.compile(r"\{.*\}", re.DOTALL)
+
+_ERROR_PAYLOAD: dict[str, Any] = {
+    "massnahmen": [],
+    "erkannte_fehlercodes": [],
+    "konfidenz": 0.0,
+    "prioritaet_bestaetigung": ProcessPriority.P3_ROUTINE.value,
+}
+
+
+def _error_response(message: str) -> str:
+    return json.dumps({**_ERROR_PAYLOAD, "zusammenfassung": message}, ensure_ascii=False)
+
 
 class AnalysisAgent:
-    """
-    LLM-basierte Analyse des komprimierten KVTC-Frames.
-    Nutzt entweder lokales Gemma (Ollama) oder Claude API.
-    """
-
     def __init__(self, config: AnalysisConfig | None = None) -> None:
         self._config = config or AnalysisConfig()
-
-    # ------------------------------------------------------------------
-    # Public
-    # ------------------------------------------------------------------
 
     def analyze(
         self,
@@ -78,13 +81,8 @@ class AnalysisAgent:
         triage: TriageResult,
     ) -> Analyseergebnis:
         t0 = time.perf_counter()
-
-        prompt = self._build_prompt(dokument, kvtc, triage)
-
-        raw_output = self._infer(prompt)
-        parsed     = self._parse_output(raw_output, triage.prioritaet)
-
-        latenz_ms = (time.perf_counter() - t0) * 1000
+        raw_output = self._infer(self._build_prompt(dokument, kvtc, triage))
+        parsed = self._parse_output(raw_output, triage.prioritaet)
 
         return Analyseergebnis(
             eingabe_checksum=kvtc.checksum,
@@ -94,22 +92,13 @@ class AnalysisAgent:
             erkannte_fehlercodes=parsed.get("erkannte_fehlercodes", []),
             konfidenz=float(parsed.get("konfidenz", 0.7)),
             modell_id=self._config.model_id,
-            latenz_ms=round(latenz_ms, 3),
+            latenz_ms=round((time.perf_counter() - t0) * 1000, 3),
             rohausgabe=raw_output,
             token_original=kvtc.original_tokens,
             token_komprimiert=kvtc.compressed_tokens,
         )
 
-    # ------------------------------------------------------------------
-    # Prompt Construction
-    # ------------------------------------------------------------------
-
-    def _build_prompt(
-        self,
-        dokument: EingabeDokument,
-        kvtc: KVTCResult,
-        triage: TriageResult,
-    ) -> str:
+    def _build_prompt(self, dokument: EingabeDokument, kvtc: KVTCResult, triage: TriageResult) -> str:
         return (
             f"DOKUMENT-TYP: {dokument.doc_type.value}\n"
             f"PRIORITÄT (Triage): {triage.prioritaet.value}\n"
@@ -119,26 +108,22 @@ class AnalysisAgent:
             "Erstelle eine strukturierte JSON-Analyse."
         )
 
-    # ------------------------------------------------------------------
-    # Inference backends
-    # ------------------------------------------------------------------
-
     def _infer(self, prompt: str) -> str:
-        if self._config.backend == ModelBackend.MOCK:
-            return self._mock_infer(prompt)
-        if self._config.backend == ModelBackend.OLLAMA_GEMMA:
-            return self._ollama_infer(prompt)
-        if self._config.backend == ModelBackend.ANTHROPIC:
-            return self._anthropic_infer(prompt)
-        return self._mock_infer(prompt)
+        dispatch = {
+            ModelBackend.MOCK:         self._mock_infer,
+            ModelBackend.OLLAMA_GEMMA: self._ollama_infer,
+            ModelBackend.ANTHROPIC:    self._anthropic_infer,
+        }
+        return dispatch.get(self._config.backend, self._mock_infer)(prompt)
 
     def _mock_infer(self, prompt: str) -> str:
-        """Deterministischer Mock für Tests und Demos."""
-        priority = "P3_ROUTINE"
-        if "P1_KRITISCH" in prompt:
-            priority = "P1_KRITISCH"
-        elif "P2_DRINGEND" in prompt:
-            priority = "P2_DRINGEND"
+        # Priority propagation: reflect triage result in mock output
+        if ProcessPriority.P1_KRITISCH.value in prompt:
+            prio = ProcessPriority.P1_KRITISCH.value
+        elif ProcessPriority.P2_DRINGEND.value in prompt:
+            prio = ProcessPriority.P2_DRINGEND.value
+        else:
+            prio = ProcessPriority.P3_ROUTINE.value
 
         return json.dumps({
             "zusammenfassung": (
@@ -146,13 +131,10 @@ class AnalysisAgent:
                 "Keine kritischen Muster erkannt (Mock-Modus). "
                 "Bitte Produktionsmodus für reale Analyse aktivieren."
             ),
-            "massnahmen": [
-                "Dokument archivieren",
-                "Nächste planmäßige Inspektion einhalten",
-            ],
+            "massnahmen": ["Dokument archivieren", "Nächste planmäßige Inspektion einhalten"],
             "erkannte_fehlercodes": [],
             "konfidenz": 0.5,
-            "prioritaet_bestaetigung": priority,
+            "prioritaet_bestaetigung": prio,
         }, ensure_ascii=False)
 
     def _ollama_infer(self, prompt: str) -> str:
@@ -164,23 +146,14 @@ class AnalysisAgent:
                     "model": self._config.model_id,
                     "prompt": f"{_SYSTEM_PROMPT}\n\n{prompt}",
                     "stream": False,
-                    "options": {
-                        "temperature": self._config.temperature,
-                        "num_predict": self._config.max_tokens,
-                    },
+                    "options": {"temperature": self._config.temperature, "num_predict": self._config.max_tokens},
                 },
                 timeout=60,
             )
             response.raise_for_status()
             return response.json().get("response", "")
         except Exception as e:
-            return json.dumps({
-                "zusammenfassung": f"Ollama-Fehler: {e}",
-                "massnahmen": [],
-                "erkannte_fehlercodes": [],
-                "konfidenz": 0.0,
-                "prioritaet_bestaetigung": "P3_ROUTINE",
-            })
+            return _error_response(f"Ollama-Fehler: {e}")
 
     def _anthropic_infer(self, prompt: str) -> str:
         try:
@@ -194,45 +167,18 @@ class AnalysisAgent:
             )
             return message.content[0].text
         except Exception as e:
-            return json.dumps({
-                "zusammenfassung": f"Anthropic-API-Fehler: {e}",
-                "massnahmen": [],
-                "erkannte_fehlercodes": [],
-                "konfidenz": 0.0,
-                "prioritaet_bestaetigung": "P3_ROUTINE",
-            })
+            return _error_response(f"Anthropic-API-Fehler: {e}")
 
-    # ------------------------------------------------------------------
-    # Output Parsing
-    # ------------------------------------------------------------------
-
-    def _parse_output(
-        self, raw: str, fallback_priority: ProcessPriority
-    ) -> dict[str, Any]:
-        import re
-        json_match = re.search(r"\{.*\}", raw, re.DOTALL)
-        if not json_match:
-            return {
-                "zusammenfassung": raw[:300],
-                "massnahmen": [],
-                "erkannte_fehlercodes": [],
-                "konfidenz": 0.3,
-                "prioritaet": fallback_priority,
-            }
-
+    def _parse_output(self, raw: str, fallback_priority: ProcessPriority) -> dict[str, Any]:
+        match = _JSON_BLOCK.search(raw)
+        if not match:
+            return {"zusammenfassung": raw[:300], "massnahmen": [], "erkannte_fehlercodes": [],
+                    "konfidenz": 0.3, "prioritaet": fallback_priority}
         try:
-            data = json.loads(json_match.group(0))
+            data = json.loads(match.group(0))
             prio_str = data.get("prioritaet_bestaetigung", fallback_priority.value)
-            try:
-                data["prioritaet"] = ProcessPriority(prio_str)
-            except ValueError:
-                data["prioritaet"] = fallback_priority
+            data["prioritaet"] = ProcessPriority(prio_str) if prio_str in ProcessPriority._value2member_map_ else fallback_priority
             return data
         except json.JSONDecodeError:
-            return {
-                "zusammenfassung": raw[:300],
-                "massnahmen": [],
-                "erkannte_fehlercodes": [],
-                "konfidenz": 0.2,
-                "prioritaet": fallback_priority,
-            }
+            return {"zusammenfassung": raw[:300], "massnahmen": [], "erkannte_fehlercodes": [],
+                    "konfidenz": 0.2, "prioritaet": fallback_priority}
