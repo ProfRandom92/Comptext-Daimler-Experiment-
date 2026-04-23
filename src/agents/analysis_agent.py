@@ -14,15 +14,15 @@ import json
 import re
 import time
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
+from src.agents.triage_agent import TriageResult
 from src.core.kvtc import KVTCResult
 from src.models.schemas import Analyseergebnis, EingabeDokument, ProcessPriority
-from src.agents.triage_agent import TriageResult
 
 
-class ModelBackend(str, Enum):
+class ModelBackend(StrEnum):
     OLLAMA_GEMMA = "ollama_gemma"
     ANTHROPIC    = "anthropic"
     MOCK         = "mock"

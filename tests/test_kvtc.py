@@ -1,6 +1,7 @@
 """Tests für IndustrialKVTCStrategy."""
 
 import pytest
+
 from src.core.kvtc import IndustrialKVTCStrategy, run_benchmark
 
 

@@ -18,7 +18,6 @@ from dataclasses import dataclass
 
 from src.models.schemas import DocumentType, EingabeDokument, ProcessPriority
 
-
 # ---------------------------------------------------------------------------
 # Kritikalitäts-Regeln
 # ---------------------------------------------------------------------------

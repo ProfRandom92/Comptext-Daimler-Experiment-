@@ -26,7 +26,6 @@ from dataclasses import dataclass
 from src.core.kvtc import IndustrialKVTCStrategy, KVTCResult
 from src.models.schemas import DocumentType, EingabeDokument
 
-
 # ---------------------------------------------------------------------------
 # Regex-Definitionen
 # ---------------------------------------------------------------------------
