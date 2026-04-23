@@ -21,11 +21,11 @@ import json
 import re
 import time
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 
-class CompressionZone(str, Enum):
+class CompressionZone(StrEnum):
     HEADER = "header"
     MIDDLE = "middle"
     WINDOW = "window"
@@ -168,7 +168,7 @@ class IndustrialKVTCStrategy:
         original_order = {line: idx for idx, line in enumerate(lines)}
         kept = sorted(
             (line for _, line in scored[:keep_n]),
-            key=lambda l: original_order.get(l, 0),
+            key=lambda line: original_order.get(line, 0),
         )
         return "\n".join(kept)
 

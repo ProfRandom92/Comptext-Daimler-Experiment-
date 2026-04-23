@@ -1,10 +1,11 @@
 """Tests für AnalysisAgent – Mock-Modus."""
 
 import pytest
+
 from src.agents.analysis_agent import AnalysisAgent, AnalysisConfig, ModelBackend
 from src.agents.intake_agent import IntakeAgent
 from src.agents.triage_agent import TriageAgent
-from src.models.schemas import DocumentType, EingabeDokument, ProcessPriority
+from src.models.schemas import ProcessPriority
 
 
 @pytest.fixture

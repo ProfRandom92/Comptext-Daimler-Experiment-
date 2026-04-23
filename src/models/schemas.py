@@ -6,17 +6,17 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 
-class ProcessPriority(str, Enum):
+class ProcessPriority(StrEnum):
     P1_KRITISCH = "P1_KRITISCH"  # Sicherheitsrelevant / Produktionsstopp
     P2_DRINGEND = "P2_DRINGEND"  # Qualitätsproblem / Wartung überfällig
     P3_ROUTINE  = "P3_ROUTINE"   # Planmäßige Wartung / Dokumentation
 
 
-class DocumentType(str, Enum):
+class DocumentType(StrEnum):
     WARTUNGSPROTOKOLL  = "WARTUNGSPROTOKOLL"
     OBD_FEHLERCODE     = "OBD_FEHLERCODE"
     QA_PRUEFBERICHT    = "QA_PRUEFBERICHT"
@@ -26,20 +26,20 @@ class DocumentType(str, Enum):
     FREITEXT           = "FREITEXT"
 
 
-class FahrzeugStatus(str, Enum):
+class FahrzeugStatus(StrEnum):
     IN_BETRIEB     = "IN_BETRIEB"
     IN_WERKSTATT   = "IN_WERKSTATT"
     AUSSER_BETRIEB = "AUSSER_BETRIEB"
     NEUPRODUKTION  = "NEUPRODUKTION"
 
 
-class QABewertung(str, Enum):
+class QABewertung(StrEnum):
     OK         = "OK"
     NACHARBEIT = "NACHARBEIT"
     SPERRUNG   = "SPERRUNG"
 
 
-class ProduktionsStatus(str, Enum):
+class ProduktionsStatus(StrEnum):
     OFFEN         = "OFFEN"
     IN_ARBEIT     = "IN_ARBEIT"
     ABGESCHLOSSEN = "ABGESCHLOSSEN"

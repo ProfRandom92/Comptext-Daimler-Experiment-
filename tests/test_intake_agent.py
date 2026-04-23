@@ -1,6 +1,7 @@
 """Tests für IntakeAgent – Bereinigung und Dokumenttyp-Erkennung."""
 
 import pytest
+
 from src.agents.intake_agent import IntakeAgent
 from src.models.schemas import DocumentType
 

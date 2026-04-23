@@ -1,7 +1,7 @@
 """Tests für TriageAgent – P1/P2/P3 Klassifizierung."""
 
 import pytest
-from src.agents.intake_agent import IntakeAgent
+
 from src.agents.triage_agent import TriageAgent
 from src.models.schemas import DocumentType, EingabeDokument, ProcessPriority
 
