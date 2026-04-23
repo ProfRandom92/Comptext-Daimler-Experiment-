@@ -1,12 +1,149 @@
+# Python
 __pycache__/
 *.py[cod]
 *.pyo
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.env
+.env.local
+.env.*.local
+
+# Testing & Coverage
 .pytest_cache/
 .coverage
+.coverage.*
 htmlcov/
-dist/
-build/
-*.egg-info/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.hypothesis/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+*.iml
+.DS_Store
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+*.pot
+
+# IDE Specific
+.pyre/
+.pytype/
+.cython_trace/
+
+# Environment-specific
+.streamlit/
+streamlit_app.py.bak
+.ollama/
+ollama_models/
+
+# LLM & Cache
+*.bin
+*.pb
+*.pt
+*.onnx
+model_cache/
+__pycache__cache/
+.cache/
+
+# Credentials & Secrets (SECURITY!)
 .env
-.venv/
-venv/
+.env.*.local
+secrets.json
+credentials.json
+*.pem
+*.key
+*.crt
+.aws/
+.gcp/
+anthropic_api_key.txt
+
+# Docker
+docker-compose.override.yml
+.docker/
+docker_build_cache/
+
+# Logs & Temp
+*.log
+*.logs
+tmp/
+temp/
+.tmp/
+
+# Project specific
+*.db
+*.sqlite
+*.sqlite3
+.ollama_cache/
+model_downloads/
+analysis_results/
+batch_results/
+
+# IDE temp files
+.vscode/settings.json
+.vscode/extensions.json
+.vscode/launch.json
+
+# macOS
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Vim
+.*.swp
+.*.swo
+*~

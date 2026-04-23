@@ -1,0 +1,71 @@
+# Auto-detect text files and normalize line endings to LF
+* text=auto
+
+# Python
+*.py text eol=lf
+*.pyx text eol=lf
+*.pxd text eol=lf
+*.pxi text eol=lf
+
+# Shell
+*.bash text eol=lf
+*.sh text eol=lf
+
+# Windows
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.exe binary
+*.dll binary
+
+# Unix
+Makefile text eol=lf
+
+# Docs
+*.md text eol=lf
+*.markdown text eol=lf
+*.rst text eol=lf
+
+# YAML
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# JSON
+*.json text eol=lf
+*.jsonc text eol=lf
+
+# TOML
+*.toml text eol=lf
+
+# Config
+.editorconfig text eol=lf
+.gitattributes text eol=lf
+.gitignore text eol=lf
+.pre-commit-config.yaml text eol=lf
+
+# Binary files
+*.bin binary
+*.pb binary
+*.pt binary
+*.onnx binary
+*.db binary
+*.sqlite binary
+
+# Archives
+*.zip binary
+*.tar binary
+*.gz binary
+*.rar binary
+*.7z binary
+
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.svg text
+
+# Documents
+*.pdf binary
+*.docx binary
+*.xlsx binary
