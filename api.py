@@ -12,6 +12,7 @@ Endpunkte:
 
 from __future__ import annotations
 
+import os
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
@@ -23,6 +24,7 @@ from src.agents.analysis_agent import AnalysisAgent
 from src.agents.intake_agent import IntakeAgent
 from src.agents.triage_agent import TriageAgent
 from src.core.kvtc import IndustrialKVTCStrategy, run_benchmark
+from src.core.result_cache import AnalysisResultCache
 from src.models.schemas import DocumentType, ProcessPriority
 from src.utils.logging import get_logger
 
@@ -47,14 +49,15 @@ app.add_middleware(
 )
 
 # ---------------------------------------------------------------------------
-# Singleton agents (created once at startup)
+# Singleton agents + cache (created once at startup)
 # ---------------------------------------------------------------------------
 
-_intake   = IntakeAgent(IndustrialKVTCStrategy(
+_intake        = IntakeAgent(IndustrialKVTCStrategy(
     DEFAULT_CONFIG.kvtc_header_lines, DEFAULT_CONFIG.kvtc_window_lines
 ))
-_triage   = TriageAgent()
-_analysis = AnalysisAgent(DEFAULT_CONFIG.analysis)
+_triage        = TriageAgent()
+_result_cache  = AnalysisResultCache(max_size=int(os.getenv("CACHE_MAX_SIZE", "256")))
+_analysis      = AnalysisAgent(DEFAULT_CONFIG.analysis, cache=_result_cache)
 
 
 # ---------------------------------------------------------------------------
@@ -107,13 +110,57 @@ class AnalyzeResponse(BaseModel):
     modell_id: str
 
 
+class BatchAnalyzeRequest(BaseModel):
+    documents: list[AnalyzeRequest] = Field(
+        ..., min_length=1, max_length=10, description="Liste von Dokumenten (max. 10)"
+    )
+
+
+class BatchItemResult(BaseModel):
+    index: int
+    success: bool
+    result: AnalyzeResponse | None = None
+    error: str | None = None
+
+
+class BatchAnalyzeResponse(BaseModel):
+    total: int
+    succeeded: int
+    failed: int
+    results: list[BatchItemResult]
+
+
 # ---------------------------------------------------------------------------
 # Endpoints
 # ---------------------------------------------------------------------------
 
+def _build_analyze_response(intake_result: Any, analyse_result: Any) -> AnalyzeResponse:
+    return AnalyzeResponse(
+        eingabe_checksum=analyse_result.eingabe_checksum,
+        prioritaet=analyse_result.prioritaet,
+        zusammenfassung=analyse_result.zusammenfassung,
+        massnahmen=analyse_result.massnahmen,
+        erkannte_fehlercodes=analyse_result.erkannte_fehlercodes,
+        konfidenz=analyse_result.konfidenz,
+        token_original=analyse_result.token_original,
+        token_komprimiert=analyse_result.token_komprimiert,
+        token_einsparung_pct=analyse_result.token_einsparung_pct,
+        latenz_ms=analyse_result.latenz_ms,
+        bereinigungen=intake_result.bereinigungen,
+        doc_type=intake_result.dokument.doc_type,
+        modell_id=analyse_result.modell_id,
+    )
+
+
 @app.get("/health")
-def health() -> dict[str, str]:
-    return {"status": "ok", "service": "comptext-daimler", "version": "0.2.0"}
+def health() -> dict[str, Any]:
+    return {
+        "status": "ok",
+        "service": "comptext-daimler",
+        "version": "0.2.0",
+        "cache_size": _result_cache.size,
+        "cache_hit_rate": round(_result_cache.stats.hit_rate, 3),
+    }
 
 
 @app.post("/compress", response_model=KVTCResponse)
@@ -157,25 +204,42 @@ def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
         intake_result  = _intake.process(req.text, quelle=req.quelle)
         triage_result  = _triage.classify(intake_result.dokument)
         analyse_result = _analysis.analyze(intake_result.dokument, intake_result.kvtc, triage_result)
-
-        return AnalyzeResponse(
-            eingabe_checksum=analyse_result.eingabe_checksum,
-            prioritaet=analyse_result.prioritaet,
-            zusammenfassung=analyse_result.zusammenfassung,
-            massnahmen=analyse_result.massnahmen,
-            erkannte_fehlercodes=analyse_result.erkannte_fehlercodes,
-            konfidenz=analyse_result.konfidenz,
-            token_original=analyse_result.token_original,
-            token_komprimiert=analyse_result.token_komprimiert,
-            token_einsparung_pct=analyse_result.token_einsparung_pct,
-            latenz_ms=analyse_result.latenz_ms,
-            bereinigungen=intake_result.bereinigungen,
-            doc_type=intake_result.dokument.doc_type,
-            modell_id=analyse_result.modell_id,
-        )
+        return _build_analyze_response(intake_result, analyse_result)
     except Exception as e:
         log.error("analyze failed", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e)) from e
+
+
+@app.post("/batch/analyze", response_model=BatchAnalyzeResponse)
+def batch_analyze(req: BatchAnalyzeRequest) -> BatchAnalyzeResponse:
+    """Verarbeitet bis zu 10 Dokumente sequenziell. Fehler in einzelnen Dokumenten
+    stoppen nicht die Verarbeitung der übrigen."""
+    log.info("Batch analyze request", extra={"count": len(req.documents)})
+    results: list[BatchItemResult] = []
+
+    for idx, doc_req in enumerate(req.documents):
+        try:
+            intake_result  = _intake.process(doc_req.text, quelle=doc_req.quelle)
+            triage_result  = _triage.classify(intake_result.dokument)
+            analyse_result = _analysis.analyze(
+                intake_result.dokument, intake_result.kvtc, triage_result
+            )
+            results.append(BatchItemResult(
+                index=idx,
+                success=True,
+                result=_build_analyze_response(intake_result, analyse_result),
+            ))
+        except Exception as e:
+            log.error("batch item failed", extra={"index": idx, "error": str(e)})
+            results.append(BatchItemResult(index=idx, success=False, error=str(e)))
+
+    succeeded = sum(1 for r in results if r.success)
+    return BatchAnalyzeResponse(
+        total=len(results),
+        succeeded=succeeded,
+        failed=len(results) - succeeded,
+        results=results,
+    )
 
 
 @app.get("/benchmark")

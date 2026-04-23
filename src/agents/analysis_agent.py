@@ -20,6 +20,9 @@ from typing import Any
 from src.core.kvtc import KVTCResult
 from src.models.schemas import Analyseergebnis, EingabeDokument, ProcessPriority
 from src.agents.triage_agent import TriageResult
+from src.utils.logging import get_logger
+
+_log = get_logger("comptext.analysis_agent")
 
 
 class ModelBackend(str, Enum):
@@ -36,6 +39,7 @@ class AnalysisConfig:
     ollama_base_url: str = "http://localhost:11434"
     max_tokens: int = 512
     temperature: float = 0.1  # low = deterministic; LLMs for process docs should not hallucinate
+    enable_prompt_cache: bool = True  # Anthropic ephemeral prompt caching
 
 
 _SYSTEM_PROMPT = """\
@@ -71,8 +75,14 @@ def _error_response(message: str) -> str:
 
 
 class AnalysisAgent:
-    def __init__(self, config: AnalysisConfig | None = None) -> None:
+    def __init__(
+        self,
+        config: AnalysisConfig | None = None,
+        cache: Any | None = None,
+    ) -> None:
         self._config = config or AnalysisConfig()
+        self._anthropic_client: Any = None  # lazy singleton, avoids per-call client creation
+        self._cache = cache  # AnalysisResultCache | None; None = disabled
 
     def analyze(
         self,
@@ -80,11 +90,17 @@ class AnalysisAgent:
         kvtc: KVTCResult,
         triage: TriageResult,
     ) -> Analyseergebnis:
+        if self._cache is not None:
+            cached = self._cache.get(kvtc.checksum)
+            if cached is not None:
+                _log.debug("Cache hit", extra={"checksum": kvtc.checksum})
+                return cached
+
         t0 = time.perf_counter()
         raw_output = self._infer(self._build_prompt(dokument, kvtc, triage))
         parsed = self._parse_output(raw_output, triage.prioritaet)
 
-        return Analyseergebnis(
+        result = Analyseergebnis(
             eingabe_checksum=kvtc.checksum,
             prioritaet=parsed.get("prioritaet", triage.prioritaet),
             zusammenfassung=parsed.get("zusammenfassung", ""),
@@ -97,6 +113,11 @@ class AnalysisAgent:
             token_original=kvtc.original_tokens,
             token_komprimiert=kvtc.compressed_tokens,
         )
+
+        if self._cache is not None:
+            self._cache.put(kvtc.checksum, result)
+
+        return result
 
     def _build_prompt(self, dokument: EingabeDokument, kvtc: KVTCResult, triage: TriageResult) -> str:
         return (
@@ -158,13 +179,33 @@ class AnalysisAgent:
     def _anthropic_infer(self, prompt: str) -> str:
         try:
             import anthropic  # type: ignore
-            client = anthropic.Anthropic()
-            message = client.messages.create(
+            if self._anthropic_client is None:
+                self._anthropic_client = anthropic.Anthropic()
+            system_blocks: list[dict[str, Any]] = [
+                {
+                    "type": "text",
+                    "text": _SYSTEM_PROMPT,
+                    **({"cache_control": {"type": "ephemeral"}} if self._config.enable_prompt_cache else {}),
+                }
+            ]
+            message = self._anthropic_client.messages.create(
                 model=self._config.anthropic_model,
                 max_tokens=self._config.max_tokens,
-                system=_SYSTEM_PROMPT,
+                system=system_blocks,
                 messages=[{"role": "user", "content": prompt}],
+                temperature=self._config.temperature,
             )
+            usage = getattr(message, "usage", None)
+            if usage:
+                _log.debug(
+                    "Anthropic token usage",
+                    extra={
+                        "input": getattr(usage, "input_tokens", 0),
+                        "output": getattr(usage, "output_tokens", 0),
+                        "cache_read": getattr(usage, "cache_read_input_tokens", 0),
+                        "cache_write": getattr(usage, "cache_creation_input_tokens", 0),
+                    },
+                )
             return message.content[0].text
         except Exception as e:
             return _error_response(f"Anthropic-API-Fehler: {e}")

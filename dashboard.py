@@ -5,6 +5,11 @@ Startbefehl: streamlit run dashboard.py
 
 from __future__ import annotations
 
+import csv
+import io
+import json as _json
+from typing import Any
+
 import streamlit as st
 
 from config import DEFAULT_CONFIG, AppConfig
@@ -32,6 +37,48 @@ _BACKEND_OPTIONS = {
     "Ollama Gemma 2B": ModelBackend.OLLAMA_GEMMA,
     "Claude Haiku":    ModelBackend.ANTHROPIC,
 }
+
+
+def _result_to_json(analyse_result: Any, intake_result: Any) -> str:
+    return _json.dumps({
+        "eingabe_checksum": analyse_result.eingabe_checksum,
+        "prioritaet": analyse_result.prioritaet.value,
+        "doc_type": intake_result.dokument.doc_type.value,
+        "zusammenfassung": analyse_result.zusammenfassung,
+        "massnahmen": analyse_result.massnahmen,
+        "erkannte_fehlercodes": analyse_result.erkannte_fehlercodes,
+        "konfidenz": analyse_result.konfidenz,
+        "token_original": analyse_result.token_original,
+        "token_komprimiert": analyse_result.token_komprimiert,
+        "token_einsparung_pct": analyse_result.token_einsparung_pct,
+        "latenz_ms": analyse_result.latenz_ms,
+        "modell_id": analyse_result.modell_id,
+        "bereinigungen": intake_result.bereinigungen,
+    }, ensure_ascii=False, indent=2)
+
+
+def _result_to_csv(analyse_result: Any, intake_result: Any) -> str:
+    buf = io.StringIO()
+    writer = csv.writer(buf, quoting=csv.QUOTE_ALL)
+    writer.writerow([
+        "checksum", "prioritaet", "doc_type", "zusammenfassung",
+        "obd_codes", "konfidenz", "token_original", "token_komprimiert",
+        "token_einsparung_pct", "latenz_ms", "modell_id",
+    ])
+    writer.writerow([
+        analyse_result.eingabe_checksum,
+        analyse_result.prioritaet.value,
+        intake_result.dokument.doc_type.value,
+        analyse_result.zusammenfassung,
+        "; ".join(analyse_result.erkannte_fehlercodes),
+        f"{analyse_result.konfidenz:.3f}",
+        analyse_result.token_original,
+        analyse_result.token_komprimiert,
+        f"{analyse_result.token_einsparung_pct:.2f}",
+        f"{analyse_result.latenz_ms:.1f}",
+        analyse_result.modell_id,
+    ])
+    return buf.getvalue()
 
 
 def _get_agents(backend: ModelBackend) -> tuple[IntakeAgent, TriageAgent, AnalysisAgent]:
@@ -128,6 +175,8 @@ with tab_analyse:
                 analyse_result = analysis_agent.analyze(
                     intake_result.dokument, intake_result.kvtc, triage_result
                 )
+                st.session_state["last_analyse_result"] = analyse_result
+                st.session_state["last_intake_result"]  = intake_result
 
             prio = analyse_result.prioritaet
             st.markdown(
@@ -167,6 +216,31 @@ with tab_analyse:
 
         elif analyse_btn:
             st.warning("Bitte ein Dokument eingeben.")
+
+        # Export-Buttons – außerhalb des analyse_btn-Blocks, damit sie nach Streamlit-Reruns
+        # (z.B. durch Klick auf Download-Button) weiter sichtbar bleiben.
+        if "last_analyse_result" in st.session_state:
+            _ar = st.session_state["last_analyse_result"]
+            _ir = st.session_state["last_intake_result"]
+            st.divider()
+            st.markdown("**Ergebnis exportieren:**")
+            dl_col1, dl_col2 = st.columns(2)
+            with dl_col1:
+                st.download_button(
+                    label="JSON herunterladen",
+                    data=_result_to_json(_ar, _ir),
+                    file_name=f"analyse_{_ar.eingabe_checksum[:8]}.json",
+                    mime="application/json",
+                    use_container_width=True,
+                )
+            with dl_col2:
+                st.download_button(
+                    label="CSV herunterladen",
+                    data=_result_to_csv(_ar, _ir),
+                    file_name=f"analyse_{_ar.eingabe_checksum[:8]}.csv",
+                    mime="text/csv",
+                    use_container_width=True,
+                )
 
 # ---------------------------------------------------------------------------
 # Tab: Benchmark

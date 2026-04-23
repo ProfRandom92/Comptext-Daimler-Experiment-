@@ -16,6 +16,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
+from src.core.obd_database import find_codes_in_text
 from src.models.schemas import DocumentType, EingabeDokument, ProcessPriority
 
 
@@ -85,7 +86,21 @@ class TriageAgent:
                     eskalations_hinweis="Sofortige Eskalation an Werkstattleitung / Produktionsleiter",
                 )
 
+        # OBD-Datenbank: erweiterte Code-Erkennung (jenseits der 9 hartcodierten Regex-Codes)
+        obd_hits = find_codes_in_text(text)
+        for hit in obd_hits:
+            if hit.schweregrad == ProcessPriority.P1_KRITISCH:
+                return TriageResult(
+                    prioritaet=ProcessPriority.P1_KRITISCH,
+                    begruendung="OBD-Datenbank: sicherheitskritischer Code erkannt",
+                    ausgeloeste_regeln=[f"OBD-DB P1: {hit.code} – {hit.beschreibung}"],
+                    eskalations_hinweis=f"Sofortige Eskalation: {hit.code} ({hit.komponente})",
+                )
+
         p2_hits = [f"P2-Regel: '{m.group(0)}'" for p in _P2_PATTERNS if (m := p.search(text))]
+        for hit in obd_hits:
+            if hit.schweregrad == ProcessPriority.P2_DRINGEND:
+                p2_hits.append(f"OBD-DB P2: {hit.code} – {hit.beschreibung}")
         km_hinweis = self._check_km_faelligkeit(text)
         if km_hinweis:
             p2_hits.append(km_hinweis)
