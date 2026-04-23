@@ -5,9 +5,13 @@ Daimler Buses – Datenmodelle für die Prozessautomatisierung.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
+
+
+def _utcnow() -> datetime:
+    return datetime.now(timezone.utc)
 
 
 class ProcessPriority(str, Enum):
@@ -57,6 +61,12 @@ class Fahrzeugdaten:
     naechster_service_km: int | None = None
     extra: dict[str, Any] = field(default_factory=dict)
 
+    def __post_init__(self) -> None:
+        if not (1886 <= self.baujahr <= datetime.now(timezone.utc).year + 1):
+            raise ValueError(f"baujahr={self.baujahr} außerhalb des gültigen Bereichs")
+        if self.kilometerstand < 0:
+            raise ValueError(f"kilometerstand={self.kilometerstand} darf nicht negativ sein")
+
     def kurzform(self) -> str:
         return f"{self.modell} ({self.baujahr}) | {self.kilometerstand:,} km"
 
@@ -67,7 +77,7 @@ class OBDFehlercode:
     beschreibung: str
     schweregrad: ProcessPriority
     steuergeraet: str
-    ersterfasst: datetime = field(default_factory=datetime.now)
+    ersterfasst: datetime = field(default_factory=_utcnow)
     behoben: bool = False
 
 
@@ -79,7 +89,7 @@ class Wartungsprotokoll:
     arbeitsschritte: list[str] = field(default_factory=list)
     verwendete_teile: list[str] = field(default_factory=list)
     techniker_kuerzel: str = ""  # anonymised by IntakeAgent before storage
-    beginn: datetime = field(default_factory=datetime.now)
+    beginn: datetime = field(default_factory=_utcnow)
     abschluss: datetime | None = None
     prioritaet: ProcessPriority = ProcessPriority.P3_ROUTINE
     notizen: str = ""
@@ -97,7 +107,7 @@ class QAPruefbericht:
     beanstandungen: list[str] = field(default_factory=list)
     gesamt_bewertung: QABewertung = QABewertung.OK
     pruefer_kuerzel: str = ""
-    pruef_datum: datetime = field(default_factory=datetime.now)
+    pruef_datum: datetime = field(default_factory=_utcnow)
     prioritaet: ProcessPriority = ProcessPriority.P3_ROUTINE
 
 
@@ -111,7 +121,7 @@ class Produktionsauftrag:
     status: ProduktionsStatus = ProduktionsStatus.OFFEN
     abweichungen: list[str] = field(default_factory=list)
     prioritaet: ProcessPriority = ProcessPriority.P3_ROUTINE
-    erstellt: datetime = field(default_factory=datetime.now)
+    erstellt: datetime = field(default_factory=_utcnow)
 
 
 @dataclass
@@ -120,7 +130,7 @@ class EingabeDokument:
     doc_type: DocumentType = DocumentType.FREITEXT
     quelle: str = ""
     metadaten: dict[str, Any] = field(default_factory=dict)
-    eingabe_zeitstempel: datetime = field(default_factory=datetime.now)
+    eingabe_zeitstempel: datetime = field(default_factory=_utcnow)
 
 
 @dataclass
@@ -136,6 +146,14 @@ class Analyseergebnis:
     rohausgabe: str = ""
     token_original: int = 0
     token_komprimiert: int = 0
+
+    def __post_init__(self) -> None:
+        if not (0.0 <= self.konfidenz <= 1.0):
+            raise ValueError(f"konfidenz={self.konfidenz} muss im Bereich [0.0, 1.0] liegen")
+        if self.token_komprimiert > self.token_original and self.token_original > 0:
+            raise ValueError(
+                f"token_komprimiert={self.token_komprimiert} > token_original={self.token_original}"
+            )
 
     @property
     def token_einsparung_pct(self) -> float:

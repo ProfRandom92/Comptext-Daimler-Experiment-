@@ -13,6 +13,7 @@ Endpunkte:
 from __future__ import annotations
 
 import os
+from contextlib import asynccontextmanager
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
@@ -30,6 +31,44 @@ from src.utils.logging import get_logger
 
 log = get_logger("comptext.api")
 
+# ---------------------------------------------------------------------------
+# CORS: restrict to known origins via env var (CORS_ORIGINS=http://a,http://b)
+# ---------------------------------------------------------------------------
+_cors_origins_raw = os.getenv("CORS_ORIGINS", "")
+_allowed_origins: list[str] = (
+    [o.strip() for o in _cors_origins_raw.split(",") if o.strip()]
+    if _cors_origins_raw
+    else []
+)
+
+# ---------------------------------------------------------------------------
+# Singleton agents + cache – initialised lazily at startup
+# ---------------------------------------------------------------------------
+_intake: IntakeAgent | None = None
+_triage: TriageAgent | None = None
+_result_cache: AnalysisResultCache | None = None
+_analysis: AnalysisAgent | None = None
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global _intake, _triage, _result_cache, _analysis
+    try:
+        _result_cache = AnalysisResultCache(
+            max_size=int(os.getenv("CACHE_MAX_SIZE", "256")),
+            ttl_seconds=int(os.getenv("CACHE_TTL_SECONDS", "3600")),
+        )
+        _intake   = IntakeAgent(IndustrialKVTCStrategy(
+            DEFAULT_CONFIG.kvtc_header_lines, DEFAULT_CONFIG.kvtc_window_lines,
+        ))
+        _triage   = TriageAgent()
+        _analysis = AnalysisAgent(DEFAULT_CONFIG.analysis, cache=_result_cache)
+        log.info("Agents initialised", extra={"backend": DEFAULT_CONFIG.analysis.backend})
+    except Exception:
+        log.critical("Agent initialisation failed – API will return 503", exc_info=True)
+    yield
+
+
 app = FastAPI(
     title="Daimler Buses CompText API",
     description=(
@@ -39,25 +78,22 @@ app = FastAPI(
     version="0.2.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_allowed_origins,
+    allow_credentials=bool(_allowed_origins),
     allow_methods=["GET", "POST"],
-    allow_headers=["*"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
-# ---------------------------------------------------------------------------
-# Singleton agents + cache (created once at startup)
-# ---------------------------------------------------------------------------
 
-_intake        = IntakeAgent(IndustrialKVTCStrategy(
-    DEFAULT_CONFIG.kvtc_header_lines, DEFAULT_CONFIG.kvtc_window_lines
-))
-_triage        = TriageAgent()
-_result_cache  = AnalysisResultCache(max_size=int(os.getenv("CACHE_MAX_SIZE", "256")))
-_analysis      = AnalysisAgent(DEFAULT_CONFIG.analysis, cache=_result_cache)
+def _require_agents() -> tuple[IntakeAgent, TriageAgent, AnalysisAgent]:
+    if _intake is None or _triage is None or _analysis is None:
+        raise HTTPException(status_code=503, detail="Service nicht verfügbar – Agent-Initialisierung fehlgeschlagen")
+    return _intake, _triage, _analysis
 
 
 # ---------------------------------------------------------------------------
@@ -154,19 +190,21 @@ def _build_analyze_response(intake_result: Any, analyse_result: Any) -> AnalyzeR
 
 @app.get("/health")
 def health() -> dict[str, Any]:
+    ready = _intake is not None
     return {
-        "status": "ok",
+        "status": "ok" if ready else "degraded",
         "service": "comptext-daimler",
         "version": "0.2.0",
-        "cache_size": _result_cache.size,
-        "cache_hit_rate": round(_result_cache.stats.hit_rate, 3),
+        "cache_size": _result_cache.size if _result_cache else 0,
+        "cache_hit_rate": round(_result_cache.stats.hit_rate, 3) if _result_cache else 0.0,
     }
 
 
 @app.post("/compress", response_model=KVTCResponse)
 def compress(req: CompressRequest) -> KVTCResponse:
+    intake, _, _ = _require_agents()
     try:
-        result = _intake._kvtc.compress(req.text)
+        result = intake._kvtc.compress(req.text)
         return KVTCResponse(
             original_tokens=result.original_tokens,
             compressed_tokens=result.compressed_tokens,
@@ -182,10 +220,11 @@ def compress(req: CompressRequest) -> KVTCResponse:
 
 @app.post("/triage", response_model=TriageResponse)
 def triage(req: TriageRequest) -> TriageResponse:
+    _, triage_agent, _ = _require_agents()
     try:
         from src.models.schemas import EingabeDokument
         doc = EingabeDokument(raw_text=req.text, doc_type=req.doc_type)
-        result = _triage.classify(doc)
+        result = triage_agent.classify(doc)
         return TriageResponse(
             prioritaet=result.prioritaet,
             begruendung=result.begruendung,
@@ -199,11 +238,12 @@ def triage(req: TriageRequest) -> TriageResponse:
 
 @app.post("/analyze", response_model=AnalyzeResponse)
 def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
+    intake, triage_agent, analysis_agent = _require_agents()
     log.info("Analyze request", extra={"quelle": req.quelle, "text_len": len(req.text)})
     try:
-        intake_result  = _intake.process(req.text, quelle=req.quelle)
-        triage_result  = _triage.classify(intake_result.dokument)
-        analyse_result = _analysis.analyze(intake_result.dokument, intake_result.kvtc, triage_result)
+        intake_result  = intake.process(req.text, quelle=req.quelle)
+        triage_result  = triage_agent.classify(intake_result.dokument)
+        analyse_result = analysis_agent.analyze(intake_result.dokument, intake_result.kvtc, triage_result)
         return _build_analyze_response(intake_result, analyse_result)
     except Exception as e:
         log.error("analyze failed", exc_info=True)
@@ -214,14 +254,15 @@ def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
 def batch_analyze(req: BatchAnalyzeRequest) -> BatchAnalyzeResponse:
     """Verarbeitet bis zu 10 Dokumente sequenziell. Fehler in einzelnen Dokumenten
     stoppen nicht die Verarbeitung der übrigen."""
+    intake, triage_agent, analysis_agent = _require_agents()
     log.info("Batch analyze request", extra={"count": len(req.documents)})
     results: list[BatchItemResult] = []
 
     for idx, doc_req in enumerate(req.documents):
         try:
-            intake_result  = _intake.process(doc_req.text, quelle=doc_req.quelle)
-            triage_result  = _triage.classify(intake_result.dokument)
-            analyse_result = _analysis.analyze(
+            intake_result  = intake.process(doc_req.text, quelle=doc_req.quelle)
+            triage_result  = triage_agent.classify(intake_result.dokument)
+            analyse_result = analysis_agent.analyze(
                 intake_result.dokument, intake_result.kvtc, triage_result
             )
             results.append(BatchItemResult(

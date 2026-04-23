@@ -31,10 +31,12 @@ from src.models.schemas import DocumentType, EingabeDokument
 # Regex-Definitionen
 # ---------------------------------------------------------------------------
 
-# Vollständige FIN (17 Zeichen, ISO 3779)
+# Vollständige FIN (17 Zeichen ISO 3779 – genau 17 Zeichen, beginnt nicht mit I/O/Q)
 _FIN_FULL    = re.compile(r"\b([A-HJ-NPR-Z0-9]{11})([A-HJ-NPR-Z0-9]{6})\b")
-# Personal-/Mitarbeiternummern (P + 5-8 Ziffern, oder nur 6-8 Ziffern allein)
-_PERSONAL_NR = re.compile(r"\bP\d{5,8}\b|\b(?<!\d)\d{6,8}(?!\d)\b")
+_FIN_17      = re.compile(r"\b[A-HJ-NPR-Z0-9]{17}\b")
+# Personal-/Mitarbeiternummern: nur explizit präfigierte Formate (P/MA/EMP)
+# Reine Ziffernfolgen werden NICHT maskiert, um Fehlalarme bei Daten/Mengen zu vermeiden
+_PERSONAL_NR = re.compile(r"\b(?:P|MA|EMP)\d{5,8}\b", re.IGNORECASE)
 # E-Mail
 _EMAIL       = re.compile(r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}")
 # Telefon (diverse Formate)
@@ -123,6 +125,9 @@ class IntakeAgent:
     def _mask_fin(self, text: str, log: list[str]) -> str:
         """Behält nur die letzten 6 Zeichen der FIN (eindeutige Seriennummer)."""
         def replacer(m: re.Match) -> str:
+            full = m.group(1) + m.group(2)
+            if len(full) != 17:
+                return m.group(0)  # ungültiges Format – unverändert lassen
             log.append("FIN maskiert")
             return f"FIN_***{m.group(2)}"
 
