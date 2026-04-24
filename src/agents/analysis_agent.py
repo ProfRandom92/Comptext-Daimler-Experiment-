@@ -13,6 +13,7 @@ from __future__ import annotations
 import json
 import re
 import time
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import StrEnum
 from typing import Any
@@ -59,6 +60,41 @@ Fokus: Predictive Maintenance, Qualitätssicherung, Produktionsoptimierung.
 Keine Kundendaten, keine persönlichen Informationen im Output.
 """
 
+# ---------------------------------------------------------------------------
+# Prompt sanitization – Strategy Pattern
+# ---------------------------------------------------------------------------
+
+_INSTRUCTION_OVERRIDE = re.compile(
+    r"(ignore\s+(previous|all)\s+instructions?|system\s*:|<\s*/?system\s*>)",
+    re.IGNORECASE,
+)
+_ZONE_MARKERS = re.compile(r"\[(HEADER|MIDDLE|WINDOW|FILTERED)\]", re.IGNORECASE)
+
+
+class PromptSanitizer(ABC):
+    @abstractmethod
+    def sanitize(self, text: str) -> str: ...
+
+
+class StrictSanitizer(PromptSanitizer):
+    """Removes instruction-override attempts and KVTC zone markers from user content."""
+
+    _MAX_FIELD_LEN = 2000
+
+    def sanitize(self, text: str) -> str:
+        text = text[: self._MAX_FIELD_LEN]
+        text = _INSTRUCTION_OVERRIDE.sub("[GEFILTERT]", text)
+        text = _ZONE_MARKERS.sub("[GEFILTERT]", text)
+        return text
+
+
+class PassthroughSanitizer(PromptSanitizer):
+    """No-op – only for fully trusted, internal pipelines."""
+
+    def sanitize(self, text: str) -> str:
+        return text
+
+
 # Module-level compiled patterns (fix: was compiled inside _parse_output per call)
 _JSON_BLOCK = re.compile(r"\{.*\}", re.DOTALL)
 
@@ -79,10 +115,12 @@ class AnalysisAgent:
         self,
         config: AnalysisConfig | None = None,
         cache: Any | None = None,
+        sanitizer: PromptSanitizer | None = None,
     ) -> None:
         self._config = config or AnalysisConfig()
         self._anthropic_client: Any = None  # lazy singleton, avoids per-call client creation
         self._cache = cache  # AnalysisResultCache | None; None = disabled
+        self._sanitizer: PromptSanitizer = sanitizer or StrictSanitizer()
 
     def analyze(
         self,
@@ -120,12 +158,13 @@ class AnalysisAgent:
         return result
 
     def _build_prompt(self, dokument: EingabeDokument, kvtc: KVTCResult, triage: TriageResult) -> str:
+        s = self._sanitizer.sanitize
         return (
             f"DOKUMENT-TYP: {dokument.doc_type.value}\n"
             f"PRIORITÄT (Triage): {triage.prioritaet.value}\n"
-            f"TRIAGE-BEGRÜNDUNG: {triage.begruendung}\n"
-            f"KOMPRIMIERTES FRAME:\n{kvtc.frame}\n\n"
-            f"ZONE WINDOW (aktuell):\n{kvtc.zones.get('window', '')}\n\n"
+            f"TRIAGE-BEGRÜNDUNG: {s(triage.begruendung)}\n"
+            f"KOMPRIMIERTES FRAME:\n{s(kvtc.frame)}\n\n"
+            f"ZONE WINDOW (aktuell):\n{s(kvtc.zones.get('window', ''))}\n\n"
             "Erstelle eine strukturierte JSON-Analyse."
         )
 

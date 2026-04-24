@@ -32,8 +32,9 @@ from src.models.schemas import DocumentType, EingabeDokument
 
 # Vollständige FIN (17 Zeichen, ISO 3779)
 _FIN_FULL    = re.compile(r"\b([A-HJ-NPR-Z0-9]{11})([A-HJ-NPR-Z0-9]{6})\b")
-# Personal-/Mitarbeiternummern (P + 5-8 Ziffern, oder nur 6-8 Ziffern allein)
-_PERSONAL_NR = re.compile(r"\bP\d{5,8}\b|\b(?<!\d)\d{6,8}(?!\d)\b")
+# Personal-/Mitarbeiternummern (P-Präfix + 5-8 Ziffern, z. B. P12345)
+# Bare-Ziffern-Alternative entfernt – zu viele Falsch-Positive auf Bestell-/Seriennummern
+_PERSONAL_NR = re.compile(r"\bP\d{5,8}\b")
 # E-Mail
 _EMAIL       = re.compile(r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}")
 # Telefon (diverse Formate)
@@ -128,10 +129,10 @@ class IntakeAgent:
         return _FIN_FULL.sub(replacer, text)
 
     def _hash_personal_nr(self, text: str, log: list[str]) -> str:
-        """Ersetzt Personalnummern durch 8-stelligen MD5-Hash (One-Way, aus Monorepo-X)."""
+        """Ersetzt Personalnummern durch 8-stelligen SHA-256-Hash (One-Way)."""
         def replacer(m: re.Match) -> str:
             log.append("Personalnummer gehasht")
-            hashed = hashlib.md5(m.group(0).encode()).hexdigest()[:8].upper()
+            hashed = hashlib.sha256(m.group(0).encode()).hexdigest()[:8].upper()
             return f"PERS_{hashed}"
 
         return _PERSONAL_NR.sub(replacer, text)

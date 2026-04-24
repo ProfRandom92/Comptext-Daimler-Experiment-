@@ -95,7 +95,7 @@ class IndustrialKVTCStrategy:
             compression_ratio=round(ratio, 4),
             zones=zones,
             frame=frame,
-            checksum=hashlib.md5(frame.encode()).hexdigest(),
+            checksum=hashlib.sha256(frame.encode()).hexdigest(),
             latency_ms=round((time.perf_counter() - t0) * 1000, 3),
             metadata=context_metadata or {},
         )
