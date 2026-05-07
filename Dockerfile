@@ -12,7 +12,9 @@ COPY . .
 RUN useradd -m appuser && chown -R appuser /app
 USER appuser
 
-EXPOSE 8501 8000
+# Render uses the PORT environment variable
+ENV PORT=10000
+EXPOSE 10000
 
-# Default: Streamlit dashboard
-CMD ["streamlit", "run", "dashboard.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# Default: FastAPI API
+CMD uvicorn api:app --host 0.0.0.0 --port ${PORT}

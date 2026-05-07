@@ -7,12 +7,14 @@ Endpunkte:
   POST /compress         – Nur KVTC-Kompression
   POST /triage           – Nur Prioritätsklassifizierung
   GET  /health           – Health-Check
+  GET  /stats            – Dashboard-Metriken (Uptime, Bytes)
   GET  /benchmark        – Standard-Benchmark ausführen
 """
 
 from __future__ import annotations
 
 import os
+import time
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
@@ -29,6 +31,10 @@ from src.models.schemas import DocumentType, ProcessPriority
 from src.utils.logging import get_logger
 
 log = get_logger("comptext.api")
+
+# Global metrics
+START_TIME = time.time()
+PROCESSED_COMPRESSED_BYTES = 0
 
 app = FastAPI(
     title="Daimler Buses CompText API",
@@ -163,10 +169,24 @@ def health() -> dict[str, Any]:
     }
 
 
+@app.get("/stats")
+def stats() -> dict[str, Any]:
+    global PROCESSED_COMPRESSED_BYTES
+    uptime_seconds = time.time() - START_TIME
+    return {
+        "uptime_seconds": round(uptime_seconds, 2),
+        "processed_compressed_bytes": PROCESSED_COMPRESSED_BYTES,
+        "cache_hit_rate": round(_result_cache.stats.hit_rate, 3),
+        "version": "0.2.0"
+    }
+
+
 @app.post("/compress", response_model=KVTCResponse)
 def compress(req: CompressRequest) -> KVTCResponse:
+    global PROCESSED_COMPRESSED_BYTES
     try:
         result = _intake._kvtc.compress(req.text)
+        PROCESSED_COMPRESSED_BYTES += len(result.frame.encode('utf-8'))
         return KVTCResponse(
             original_tokens=result.original_tokens,
             compressed_tokens=result.compressed_tokens,
@@ -199,9 +219,11 @@ def triage(req: TriageRequest) -> TriageResponse:
 
 @app.post("/analyze", response_model=AnalyzeResponse)
 def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
+    global PROCESSED_COMPRESSED_BYTES
     log.info("Analyze request", extra={"quelle": req.quelle, "text_len": len(req.text)})
     try:
         intake_result  = _intake.process(req.text, quelle=req.quelle)
+        PROCESSED_COMPRESSED_BYTES += len(intake_result.kvtc.frame.encode('utf-8'))
         triage_result  = _triage.classify(intake_result.dokument)
         analyse_result = _analysis.analyze(intake_result.dokument, intake_result.kvtc, triage_result)
         return _build_analyze_response(intake_result, analyse_result)
@@ -214,12 +236,14 @@ def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
 def batch_analyze(req: BatchAnalyzeRequest) -> BatchAnalyzeResponse:
     """Verarbeitet bis zu 10 Dokumente sequenziell. Fehler in einzelnen Dokumenten
     stoppen nicht die Verarbeitung der übrigen."""
+    global PROCESSED_COMPRESSED_BYTES
     log.info("Batch analyze request", extra={"count": len(req.documents)})
     results: list[BatchItemResult] = []
 
     for idx, doc_req in enumerate(req.documents):
         try:
             intake_result  = _intake.process(doc_req.text, quelle=doc_req.quelle)
+            PROCESSED_COMPRESSED_BYTES += len(intake_result.kvtc.frame.encode('utf-8'))
             triage_result  = _triage.classify(intake_result.dokument)
             analyse_result = _analysis.analyze(
                 intake_result.dokument, intake_result.kvtc, triage_result

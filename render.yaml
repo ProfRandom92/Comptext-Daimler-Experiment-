@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: comptext-daimler-api
+    runtime: docker
+    region: frankfurt
+    plan: free
+    envVars:
+      - key: LLM_BACKEND
+        value: mock
+      - key: CACHE_MAX_SIZE
+        value: "256"
+      - key: LOG_LEVEL
+        value: INFO
