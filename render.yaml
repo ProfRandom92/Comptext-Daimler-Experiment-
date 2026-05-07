@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: comptext-daimler-api
+    runtime: docker
+    plan: starter
+    region: frankfurt
+    healthCheckPath: /health
+    envVars:
+      - key: LLM_BACKEND
+        value: mock
+      - key: CACHE_MAX_SIZE
+        value: 256

@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from src.core.obd_database import OBD_DATABASE, find_codes_in_text, lookup, lookup_severity
 from src.models.schemas import ProcessPriority
 

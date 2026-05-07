@@ -1,0 +1,11 @@
+.git
+.github
+.pytest_cache
+.streamlit
+tests
+showcase
+daimler_fleet
+*.pyc
+__pycache__
+.env
+.venv
