@@ -91,7 +91,7 @@ export default function SecuritySlide() {
     <div className="w-full h-full flex flex-col justify-center px-12 py-10 max-w-6xl mx-auto">
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <div className="text-xs font-mono tracking-widest text-[#00A0DC] uppercase mb-2">05 / DSGVO & Security</div>
+        <div className="text-xs font-mono tracking-widest text-[#00A0DC] uppercase mb-2">06 / DSGVO & Security</div>
         <h2 className="text-4xl font-black">
           Privacy <span className="text-gradient">by Design</span>
         </h2>

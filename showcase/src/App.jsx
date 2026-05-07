@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import HeroSlide from './slides/HeroSlide.jsx'
 import ProblemSlide from './slides/ProblemSlide.jsx'
+import ScenariosSlide from './slides/ScenariosSlide.jsx'
 import ArchitectureSlide from './slides/ArchitectureSlide.jsx'
 import KVTCSlide from './slides/KVTCSlide.jsx'
 import SecuritySlide from './slides/SecuritySlide.jsx'
@@ -11,6 +12,7 @@ import DemoSlide from './slides/DemoSlide.jsx'
 const SLIDES = [
   { id: 'hero',         component: HeroSlide,         label: 'Start' },
   { id: 'problem',      component: ProblemSlide,       label: 'Challenge' },
+  { id: 'scenarios',    component: ScenariosSlide,     label: 'Szenarien' },
   { id: 'architecture', component: ArchitectureSlide,  label: 'Architektur' },
   { id: 'kvtc',         component: KVTCSlide,          label: 'KVTC' },
   { id: 'security',     component: SecuritySlide,      label: 'DSGVO' },

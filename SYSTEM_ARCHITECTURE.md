@@ -32,3 +32,12 @@ The following table demonstrates the theoretical and empirical efficiency gains 
 - **C (Code)**: Structured identification (OBD codes, SAP IDs, FIN fragments).
 
 This strategy ensures that the most critical industrial information is preserved while minimizing the token footprint, enabling larger context windows and reducing LLM inference costs.
+
+## Industrial Use Case Scenarios
+
+| Scenario | Core Benefit | Visualization / Impact |
+| :--- | :--- | :--- |
+| **Token Reduction** | Cost Optimization | **90% cost savings** on LLM input by compressing 10MB logs to 1.2MB KVTC frames. |
+| **Data Protection** | GDPR Compliance | PII (FIN, Names) is masked *before* leaving the local intake layer (Privacy-by-Design). |
+| **Security** | Air-Gap Ready | 100% offline analysis with **Ollama Gemma 2B** prevents data leakage to public clouds. |
+| **Performance** | Real-Time Triage | **< 20ms latency** for critical OBD error classification (P1_KRITISCH) at the edge. |

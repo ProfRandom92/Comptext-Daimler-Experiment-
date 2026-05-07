@@ -130,8 +130,8 @@ with st.sidebar:
 # Tabs
 # ---------------------------------------------------------------------------
 
-tab_analyse, tab_benchmark, tab_info = st.tabs(
-    ["📋 Dokument-Analyse", "📊 Benchmark", "ℹ️ Systeminfo"]
+tab_analyse, tab_szenarien, tab_benchmark, tab_info = st.tabs(
+    ["📋 Dokument-Analyse", "💡 Szenarien", "📊 Benchmark", "ℹ️ Systeminfo"]
 )
 
 # ---------------------------------------------------------------------------
@@ -245,6 +245,37 @@ with tab_analyse:
 # ---------------------------------------------------------------------------
 # Tab: Benchmark
 # ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# Tab: Szenarien
+# ---------------------------------------------------------------------------
+
+with tab_szenarien:
+    st.header("Einsatz-Szenarien")
+    st.markdown("Visualisierung der CompText-Vorteile in verschiedenen industriellen Kontexten.")
+
+    s1, s2 = st.columns(2)
+    with s1:
+        with st.expander("📉 **Token Reduction & Kosten**", expanded=True):
+            st.info("**Predictive Maintenance Monitoring**")
+            st.write("Langzeit-Logdaten von Busflotten erzeugen enorme Token-Mengen.")
+            st.success("**Impact:** 90% weniger LLM-Kosten durch KVTC-Kompression.")
+
+        with st.expander("🛡️ **Datenschutz (DSGVO)**", expanded=True):
+            st.info("**Externes Audit & Cloud-Analyse**")
+            st.write("Werkstattberichte müssen für externe Analyse anonymisiert werden.")
+            st.success("**Impact:** Automatische Maskierung von PII (FIN, Namen) im Intake-Layer.")
+
+    with s2:
+        with st.expander("🔒 **Sicherheit & Air-Gap**", expanded=True):
+            st.info("**Offline-Diagnose im Werkstatt-LAN**")
+            st.write("Sicherheitskritische Daten dürfen das interne Netzwerk nicht verlassen.")
+            st.success("**Impact:** Volle Funktionalität mit lokalen Modellen (Ollama) ohne Internet.")
+
+        with st.expander("⚡ **Performance & Echtzeit**", expanded=True):
+            st.info("**Real-Time Fleet Triage**")
+            st.write("Kritische OBD-Fehler erfordern sofortige Reaktion.")
+            st.success("**Impact:** Triage-Latenz < 20ms ermöglicht sofortige Fahrer-Benachrichtigung.")
 
 with tab_benchmark:
     st.header("KVTC-Benchmark")

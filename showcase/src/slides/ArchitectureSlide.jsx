@@ -95,7 +95,7 @@ export default function ArchitectureSlide() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-6"
       >
-        <div className="text-xs font-mono tracking-widest text-[#00A0DC] uppercase mb-2">03 / Architektur</div>
+        <div className="text-xs font-mono tracking-widest text-[#00A0DC] uppercase mb-2">04 / Architektur</div>
         <h2 className="text-4xl font-black">
           3-Agent <span className="text-gradient">Pipeline</span>
         </h2>

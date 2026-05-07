@@ -463,6 +463,16 @@ Response:
 
 ---
 
+
+## 💡 Szenarien (Industrial Use Cases)
+
+| Bereich | Szenario | Impact |
+|:---|:---|:---|
+| **Token Reduction** | Predictive Maintenance Monitoring | **-90% Kosten** durch KVTC-Kompression von Log-Fluten. |
+| **Datenschutz** | Externes Audit & Cloud-Analyse | **DSGVO-konform** durch PII-Maskierung (FIN, Namen) im Intake. |
+| **Sicherheit** | Air-Gap Werkstatt-LAN | **100% Offline** mit Ollama Gemma 2B (kein Datenabfluss). |
+| **Performance** | Real-Time Fleet Triage | **< 20ms Latenz** für kritische Fehler-Eskalation am Edge. |
+
 ## 📊 Performance & Benchmarks
 
 ### Kompressionsraten (Real-World)
