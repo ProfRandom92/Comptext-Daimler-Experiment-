@@ -1,18 +1,21 @@
-import pytest
-import hashlib
-import sys
 import os
+import sys
 
 # Add root to sys.path to import src and showcase
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from showcase.xentry_optimizer import filter_log
 from showcase.mo360_shift_filter import extract_deviations
 from showcase.supply_chain_dedup import semantic_dedup
+from showcase.xentry_optimizer import filter_log
 from src.core.kvtc import IndustrialKVTCStrategy
 
+
 def test_xentry_optimizer_determinism():
-    sample_log = "12:00:00.01 [ECU_01] ERROR: Fault State detected - Code: B1202\n"                  "12:00:00.02 [INFO] Heartbeat\n"                  "12:00:00.03 [POWER] WARN: Critical Voltage Drop - 10.5V"
+    sample_log = (
+        "12:00:00.01 [ECU_01] ERROR: Fault State detected - Code: B1202\n"
+        "12:00:00.02 [INFO] Heartbeat\n"
+        "12:00:00.03 [POWER] WARN: Critical Voltage Drop - 10.5V"
+    )
 
     filtered1 = filter_log(sample_log)
     filtered2 = filter_log(sample_log)
@@ -29,7 +32,12 @@ def test_xentry_optimizer_determinism():
     assert res1.checksum == res2.checksum
 
 def test_mo360_shift_filter_determinism():
-    sample_report = "Schichtbericht - Factory 56\n"                     "Schicht: Frühschicht\n"                     "06:00: Schichtbeginn. Normalbetrieb.\n"                     "07:00: Stopp an Station 22: Materialmangel."
+    sample_report = (
+        "Schichtbericht - Factory 56\n"
+        "Schicht: Frühschicht\n"
+        "06:00: Schichtbeginn. Normalbetrieb.\n"
+        "07:00: Stopp an Station 22: Materialmangel."
+    )
 
     extracted1 = extract_deviations(sample_report)
     extracted2 = extract_deviations(sample_report)
