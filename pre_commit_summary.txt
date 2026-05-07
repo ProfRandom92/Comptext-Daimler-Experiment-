@@ -1,0 +1,17 @@
+Summary of changes for the Daimler-Experiment:
+1. Implemented showcase/xentry_optimizer.py:
+   - Simulates 5000+ line diagnostic logs.
+   - Filters for "Fault State", "Error-ID", and critical voltage drops.
+   - Applies IndustrialKVTCStrategy for context reduction.
+2. Implemented showcase/mo360_shift_filter.py:
+   - Processes unstructured shift reports from Factory 56.
+   - Removes redundant "Normalbetrieb" status.
+   - Structures deviations as Key-Value pairs for token efficiency.
+3. Implemented showcase/supply_chain_dedup.py:
+   - Deduplicates supplier updates using semantic hashing.
+   - Keeps only incremental changes.
+4. Added tests/test_showcase_scenarios.py:
+   - Validates all showcase scenarios for determinism and logical correctness.
+5. Verification:
+   - All scripts verified to run as "Live-Examples" with stats output.
+   - Full test suite (67 tests) passed.
