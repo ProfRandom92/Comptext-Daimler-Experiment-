@@ -11,18 +11,17 @@ API Endpoints:
 - GET  /health                    Health check
 """
 
-from fastapi import FastAPI, HTTPException, UploadFile, File, BackgroundTasks
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
-from pydantic import BaseModel, Field
-from typing import Optional, List, Dict, Any
 import json
-import uuid
-import os
-from datetime import datetime
-import asyncio
-import httpx
 import logging
+import os
+import uuid
+from datetime import datetime
+from typing import Any
+
+import httpx
+from fastapi import BackgroundTasks, FastAPI, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -36,7 +35,7 @@ class FHIRBundle(BaseModel):
     """FHIR R4 Bundle"""
     resourceType: str = "Bundle"
     type: str = "transaction"
-    entry: List[Dict[str, Any]] = []
+    entry: list[dict[str, Any]] = []
 
     class Config:
         schema_extra = {
@@ -50,8 +49,8 @@ class FHIRBundle(BaseModel):
 
 class PipelineRequest(BaseModel):
     """Pipeline processing request"""
-    bundle: Optional[FHIRBundle] = None
-    scenario: Optional[str] = Field(None, description="Built-in scenario: STEMI, SEPSIS, STROKE, ANAPHYLAXIE, DM_HYPO")
+    bundle: FHIRBundle | None = None
+    scenario: str | None = Field(None, description="Built-in scenario: STEMI, SEPSIS, STROKE, ANAPHYLAXIE, DM_HYPO")
     include_benchmark: bool = Field(False, description="Include token metrics in response")
 
     class Config:
@@ -68,8 +67,8 @@ class PipelineResponse(BaseModel):
     id: str
     scenario: str
     frame: str
-    metrics: Dict[str, Any]
-    safety: Dict[str, Any]
+    metrics: dict[str, Any]
+    safety: dict[str, Any]
     timestamp: datetime
 
     class Config:
@@ -95,7 +94,7 @@ class PipelineResponse(BaseModel):
 
 class BenchmarkRequest(BaseModel):
     """Benchmark request"""
-    scenarios: List[str] = Field(["ALL"], description="Scenarios to benchmark")
+    scenarios: list[str] = Field(["ALL"], description="Scenarios to benchmark")
     detailed: bool = Field(False, description="Include stage-by-stage metrics")
 
     class Config:
@@ -110,21 +109,21 @@ class BenchmarkRequest(BaseModel):
 class ValidationRequest(BaseModel):
     """Frame validation request"""
     frame: str
-    checks: List[str] = Field(["syntax", "safety", "gdpr"], description="Checks to run")
+    checks: list[str] = Field(["syntax", "safety", "gdpr"], description="Checks to run")
 
 
 class ValidationResponse(BaseModel):
     """Frame validation response"""
     valid: bool
-    checks: Dict[str, Any]
-    issues: List[str] = []
+    checks: dict[str, Any]
+    issues: list[str] = []
 
 
 class ScenarioInfo(BaseModel):
     """Clinical scenario information"""
     id: str
     name: str
-    icd10: List[str]
+    icd10: list[str]
     triage: str
     estimated_tokens: int
 
@@ -133,7 +132,7 @@ class HealthStatus(BaseModel):
     """Health check response"""
     status: str
     mcp_connected: bool
-    services: Dict[str, str]
+    services: dict[str, str]
     timestamp: datetime
 
 
@@ -160,7 +159,7 @@ class MCPClient:
             self.connected = False
             return False
 
-    async def call_tool(self, tool_name: str, args: Dict[str, Any]) -> Dict[str, Any]:
+    async def call_tool(self, tool_name: str, args: dict[str, Any]) -> dict[str, Any]:
         """Call MCP tool"""
         try:
             response = await self.client.post(
@@ -173,7 +172,7 @@ class MCPClient:
             logger.error(f"MCP tool call failed: {tool_name}: {e}")
             raise
 
-    async def pipeline(self, bundle: Optional[Dict] = None, scenario: Optional[str] = None) -> Dict:
+    async def pipeline(self, bundle: dict | None = None, scenario: str | None = None) -> dict:
         """Run CompText pipeline"""
         args = {}
         if bundle:
@@ -182,7 +181,7 @@ class MCPClient:
             args["scenario"] = scenario
         return await self.call_tool("comptext_pipeline", args)
 
-    async def benchmark(self, scenarios: List[str], detailed: bool = False) -> Dict:
+    async def benchmark(self, scenarios: list[str], detailed: bool = False) -> dict:
         """Run benchmarks"""
         args = {
             "scenarios": scenarios if scenarios != ["ALL"] else None,
@@ -190,11 +189,11 @@ class MCPClient:
         }
         return await self.call_tool("comptext_benchmark", {k: v for k, v in args.items() if v is not None})
 
-    async def scenarios(self, filter: str = "all") -> Dict:
+    async def scenarios(self, filter: str = "all") -> dict:
         """List scenarios"""
         return await self.call_tool("comptext_scenarios", {"filter": filter})
 
-    async def validate(self, frame: str, checks: List[str]) -> Dict:
+    async def validate(self, frame: str, checks: list[str]) -> dict:
         """Validate frame"""
         return await self.call_tool("comptext_validate", {"frame": frame, "checks": checks})
 
@@ -223,8 +222,8 @@ mcp_url = os.getenv("COMPTEXT_MCP_URL", "http://localhost:3000")
 mcp_client = MCPClient(mcp_url)
 
 # In-memory storage for results (use database in production)
-results_store: Dict[str, PipelineResponse] = {}
-benchmark_store: Dict[str, Dict] = {}
+results_store: dict[str, PipelineResponse] = {}
+benchmark_store: dict[str, dict] = {}
 
 
 # ============================================================================
@@ -299,11 +298,11 @@ async def process_pipeline(request: PipelineRequest):
 
     except Exception as e:
         logger.error(f"Pipeline processing failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/api/pipeline/upload")
-async def upload_fhir_bundle(file: UploadFile = File(...)):
+async def upload_fhir_bundle(file: UploadFile):
     """Upload FHIR bundle JSON file"""
     try:
         content = await file.read()
@@ -318,9 +317,9 @@ async def upload_fhir_bundle(file: UploadFile = File(...)):
         return await process_pipeline(request)
 
     except json.JSONDecodeError:
-        raise HTTPException(status_code=400, detail="Invalid JSON")
+        raise HTTPException(status_code=400, detail="Invalid JSON") from None
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=f"Invalid FHIR: {e}")
+        raise HTTPException(status_code=400, detail=f"Invalid FHIR: {e}") from e
 
 
 @app.get("/api/pipeline/results/{process_id}", response_model=PipelineResponse)
@@ -336,7 +335,7 @@ async def get_result(process_id: str):
 # SCENARIOS ENDPOINTS
 # ============================================================================
 
-@app.get("/api/scenarios", response_model=Dict[str, Any])
+@app.get("/api/scenarios", response_model=dict[str, Any])
 async def list_scenarios(filter: str = "all"):
     """List available clinical scenarios"""
     try:
@@ -344,7 +343,7 @@ async def list_scenarios(filter: str = "all"):
         return result
     except Exception as e:
         logger.error(f"Failed to list scenarios: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/api/scenarios/{scenario_id}/process", response_model=PipelineResponse)
@@ -354,7 +353,7 @@ async def process_scenario(scenario_id: str):
         return await process_pipeline(PipelineRequest(scenario=scenario_id))
     except Exception as e:
         logger.error(f"Scenario processing failed: {scenario_id}: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================
@@ -400,7 +399,7 @@ async def run_benchmark(request: BenchmarkRequest, background_tasks: BackgroundT
 
     except Exception as e:
         logger.error(f"Benchmark start failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.get("/api/benchmark/results/{benchmark_id}")
@@ -433,7 +432,7 @@ async def validate_frame(request: ValidationRequest):
 
     except Exception as e:
         logger.error(f"Validation failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================
