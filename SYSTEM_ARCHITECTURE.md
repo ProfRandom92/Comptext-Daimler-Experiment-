@@ -1,4 +1,4 @@
-# SYSTEM_ARCHITECTURE.md - CompText Daimler Ecosystem
+# SYSTEM_ARCHITECTURE.md - CompText Mercedes-Benz Ecosystem
 
 ## Agentic Loop & Orchestration
 
@@ -7,7 +7,7 @@ graph LR
     A[Jules (Dev)] -- Deploy/Optimize --> B[Render MCP (Ops)]
     B -- Hosts --> C[CompText Kernel (API)]
     C -- Analyzes/Compresses --> D[n8n (Orchestration)]
-    D -- Delivers Insights --> E[Daimler Truck (Value)]
+    D -- Delivers Insights --> E[Mercedes-Benz Strategy (ROI)]
     E -- Feedback --> A
 ```
 
@@ -41,3 +41,11 @@ This strategy ensures that the most critical industrial information is preserved
 | **Data Protection** | GDPR Compliance | PII (FIN, Names) is masked *before* leaving the local intake layer (Privacy-by-Design). |
 | **Security** | Air-Gap Ready | 100% offline analysis with **Ollama Gemma 2B** prevents data leakage to public clouds. |
 | **Performance** | Real-Time Triage | **< 20ms latency** for critical OBD error classification (P1_KRITISCH) at the edge. |
+
+## Strategic Alignment: Mercedes-Benz "Lead in Electric & Software"
+
+CompText acts as a **Pre-LLM Optimization Layer (POL)**, supporting the transformation to a software-defined company (MB.OS).
+
+- **Cost Control**: Decouples AI usage growth from IT budget expansion (60-90% saving).
+- **Digital Trust**: Ensures compliance with **ISO 21434** and **GDPR Art. 25** at the intake level.
+- **Productivity**: Contributes to the **20% efficiency target** by providing 3.24x faster inference through relevant-only data.

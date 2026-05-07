@@ -251,33 +251,35 @@ with tab_analyse:
 # ---------------------------------------------------------------------------
 
 with tab_szenarien:
-    st.header("Einsatz-Szenarien")
-    st.markdown("Visualisierung der CompText-Vorteile in verschiedenen industriellen Kontexten.")
+    st.header("Mercedes-Benz ROI Use Cases")
+    st.markdown("Visualisierung der strategischen Einordnung und Wertschöpfung.")
 
     s1, s2 = st.columns(2)
     with s1:
-        with st.expander("📉 **Token Reduction & Kosten**", expanded=True):
-            st.info("**Predictive Maintenance Monitoring**")
-            st.write("Langzeit-Logdaten von Busflotten erzeugen enorme Token-Mengen.")
-            st.success("**Impact:** 90% weniger LLM-Kosten durch KVTC-Kompression.")
+        with st.expander("🔧 **XENTRY Diagnose-Logs**", expanded=True):
+            st.info("**After-Sales After-Hours Optimization**")
+            st.write("Reduktion von logs mit 10.000 Zeilen auf die relevanten 20 Zeilen "Fault State".")
+            st.success("**Impact:** Massive Token-Ersparnis und schnellere Inferenz bei der Fehleranalyse.")
 
-        with st.expander("🛡️ **Datenschutz (DSGVO)**", expanded=True):
-            st.info("**Externes Audit & Cloud-Analyse**")
-            st.write("Werkstattberichte müssen für externe Analyse anonymisiert werden.")
-            st.success("**Impact:** Automatische Maskierung von PII (FIN, Namen) im Intake-Layer.")
+        with st.expander("📦 **Supply Chain Reporting**", expanded=True):
+            st.info("**Semantic De-Duplication**")
+            st.write("Bereinigung redundanter Lieferanten-Updates. Fokus auf Risiko-Abweichungen.")
+            st.success("**Impact:** Beschleunigte Risiko-Assessments für das Management.")
 
     with s2:
-        with st.expander("🔒 **Sicherheit & Air-Gap**", expanded=True):
-            st.info("**Offline-Diagnose im Werkstatt-LAN**")
-            st.write("Sicherheitskritische Daten dürfen das interne Netzwerk nicht verlassen.")
-            st.success("**Impact:** Volle Funktionalität mit lokalen Modellen (Ollama) ohne Internet.")
+        with st.expander("🏭 **MO360 Produktion (Factory 56)**", expanded=True):
+            st.info("**Relevanzfilter für Schichtberichte**")
+            st.write("Filtert redundantes "Normalbetrieb-Rauschen" aus Berichten.")
+            st.success("**Impact:** Qualitätsingenieure erhalten präzise Fehleridentifikationen.")
 
-        with st.expander("⚡ **Performance & Echtzeit**", expanded=True):
-            st.info("**Real-Time Fleet Triage**")
-            st.write("Kritische OBD-Fehler erfordern sofortige Reaktion.")
-            st.success("**Impact:** Triage-Latenz < 20ms ermöglicht sofortige Fahrer-Benachrichtigung.")
+        with st.expander("📊 **Wirtschaftlicher Impact (KPIs)**", expanded=True):
+            st.write("🚀 **3.24x** schnellere Inferenz")
+            st.write("📉 **60-90%** Token-Kostensenkung")
+            st.write("🛡️ **ISO 21434** Cybersecurity Standard")
+            st.success("**Ziel:** 20% Produktivitätssteigerung bis 2025.")
 
-with tab_benchmark:
+
+    with tab_benchmark:
     st.header("KVTC-Benchmark")
     st.markdown(
         "Simuliert Komprimierung über typische Daimler-Buses-Dokumente "
