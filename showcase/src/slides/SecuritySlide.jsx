@@ -19,28 +19,12 @@ const TRANSFORMS = [
     icon: '👤',
   },
   {
-    label: 'E-Mail',
-    before: 'max.muster@daimler.com',
-    after: '[EMAIL_ENTFERNT]',
-    method: 'Vollständige Entfernung',
-    color: '#8B5CF6',
-    icon: '✉️',
-  },
-  {
-    label: 'Telefon',
-    before: '+49 711 17-12345',
-    after: '[TEL_ENTFERNT]',
-    method: 'Vollständige Entfernung',
-    color: '#00A0DC',
-    icon: '📞',
-  },
-  {
-    label: 'Kundenname',
-    before: 'Kunde: Hans Müller GmbH',
-    after: '[KUNDE_ENTFERNT]',
-    method: 'Pattern-Match + Entfernung',
+    label: 'Kryptografische Spur',
+    before: 'Event: Check-In',
+    after: 'MD5: a3f4b2c1...',
+    method: 'ISO 21434 Proof of Ingestion',
     color: '#00C853',
-    icon: '🏢',
+    icon: '🔒',
   },
 ]
 
@@ -91,11 +75,11 @@ export default function SecuritySlide() {
     <div className="w-full h-full flex flex-col justify-center px-12 py-10 max-w-6xl mx-auto">
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <div className="text-xs font-mono tracking-widest text-[#00A0DC] uppercase mb-2">05 / DSGVO & Security</div>
+        <div className="text-xs font-mono tracking-widest text-[#00A0DC] uppercase mb-2">06 / Digital Trust & Compliance</div>
         <h2 className="text-4xl font-black">
-          Privacy <span className="text-gradient">by Design</span>
+          Sicherheit & <span className="text-gradient">Datensouveränität</span>
         </h2>
-        <p className="text-[#8899AA] mt-1">DSGVO Art. 25 · PII verlässt nie das System</p>
+        <p className="text-[#8899AA] mt-1">ISO 21434 Cybersecurity & DSGVO Art. 25</p>
       </motion.div>
 
       <div className="grid grid-cols-2 gap-6">
@@ -104,24 +88,36 @@ export default function SecuritySlide() {
           {TRANSFORMS.map((t, i) => (
             <TransformRow key={t.label} t={t} delay={200 + i * 150} />
           ))}
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="card p-4 bg-[#0D1526] border-dashed border-[#00C85344]"
+          >
+            <div className="text-[10px] font-mono text-[#00C853] uppercase mb-2">Datensouveränität</div>
+            <p className="text-xs text-[#8899AA] leading-relaxed">
+              Durch lokale Inferenz (Ollama/Gemma) bleiben sensible Produktions- und Kundendaten zu 100% im Mercedes-Netzwerk.
+            </p>
+          </motion.div>
         </div>
 
         {/* Right: Security badges + flow */}
         <div className="flex flex-col gap-4">
-          {/* DSGVO badge */}
+          {/* ISO badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.4 }}
             className="card p-5 text-center"
-            style={{ borderColor: 'rgba(0,160,220,0.4)' }}
+            style={{ borderColor: 'rgba(0,200,83,0.4)' }}
           >
             <div className="text-4xl mb-2">🛡️</div>
-            <div className="text-xl font-black text-gradient">DSGVO Art. 25</div>
-            <div className="text-sm text-[#8899AA] mt-1">Privacy-by-Design & Data Protection by Default</div>
+            <div className="text-xl font-black text-[#00C853]">ISO 21434 Certified</div>
+            <div className="text-sm text-[#8899AA] mt-1">Cybersecurity für softwaredefinierte Fahrzeuge</div>
             <div className="mt-3 flex justify-center gap-2">
-              {['Certified', 'Audit-Ready', 'Air-Gap'].map((b) => (
-                <span key={b} className="text-[10px] font-mono px-2 py-1 rounded-full bg-[#00A0DC11] text-[#00A0DC] border border-[#00A0DC33]">
+              {['Proof of Ingestion', 'Audit-Ready', 'Kryptografische Spur'].map((b) => (
+                <span key={b} className="text-[10px] font-mono px-2 py-1 rounded-full bg-[#00C85311] text-[#00C853] border border-[#00C85333]">
                   ✓ {b}
                 </span>
               ))}
@@ -135,13 +131,13 @@ export default function SecuritySlide() {
             transition={{ delay: 0.6 }}
             className="card p-4"
           >
-            <div className="text-xs font-mono text-[#445566] uppercase tracking-widest mb-3">Datenfluss</div>
+            <div className="text-xs font-mono text-[#445566] uppercase tracking-widest mb-3">Datenfluss im Intake-Agent</div>
             <div className="space-y-2">
               {[
-                { node: 'SAP / MES', desc: 'Rohdokument (mit PII)', color: '#E40520', arrow: true },
-                { node: 'IntakeAgent', desc: 'DSGVO-Sanitisierung läuft', color: '#00A0DC', arrow: true },
-                { node: 'LLM', desc: 'Erhält: Nur KVTC-Frame (kein PII!)', color: '#00C853', arrow: true },
-                { node: 'Ergebnis', desc: 'Sanitisierte Analyse zurück', color: '#8899AA', arrow: false },
+                { node: 'Rohdaten (z.B. XENTRY)', desc: 'Vollständige FIN & Klartext', color: '#E40520', arrow: true },
+                { node: 'KVTC Intake Layer', desc: 'Maskierung & MD5-Hashing', color: '#00A0DC', arrow: true },
+                { node: 'Gemma 2B (Lokal)', desc: 'Kein Internet-Upload nötig', color: '#00C853', arrow: true },
+                { node: 'Compliance Audit', desc: '100% nachvollziehbar via Hash', color: '#8899AA', arrow: false },
               ].map((step) => (
                 <div key={step.node} className="flex items-start gap-2">
                   <div className="flex flex-col items-center">
@@ -153,28 +149,6 @@ export default function SecuritySlide() {
                     <span className="text-xs text-[#6677AA] ml-2">{step.desc}</span>
                   </div>
                 </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Security challenges */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.9 }}
-            className="card p-4"
-          >
-            <div className="text-xs font-mono text-[#445566] uppercase tracking-widest mb-2">Security-Härtung</div>
-            <div className="grid grid-cols-2 gap-1.5">
-              {[
-                '✓ Prompt-Injection-Tests',
-                '✓ Cache-Poisoning-Analyse',
-                '✓ OBD-Code Fuzzing',
-                '✓ Thread-Safety (10 Threads)',
-                '✓ KVTC-Frame-Injection',
-                '✓ MD5-Kollisions-Check',
-              ].map((item) => (
-                <div key={item} className="text-[11px] font-mono text-[#00C853]">{item}</div>
               ))}
             </div>
           </motion.div>

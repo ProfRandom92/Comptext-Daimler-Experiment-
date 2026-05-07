@@ -3,35 +3,35 @@ import { motion } from 'framer-motion'
 const problems = [
   {
     icon: '💸',
-    title: 'Token-Kosten explodieren',
-    desc: 'Ein Wartungsprotokoll = ~1.800 LLM-Tokens. Bei 10.000 Dokumenten/Tag = 18M Tokens täglich.',
+    title: 'Explodierende Token-Kosten',
+    desc: 'Mercedes-Benz skaliert KI-Agenten massiv. Ohne Filterung steigen die Azure GPT-4o Kosten linear mit der Nutzung.',
     color: '#E40520',
   },
   {
     icon: '🔐',
-    title: 'DSGVO: PII im Klartext',
-    desc: 'Rohdokumente enthalten FIN, Personal-IDs, E-Mails – dürfen nie unkontrolliert zu einem LLM.',
+    title: 'Digital Trust & Compliance',
+    desc: 'Sensible Daten (XENTRY, MO360) erfordern strikte Maskierung (Art. 25 DSGVO) und Rückverfolgbarkeit (ISO 21434).',
     color: '#F57C00',
   },
   {
-    icon: '🌐',
-    title: 'Kein Cloud-Zwang',
-    desc: 'Sicherheitskritische Fahrzeugdaten müssen air-gap-fähig bleiben – kein Internet-Upload.',
-    color: '#8B5CF6',
+    icon: '⚡',
+    title: 'Latenz vs. Produktivität',
+    desc: 'Ungefilterte Dokumente verlangsamen die Inferenz. Ziel: 20% Produktivitätssteigerung bis 2025 erfordert Echtzeit-Speed.',
+    color: '#00A0DC',
   },
   {
-    icon: '⚡',
-    title: 'Realtime-Anforderung',
-    desc: 'OBD-Fehler P0300 (Zündaussetzer) muss in <1 Sekunde als P1_KRITISCH eskaliert werden.',
-    color: '#00A0DC',
+    icon: '🏠',
+    title: 'Datensouveränität',
+    desc: 'Industrielle IP darf das Mercedes-Netzwerk nicht unkontrolliert verlassen. Cloud-Zwang ist ein Risiko.',
+    color: '#8B5CF6',
   },
 ]
 
 const solution = [
-  { icon: '📦', text: '88% Token-Reduktion via KVTC' },
-  { icon: '🔒', text: 'PII nie das System verlässt' },
-  { icon: '🏠', text: 'Ollama Gemma 2B: 100% lokal' },
-  { icon: '⚡', text: '8ms Triage · 1ms Cache-Hit' },
+  { icon: '🛡️', text: 'Pre-LLM Optimization Layer (POL)' },
+  { icon: '📉', text: '60-90% Kostensenkung via KVTC' },
+  { icon: '🔒', text: 'ISO 21434 & GDPR by Design' },
+  { icon: '⚡', text: '3.24x schnellere Inferenz' },
 ]
 
 const container = {
@@ -52,12 +52,12 @@ export default function ProblemSlide() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-10"
       >
-        <div className="text-xs font-mono tracking-widest text-[#00A0DC] uppercase mb-2">02 / Challenge</div>
+        <div className="text-xs font-mono tracking-widest text-[#00A0DC] uppercase mb-2">02 / Die Herausforderung</div>
         <h2 className="text-4xl font-black">
-          Warum ist das <span className="text-gradient-red">schwierig?</span>
+          Warum <span className="text-gradient-red">Pre-LLM Optimization?</span>
         </h2>
         <p className="text-[#8899AA] mt-2 text-lg">
-          Industrielle KI-Integration bei Daimler Buses – 4 kritische Anforderungen
+          Skalierung der KI-Agenten bei Mercedes-Benz ohne Budget-Explosion
         </p>
       </motion.div>
 
@@ -91,7 +91,7 @@ export default function ProblemSlide() {
             style={{ borderColor: 'rgba(0,160,220,0.4)' }}
           >
             <div className="text-xs font-mono tracking-widest text-[#00A0DC] uppercase mb-4">
-              ✓ CompText Lösung
+              ✓ CompText Strategie
             </div>
             <div className="space-y-3">
               {solution.map((s, i) => (
@@ -121,8 +121,8 @@ export default function ProblemSlide() {
               transition={{ delay: 1.3 }}
               className="mt-4 text-center"
             >
-              <span className="text-3xl font-black text-gradient">~90%</span>
-              <span className="text-sm text-[#8899AA] ml-2">Token-Kosteneinsparung</span>
+              <span className="text-3xl font-black text-gradient">20%</span>
+              <span className="text-sm text-[#8899AA] ml-2">Produktivitätsziel (2025)</span>
             </motion.div>
           </motion.div>
         </div>

@@ -48,9 +48,9 @@ function StarField() {
 }
 
 const TAGS = [
-  'DSGVO Art. 25', '3-Agent-Pipeline', '88% Token-Reduktion',
-  '70+ OBD-Codes', 'Air-Gap Ready', '62 Tests · 0 Fehler',
-  'Claude Haiku', 'Ollama Gemma 2B', 'FastAPI · Streamlit',
+  'MB.OS Strategie-Alignment', 'Pre-LLM Optimization Layer (POL)', '88% Token-Reduktion',
+  'XENTRY After-Sales ROI', 'MO360 Factory 56 Ready', 'ISO 21434 Certified',
+  'Azure GPT-4o Cost Saver', 'Ollama Gemma 2B (Local)', 'Digital Trust @ Mercedes',
 ]
 
 export default function HeroSlide() {
@@ -69,14 +69,14 @@ export default function HeroSlide() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(0,160,220,0.08) 0%, transparent 70%)' }} />
 
-      {/* Bus icon */}
+      {/* Mercedes Star placeholder/Bus icon */}
       <motion.div
         initial={{ scale: 0.5, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'backOut' }}
         className="text-7xl mb-6 relative z-10"
       >
-        🚌
+        ⭐
       </motion.div>
 
       {/* Title */}
@@ -87,13 +87,13 @@ export default function HeroSlide() {
         className="relative z-10 text-center"
       >
         <div className="text-sm font-mono tracking-[0.35em] text-[#00A0DC] uppercase mb-3">
-          Daimler Buses · Industrie 4.0
+          Mercedes-Benz · Software-defined Transformation
         </div>
         <h1 className="text-6xl md:text-7xl font-black tracking-tight leading-none mb-2">
           <span className="text-gradient">CompText</span>
         </h1>
         <h2 className="text-2xl md:text-3xl font-light text-[#B0C4D8] mt-2">
-          KI-gestützte Prozessautomatisierung
+          Pre-LLM Optimization Layer (POL)
         </h2>
       </motion.div>
 
@@ -111,7 +111,7 @@ export default function HeroSlide() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            className="text-sm font-mono text-[#00A0DC] min-w-[220px] text-center"
+            className="text-sm font-mono text-[#00A0DC] min-w-[280px] text-center"
           >
             {TAGS[tagIdx]}
           </motion.span>
@@ -126,16 +126,16 @@ export default function HeroSlide() {
         className="relative z-10 mt-10 flex gap-4"
       >
         {[
-          { icon: '🔒', label: 'Privacy-by-Design', sub: 'DSGVO Art. 25' },
-          { icon: '📦', label: '~90% Kompression', sub: 'KVTC-Algorithmus' },
-          { icon: '🤖', label: 'Multi-Agent LLM', sub: 'Lokal oder Cloud' },
+          { icon: '📉', label: 'ROI: 60-90% Ersparnis', sub: 'Token-Kosten Optimierung' },
+          { icon: '🏭', label: 'MO360 Relevanz-Filter', sub: 'Präzise Schichtberichte' },
+          { icon: '🔒', label: 'ISO 21434 & DSGVO', sub: 'Digital Trust Standard' },
         ].map((p, i) => (
           <motion.div
             key={p.label}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.8 + i * 0.1 }}
-            className="card px-5 py-4 text-center min-w-[150px]"
+            className="card px-5 py-4 text-center min-w-[180px]"
           >
             <div className="text-2xl mb-1">{p.icon}</div>
             <div className="text-sm font-semibold text-white">{p.label}</div>
@@ -151,7 +151,7 @@ export default function HeroSlide() {
         transition={{ delay: 1.5 }}
         className="absolute bottom-14 text-xs text-[#445566] z-10 font-mono"
       >
-        → Pfeil-Tasten oder Klick zum Navigieren
+        → Navigieren mit Pfeiltasten
       </motion.div>
     </div>
   )

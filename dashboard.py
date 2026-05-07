@@ -130,8 +130,8 @@ with st.sidebar:
 # Tabs
 # ---------------------------------------------------------------------------
 
-tab_analyse, tab_benchmark, tab_info = st.tabs(
-    ["📋 Dokument-Analyse", "📊 Benchmark", "ℹ️ Systeminfo"]
+tab_analyse, tab_szenarien, tab_benchmark, tab_info = st.tabs(
+    ["📋 Dokument-Analyse", "💡 Szenarien", "📊 Benchmark", "ℹ️ Systeminfo"]
 )
 
 # ---------------------------------------------------------------------------
@@ -246,7 +246,40 @@ with tab_analyse:
 # Tab: Benchmark
 # ---------------------------------------------------------------------------
 
-with tab_benchmark:
+# ---------------------------------------------------------------------------
+# Tab: Szenarien
+# ---------------------------------------------------------------------------
+
+with tab_szenarien:
+    st.header("Mercedes-Benz ROI Use Cases")
+    st.markdown("Visualisierung der strategischen Einordnung und Wertschöpfung.")
+
+    s1, s2 = st.columns(2)
+    with s1:
+        with st.expander("🔧 **XENTRY Diagnose-Logs**", expanded=True):
+            st.info("**After-Sales After-Hours Optimization**")
+            st.write("Reduktion von logs mit 10.000 Zeilen auf die relevanten 20 Zeilen "Fault State".")
+            st.success("**Impact:** Massive Token-Ersparnis und schnellere Inferenz bei der Fehleranalyse.")
+
+        with st.expander("📦 **Supply Chain Reporting**", expanded=True):
+            st.info("**Semantic De-Duplication**")
+            st.write("Bereinigung redundanter Lieferanten-Updates. Fokus auf Risiko-Abweichungen.")
+            st.success("**Impact:** Beschleunigte Risiko-Assessments für das Management.")
+
+    with s2:
+        with st.expander("🏭 **MO360 Produktion (Factory 56)**", expanded=True):
+            st.info("**Relevanzfilter für Schichtberichte**")
+            st.write("Filtert redundantes "Normalbetrieb-Rauschen" aus Berichten.")
+            st.success("**Impact:** Qualitätsingenieure erhalten präzise Fehleridentifikationen.")
+
+        with st.expander("📊 **Wirtschaftlicher Impact (KPIs)**", expanded=True):
+            st.write("🚀 **3.24x** schnellere Inferenz")
+            st.write("📉 **60-90%** Token-Kostensenkung")
+            st.write("🛡️ **ISO 21434** Cybersecurity Standard")
+            st.success("**Ziel:** 20% Produktivitätssteigerung bis 2025.")
+
+
+    with tab_benchmark:
     st.header("KVTC-Benchmark")
     st.markdown(
         "Simuliert Komprimierung über typische Daimler-Buses-Dokumente "
