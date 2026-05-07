@@ -24,7 +24,10 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt ruff
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install ruff pytest-cov
 
       - name: Lint (ruff)
         run: ruff check src/ tests/ api.py config.py
