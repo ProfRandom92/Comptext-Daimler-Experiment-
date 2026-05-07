@@ -41,3 +41,14 @@ Production reliability is ensured through:
 - **n8n Fallback Logic**: Automated error handling in orchestration (e.g., Slack alerts on API timeout).
 - **Health Monitoring**: Real-time stats via the `/stats` and `/health` endpoints, tracking uptime and token throughput.
 - **Edge-Ready Design**: Designed for low-latency deployment in local data centers or Frankfurt-region cloud nodes.
+
+## Proof-of-Value Scenarios
+
+For detailed visualizations of the Kernel's impact, refer to [SCENARIOS.md](./SCENARIOS.md).
+- **Token Reduction**: Scales to 90% for large industrial logs.
+- **Privacy**: Automated masking of FIN and P-Numbers (DSGVO).
+- **Security**: Sequence diagram of the cryptographic Audit-Trail.
+- **Performance**: Latency benchmarks for Edge vs. Cloud.
+
+---
+*Ready for Call: System online, v0.3.0 verified, visualizations prepared.*
