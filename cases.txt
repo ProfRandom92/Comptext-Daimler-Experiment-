@@ -1,0 +1,15 @@
+Wartungsprotokoll
+Fahrzeug: Daimler Truck Actros
+FIN: WDB9630011L123456
+Datum: 2026-05-07
+Kilometerstand: 125000
+Fehler: P0300
+Techniker: PERS_12345
+[HEADER]
+SOP-123: Bremsenprüfung
+[MIDDLE]
+Historie 2024: OK
+Historie 2023: OK
+Historie 2022: OK
+[WINDOW]
+Aktueller Befund: Beläge verschlissen.
