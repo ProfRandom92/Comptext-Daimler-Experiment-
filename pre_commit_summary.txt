@@ -1,7 +1,6 @@
-Final cleanup for PR #23 completed:
-1. Fixed numbering in README.md.
-2. Verified React UI terminology in README.md and PROJECT_WIKI.md.
-3. Updated CORS configuration in api.py and src/api/main.py to strictly expect the production Render frontend URL and local React development URLs.
-4. Purged all medical domain references (MedGemma, clinical datasets, etc.) from SETUP_GUIDE.md, CHANGELOG.md, agent files, API files, core files, and README.md.
-5. Updated Makefile to support the React frontend (npm run dev/start).
-6. Ran 'make format', 'make lint', and 'make test' with all tests passing successfully.
+Resolved PR comments:
+1. Fixed numbering in 'Bekannte Limitations' section of README.md.
+2. Updated ALLOWED_ORIGINS default in api.py to use React's default port 3000 instead of Streamlit's 8501.
+3. Updated Makefile's dev target to correctly point to dev-api.
+4. Verified that ALLOWED_ORIGINS points to the expected React frontend locations.
+5. Removed src/api/main.py completely as it contained legacy medical domain code and was a duplicate entry point.

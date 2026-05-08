@@ -71,7 +71,7 @@ clean: ## Remove build artifacts and caches
 
 dev: ## Run in development mode (Mock LLM, debug logging)
 	@echo "$(BLUE)Starting development server...$(NC)"
-	cd showcase && npm install && npm run dev
+	$(MAKE) dev-api
 
 dev-api: ## Run FastAPI dev server (auto-reload)
 	@echo "$(BLUE)Starting API development server...$(NC)"
