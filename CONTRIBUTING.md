@@ -118,7 +118,7 @@ main (Production-Ready)
    - Implement X functionality
    - Improve Y performance
    - Fix Z edge case
-   
+
    Closes #123"
    ```
 
@@ -224,16 +224,16 @@ from dataclasses import dataclass
 @dataclass
 class Example:
     """Description of this class."""
-    
+
     value: int
-    
+
     def process(self, input_data: str) -> dict[str, Any]:
         """
         Brief description.
-        
+
         Args:
             input_data: Description
-            
+
         Returns:
             Dictionary with results
         """
@@ -264,12 +264,12 @@ class TestMyFeature:
         """Test X works correctly."""
         obj = MyClass()
         assert obj.method() == expected
-    
+
     def test_edge_case_empty_input(self):
         """Test handling of empty input."""
         obj = MyClass()
         assert obj.method("") == expected
-    
+
     def test_error_handling(self):
         """Test error cases."""
         obj = MyClass()
@@ -312,13 +312,13 @@ Schreib eine Private E-Mail zu: **security@example.com**
    def analyze(self, document: str) -> AnalysisResult:
        """
        Analyze document with 3-agent pipeline.
-       
+
        Args:
            document: Raw text to analyze
-           
+
        Returns:
            AnalysisResult with priority and recommendations
-           
+
        Raises:
            ValueError: If document is empty
        """

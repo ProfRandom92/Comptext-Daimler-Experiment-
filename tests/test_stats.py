@@ -4,6 +4,7 @@ from api import app
 
 client = TestClient(app)
 
+
 def test_stats_endpoint():
     response = client.get("/stats")
     assert response.status_code == 200
@@ -12,6 +13,7 @@ def test_stats_endpoint():
     assert "processed_compressed_bytes" in data
     assert "cache_hit_rate" in data
     assert data["version"] == "0.3.0"
+
 
 def test_processed_bytes_increment():
     # Initial stats

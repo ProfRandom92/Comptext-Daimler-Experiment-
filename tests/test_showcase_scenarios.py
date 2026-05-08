@@ -2,7 +2,7 @@ import os
 import sys
 
 # Add root to sys.path to import src and showcase
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from showcase.mo360_shift_filter import extract_deviations
 from showcase.supply_chain_dedup import semantic_dedup
@@ -31,6 +31,7 @@ def test_xentry_optimizer_determinism():
 
     assert res1.checksum == res2.checksum
 
+
 def test_mo360_shift_filter_determinism():
     sample_report = (
         "Schichtbericht - Factory 56\n"
@@ -52,11 +53,12 @@ def test_mo360_shift_filter_determinism():
 
     assert res1.checksum == res2.checksum
 
+
 def test_supply_chain_dedup_determinism():
     updates = [
         "Update 08:00: Alle Teile im Zulauf.",
         "Update 09:00: Alle Teile im Zulauf.",
-        "Update 10:00: Verzögerung bei Halbleitern."
+        "Update 10:00: Verzögerung bei Halbleitern.",
     ]
 
     dedup1 = semantic_dedup(updates)

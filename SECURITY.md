@@ -62,7 +62,7 @@ Hallo,
 
 ich habe eine Prompt-Injection-Anfälligkeit in der analysis_agent.py gefunden:
 
-Der _build_prompt() Methode sanitisiert KVTC-Frames nicht ausreichend, 
+Der _build_prompt() Methode sanitisiert KVTC-Frames nicht ausreichend,
 was es ermöglicht, System-Prompts zu überschreiben.
 
 Auswirkung: Ein Angreifer könnte das LLM-Verhalten ändern.
@@ -205,5 +205,5 @@ Vor jedem Release durchführen:
 
 ---
 
-**Zuletzt aktualisiert**: 2026-04-23  
+**Zuletzt aktualisiert**: 2026-04-23
 **Status**: ✅ Production-Ready

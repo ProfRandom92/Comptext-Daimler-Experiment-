@@ -1,6 +1,6 @@
 # CompText × Daimler – Integration Status Report
-**Generated:** 2026-05-08T04:50:00Z  
-**Version:** v0.3.0 – Industrial Showcase  
+**Generated:** 2026-05-08T04:50:00Z
+**Version:** v0.3.0 – Industrial Showcase
 **Author:** Alexander Kölnberger | AI/LLM Engineer
 
 ---
@@ -25,12 +25,12 @@
 |---|---|---|---|
 | CompText × Daimler – Industrial Showcase v4 | `dZ6IxTcCtaYGyw7Q` | ✅ Published | 40, 41, 42 |
 
-**Webhook URL (Production):**  
+**Webhook URL (Production):**
 `https://alexanderkoelnberger.app.n8n.cloud/webhook/comptext-Demo`
 
 **Szenarien getestet:**
 - ✅ Execution #40 – Xentry Diagnostic Log Compression
-- ✅ Execution #41 – MO360 Shift Report Filter  
+- ✅ Execution #41 – MO360 Shift Report Filter
 - ✅ Execution #42 – Supply Chain Deduplication
 
 ### n8n Response Schema (Standard)

@@ -48,17 +48,17 @@ class KVTCResult:
 
 
 # Module-level compiled patterns (fix: was re-compiled per call in _classify_type)
-_OBD_PATTERN    = re.compile(r"\b[PBCU]\d{4}\b")
-_SAP_PATTERN    = re.compile(r"\b\d{7,10}\b")
-_FIN_FRAGMENT   = re.compile(r"\b[A-Z]{3}\d{6,8}\b")
-_DATE_PATTERN   = re.compile(r"\d{2}[.\-/]\d{2}[.\-/]\d{2,4}")
-_KV_PAIR        = re.compile(r"([\w\s]{2,30})\s*[:=]\s*(\S[^\n]*)")
+_OBD_PATTERN = re.compile(r"\b[PBCU]\d{4}\b")
+_SAP_PATTERN = re.compile(r"\b\d{7,10}\b")
+_FIN_FRAGMENT = re.compile(r"\b[A-Z]{3}\d{6,8}\b")
+_DATE_PATTERN = re.compile(r"\d{2}[.\-/]\d{2}[.\-/]\d{2,4}")
+_KV_PAIR = re.compile(r"([\w\s]{2,30})\s*[:=]\s*(\S[^\n]*)")
 _NUMBER_PATTERN = re.compile(r"\b\d+[\.,]?\d*\b")
-_NUMERIC_VALUE  = re.compile(r"^[\d.,\s]+$")
+_NUMERIC_VALUE = re.compile(r"^[\d.,\s]+$")
 
 
 class IndustrialKVTCStrategy:
-    _CHARS_PER_TOKEN  = 4
+    _CHARS_PER_TOKEN = 4
     _MIDDLE_KEEP_RATIO = 0.25
 
     def __init__(self, header_lines: int = 10, window_lines: int = 15) -> None:
@@ -80,9 +80,7 @@ class IndustrialKVTCStrategy:
         }
 
         full_compressed = "\n\n".join(
-            f"[{zone.upper()}]\n{content}"
-            for zone, content in zones.items()
-            if content.strip()
+            f"[{zone.upper()}]\n{content}" for zone, content in zones.items() if content.strip()
         )
 
         frame = self._serialize_frame(self._extract_kvtc(full_compressed), context_metadata or {})
@@ -114,11 +112,7 @@ class IndustrialKVTCStrategy:
             values.append(v)
             types.append(self._classify_type(v))
 
-        codes = (
-            _OBD_PATTERN.findall(text)
-            + _SAP_PATTERN.findall(text)
-            + _FIN_FRAGMENT.findall(text)
-        )
+        codes = _OBD_PATTERN.findall(text) + _SAP_PATTERN.findall(text) + _FIN_FRAGMENT.findall(text)
 
         return {
             "K": list(dict.fromkeys(keys)),
@@ -179,10 +173,10 @@ class IndustrialKVTCStrategy:
             return 0.0
         score = (
             len(_NUMBER_PATTERN.findall(line)) * 2.0
-            + len(_OBD_PATTERN.findall(line))  * 4.0
-            + len(_SAP_PATTERN.findall(line))  * 3.0
-            + len(_KV_PAIR.findall(line))       * 1.5
-            + len(_DATE_PATTERN.findall(line))  * 2.0
+            + len(_OBD_PATTERN.findall(line)) * 4.0
+            + len(_SAP_PATTERN.findall(line)) * 3.0
+            + len(_KV_PAIR.findall(line)) * 1.5
+            + len(_DATE_PATTERN.findall(line)) * 2.0
         )
         return score * 0.5 if len(stripped) < 10 else score
 
@@ -208,7 +202,9 @@ def run_benchmark(test_cases: list[dict[str, str]]) -> dict[str, Any]:
     count = len(results)
     return {
         "cases": results,
-        "avg_token_reduction_pct": round(sum(r["reduction_pct"] for r in results) / count, 2) if count else 0,
+        "avg_token_reduction_pct": (
+            round(sum(r["reduction_pct"] for r in results) / count, 2) if count else 0
+        ),
         "avg_latency_ms": round(sum(r["latency_ms"] for r in results) / count, 3) if count else 0,
         "total_cases": count,
     }

@@ -13,37 +13,37 @@ from typing import Any
 class ProcessPriority(StrEnum):
     P1_KRITISCH = "P1_KRITISCH"  # Sicherheitsrelevant / Produktionsstopp
     P2_DRINGEND = "P2_DRINGEND"  # Qualitätsproblem / Wartung überfällig
-    P3_ROUTINE  = "P3_ROUTINE"   # Planmäßige Wartung / Dokumentation
+    P3_ROUTINE = "P3_ROUTINE"  # Planmäßige Wartung / Dokumentation
 
 
 class DocumentType(StrEnum):
-    WARTUNGSPROTOKOLL  = "WARTUNGSPROTOKOLL"
-    OBD_FEHLERCODE     = "OBD_FEHLERCODE"
-    QA_PRUEFBERICHT    = "QA_PRUEFBERICHT"
+    WARTUNGSPROTOKOLL = "WARTUNGSPROTOKOLL"
+    OBD_FEHLERCODE = "OBD_FEHLERCODE"
+    QA_PRUEFBERICHT = "QA_PRUEFBERICHT"
     PRODUKTIONSAUFTRAG = "PRODUKTIONSAUFTRAG"
-    LIEFERSCHEIN       = "LIEFERSCHEIN"
-    ARBEITSPLAN        = "ARBEITSPLAN"
-    FREITEXT           = "FREITEXT"
+    LIEFERSCHEIN = "LIEFERSCHEIN"
+    ARBEITSPLAN = "ARBEITSPLAN"
+    FREITEXT = "FREITEXT"
 
 
 class FahrzeugStatus(StrEnum):
-    IN_BETRIEB     = "IN_BETRIEB"
-    IN_WERKSTATT   = "IN_WERKSTATT"
+    IN_BETRIEB = "IN_BETRIEB"
+    IN_WERKSTATT = "IN_WERKSTATT"
     AUSSER_BETRIEB = "AUSSER_BETRIEB"
-    NEUPRODUKTION  = "NEUPRODUKTION"
+    NEUPRODUKTION = "NEUPRODUKTION"
 
 
 class QABewertung(StrEnum):
-    OK         = "OK"
+    OK = "OK"
     NACHARBEIT = "NACHARBEIT"
-    SPERRUNG   = "SPERRUNG"
+    SPERRUNG = "SPERRUNG"
 
 
 class ProduktionsStatus(StrEnum):
-    OFFEN         = "OFFEN"
-    IN_ARBEIT     = "IN_ARBEIT"
+    OFFEN = "OFFEN"
+    IN_ARBEIT = "IN_ARBEIT"
     ABGESCHLOSSEN = "ABGESCHLOSSEN"
-    GESPERRT      = "GESPERRT"
+    GESPERRT = "GESPERRT"
 
 
 @dataclass

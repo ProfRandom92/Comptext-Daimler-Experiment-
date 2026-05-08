@@ -11,14 +11,29 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 
 import requests
+from opentelemetry import trace
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 from src.utils.logging import get_logger
 
 log = get_logger("comptext.telemetry")
 
-_TINYBIRD_URL  = "https://api.tinybird.co/v0/events"
+_TINYBIRD_URL = "https://eu.tinybird.co/v0/events"
 _TINYBIRD_TOKEN = os.getenv("TINYBIRD_TOKEN", "")
-_TIMEOUT_SEC   = 2.0
+_OTEL_EXPORTER_OTLP_ENDPOINT = os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "")
+_TIMEOUT_SEC = 2.0
+
+# Initialize OpenTelemetry
+if _OTEL_EXPORTER_OTLP_ENDPOINT:
+    provider = TracerProvider()
+    processor = BatchSpanProcessor(OTLPSpanExporter(endpoint=_OTEL_EXPORTER_OTLP_ENDPOINT))
+    provider.add_span_processor(processor)
+    trace.set_tracer_provider(provider)
+    otel_tracer = trace.get_tracer(__name__)
+else:
+    otel_tracer = None
 
 
 class TinybirdTracker:
@@ -26,8 +41,8 @@ class TinybirdTracker:
 
     def __init__(self, datasource: str = "comptext_metrics") -> None:
         self._datasource = datasource
-        self._enabled    = bool(_TINYBIRD_TOKEN)
-        self._executor   = ThreadPoolExecutor(max_workers=4)
+        self._enabled = bool(_TINYBIRD_TOKEN)
+        self._executor = ThreadPoolExecutor(max_workers=4)
         if not self._enabled:
             log.info("TinybirdTracker disabled – TINYBIRD_TOKEN not set")
 
@@ -48,12 +63,12 @@ class TinybirdTracker:
             return False
 
         payload: dict[str, Any] = {
-            "endpoint":           endpoint,
-            "original_tokens":    original_tokens,
-            "compressed_tokens":  compressed_tokens,
+            "endpoint": endpoint,
+            "original_tokens": original_tokens,
+            "compressed_tokens": compressed_tokens,
             "savings_percentage": round(savings_percentage, 4),
-            "latency_ms":         round(latency_ms, 2),
-            "timestamp":          int(time.time() * 1000),
+            "latency_ms": round(latency_ms, 2),
+            "timestamp": int(time.time() * 1000),
         }
         if extra:
             # Sanitise: never forward raw text or PII fields

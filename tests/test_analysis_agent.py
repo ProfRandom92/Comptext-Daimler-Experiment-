@@ -10,8 +10,8 @@ from src.models.schemas import ProcessPriority
 
 @pytest.fixture
 def pipeline():
-    intake   = IntakeAgent()
-    triage   = TriageAgent()
+    intake = IntakeAgent()
+    triage = TriageAgent()
     analysis = AnalysisAgent(AnalysisConfig(backend=ModelBackend.MOCK))
     return intake, triage, analysis
 

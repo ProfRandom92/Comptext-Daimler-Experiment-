@@ -16,12 +16,12 @@ from typing import Any
 class _JsonFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         payload: dict[str, Any] = {
-            "ts":      datetime.now(UTC).isoformat(),
-            "level":   record.levelname,
-            "logger":  record.name,
-            "msg":     record.getMessage(),
-            "module":  record.module,
-            "line":    record.lineno,
+            "ts": datetime.now(UTC).isoformat(),
+            "level": record.levelname,
+            "logger": record.name,
+            "msg": record.getMessage(),
+            "module": record.module,
+            "line": record.lineno,
         }
         if record.exc_info:
             payload["exc"] = self.formatException(record.exc_info)
@@ -37,9 +37,11 @@ def get_logger(name: str) -> logging.Logger:
 
     handler = logging.StreamHandler(sys.stdout)
     fmt = os.getenv("LOG_FORMAT", "json")
-    handler.setFormatter(_JsonFormatter() if fmt == "json" else logging.Formatter(
-        "%(asctime)s [%(levelname)s] %(name)s – %(message)s"
-    ))
+    handler.setFormatter(
+        _JsonFormatter()
+        if fmt == "json"
+        else logging.Formatter("%(asctime)s [%(levelname)s] %(name)s – %(message)s")
+    )
 
     level = os.getenv("LOG_LEVEL", "INFO").upper()
     logger.setLevel(getattr(logging, level, logging.INFO))

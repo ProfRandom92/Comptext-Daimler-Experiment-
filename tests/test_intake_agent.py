@@ -59,7 +59,7 @@ def test_detect_freitext(agent):
 
 
 def test_kvtc_result_present(agent):
-    text = "\n".join([f"Eintrag {i}: Kilometerstand {i*1000}" for i in range(20)])
+    text = "\n".join([f"Eintrag {i}: Kilometerstand {i * 1000}" for i in range(20)])
     result = agent.process(text)
     assert result.kvtc.original_tokens > 0
     assert result.kvtc.checksum

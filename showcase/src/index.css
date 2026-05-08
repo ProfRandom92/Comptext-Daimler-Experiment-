@@ -2,14 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'MB Corpo S Text Web';
+  src: local('Inter'), local('Segoe UI');
+}
+@font-face {
+  font-family: 'MB Corpo A Title Cond Web';
+  src: local('Inter'), local('Segoe UI');
+}
+
 :root {
   --c-bg: #080C14;
   --c-navy: #0D1526;
   --c-card: #111827;
-  --c-blue: #00A0DC;
+  --c-blue: #0067B1;
   --c-blue-dim: rgba(0, 160, 220, 0.15);
   --c-red: #E40520;
-  --c-orange: #F57C00;
+  --c-orange: #E66000;
   --c-green: #00C853;
   --c-text: #F0F4F8;
   --c-muted: #8899AA;
@@ -28,7 +37,7 @@ html, body, #root {
   overflow: hidden;
   background: var(--c-bg);
   color: var(--c-text);
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'MB Corpo S Text Web', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -42,16 +51,16 @@ html, body, #root {
 
 /* Glow effects */
 .glow-blue {
-  box-shadow: 0 0 20px rgba(0, 160, 220, 0.4), 0 0 60px rgba(0, 160, 220, 0.15);
+  box-shadow: 0 0 16px rgba(0, 103, 177, 0.4), 0 0 64px rgba(0, 103, 177, 0.15);
 }
 .glow-red {
-  box-shadow: 0 0 20px rgba(228, 5, 32, 0.5), 0 0 60px rgba(228, 5, 32, 0.2);
+  box-shadow: 0 0 16px rgba(228, 5, 32, 0.5), 0 0 64px rgba(228, 5, 32, 0.2);
 }
 .glow-green {
-  box-shadow: 0 0 20px rgba(0, 200, 83, 0.4), 0 0 60px rgba(0, 200, 83, 0.15);
+  box-shadow: 0 0 16px rgba(0, 200, 83, 0.4), 0 0 64px rgba(0, 200, 83, 0.15);
 }
 .glow-orange {
-  box-shadow: 0 0 20px rgba(245, 124, 0, 0.4), 0 0 60px rgba(245, 124, 0, 0.15);
+  box-shadow: 0 0 16px rgba(230, 96, 0, 0.4), 0 0 64px rgba(230, 96, 0, 0.15);
 }
 
 /* Text gradient */
@@ -72,14 +81,14 @@ html, body, #root {
 .card {
   background: var(--c-card);
   border: 1px solid var(--c-border);
-  border-radius: 12px;
+  border-radius: 8px;
 }
 
 /* Slide navigation dots */
 .dot {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
+  border-radius: 8px;
   background: rgba(255,255,255,0.25);
   transition: all 0.3s ease;
   cursor: pointer;
@@ -88,7 +97,7 @@ html, body, #root {
   background: var(--c-blue);
   box-shadow: 0 0 8px rgba(0,160,220,0.8);
   width: 24px;
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 /* Scrollbar hide */
@@ -127,7 +136,7 @@ canvas.particles {
   position: absolute;
   width: 8px;
   height: 8px;
-  border-radius: 50%;
+  border-radius: 8px;
   background: var(--c-blue);
   box-shadow: 0 0 8px var(--c-blue);
   animation: flow-down 1.8s ease-in-out infinite;
@@ -158,4 +167,21 @@ canvas.particles {
 @keyframes count-up {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+.primary {
+  background-color: var(--c-blue);
+  color: white;
+}
+.primary.darken-3 {
+  background-color: #004d80;
+  color: white;
+}
+.secondary {
+  background-color: var(--c-orange);
+  color: white;
+}
+
+h1, h2, h3, h4, h5, h6, .title-font {
+  font-family: 'MB Corpo A Title Cond Web', system-ui, sans-serif;
 }
