@@ -67,7 +67,7 @@ def main():
     result = strategy.compress(structured_deviations)
     duration = (time.perf_counter() - start_time) * 1000
 
-    orig_tokens = strategy._estimate_tokens(raw_report)
+    orig_tokens = strategy.estimate_tokens(raw_report)
 
     print(f"Original Report Tokens: {orig_tokens}")
     print(f"Compressed Tokens:      {result.compressed_tokens}")
