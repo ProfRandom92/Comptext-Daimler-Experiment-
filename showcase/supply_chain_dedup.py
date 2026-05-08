@@ -1,22 +1,24 @@
-import sys
-import os
-import time
 import hashlib
+import os
 import re
+import sys
+import time
 
 # Add root to sys.path to import src
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from src.core.kvtc import IndustrialKVTCStrategy
+
 
 def get_supplier_updates():
     return [
         "Update 08:00: Alle Teile im Zulauf. Keine Verzögerungen erwartet.",
-        "Update 09:00: Alle Teile im Zulauf. Keine Verzögerungen erwartet.", # Exact content duplicate
+        "Update 09:00: Alle Teile im Zulauf. Keine Verzögerungen erwartet.",  # Exact content duplicate
         "Update 10:00: Verzögerung bei Halbleitern (Region APAC). Neues Risiko identifiziert.",
-        "Update 11:00: Verzögerung bei Halbleitern (Region APAC). Status unverändert.", # Semantic redundant
-        "Update 12:00: Logistik-Streik in Hafen angekündigt. ETA +48h für Container C-12."
+        "Update 11:00: Verzögerung bei Halbleitern (Region APAC). Status unverändert.",  # Semantic redundant
+        "Update 12:00: Logistik-Streik in Hafen angekündigt. ETA +48h für Container C-12.",
     ]
+
 
 def semantic_dedup(updates):
     seen_hashes = set()
@@ -27,7 +29,7 @@ def semantic_dedup(updates):
         # We find the index after the first HH:MM:
         match = re.search(r"\d{2}:\d{2}: ", update)
         if match:
-            content = update[match.end():].strip()
+            content = update[match.end() :].strip()
         else:
             content = update.strip()
 
@@ -43,10 +45,11 @@ def semantic_dedup(updates):
 
     return unique_updates
 
+
 def main():
-    print("="*60)
+    print("=" * 60)
     print("CASE 3: SUPPLY CHAIN DEDUPLICATOR")
-    print("="*60)
+    print("=" * 60)
 
     updates = get_supplier_updates()
     raw_text = "\n".join(updates)
@@ -77,7 +80,8 @@ def main():
     print("-" * 60)
     print("OPTIMIZED KVTC FRAME:")
     print(result.frame)
-    print("="*60 + "\n")
+    print("=" * 60 + "\n")
+
 
 if __name__ == "__main__":
     main()

@@ -4,6 +4,10 @@ services:
     runtime: docker
     region: frankfurt
     plan: free
+    disk:
+      name: cache
+      mountPath: /cache
+      sizeGB: 10
     envVars:
       - key: LLM_BACKEND
         value: mock

@@ -25,36 +25,36 @@ from src.models.schemas import DocumentType, EingabeDokument, ProcessPriority
 
 # P1: Sicherheitskritisch / sofortiger Handlungsbedarf
 _P1_PATTERNS = [
-    re.compile(r"\bBremsenausfall|Bremsversagen|Bremsanlage\s+defekt\b",        re.I),
-    re.compile(r"\bLenkungsausfall|Lenkung\s+defekt\b",                         re.I),
-    re.compile(r"\bFahrzeugbrand|Brand|Feuer\b",                                re.I),
-    re.compile(r"\bProduktionsstopp|Bandstillstand|Linienstopp\b",              re.I),
-    re.compile(r"\bSicherheitsrelevant|safety.critical|sicherheitskritisch\b",  re.I),
-    re.compile(r"\bUnfall|Kollision|Personenschaden\b",                         re.I),
-    re.compile(r"\bSperrung\b",                                                 re.I),  # QA-Sperrung
-    re.compile(r"\bP0300|P0301|P0302|P0303|P0304\b"),                          # Mehrfachzündaussetzer
-    re.compile(r"\bU0100|U0073\b"),                                             # CAN-Bus-Ausfall
-    re.compile(r"\bAirbag\s+defekt|SRS\s+Fehler\b",                            re.I),
-    re.compile(r"\bKühlmittelaustritt|Überhitzung\b",                          re.I),
+    re.compile(r"\bBremsenausfall|Bremsversagen|Bremsanlage\s+defekt\b", re.I),
+    re.compile(r"\bLenkungsausfall|Lenkung\s+defekt\b", re.I),
+    re.compile(r"\bFahrzeugbrand|Brand|Feuer\b", re.I),
+    re.compile(r"\bProduktionsstopp|Bandstillstand|Linienstopp\b", re.I),
+    re.compile(r"\bSicherheitsrelevant|safety.critical|sicherheitskritisch\b", re.I),
+    re.compile(r"\bUnfall|Kollision|Personenschaden\b", re.I),
+    re.compile(r"\bSperrung\b", re.I),  # QA-Sperrung
+    re.compile(r"\bP0300|P0301|P0302|P0303|P0304\b"),  # Mehrfachzündaussetzer
+    re.compile(r"\bU0100|U0073\b"),  # CAN-Bus-Ausfall
+    re.compile(r"\bAirbag\s+defekt|SRS\s+Fehler\b", re.I),
+    re.compile(r"\bKühlmittelaustritt|Überhitzung\b", re.I),
 ]
 
 # P2: Dringend, baldige Maßnahme erforderlich
 _P2_PATTERNS = [
-    re.compile(r"\bÜberfällig|überfällig|Fälligkeit\s+überschritten\b",        re.I),
-    re.compile(r"\bQualitätsmangel|Nacharbeit\s+erforderlich\b",                re.I),
-    re.compile(r"\bTeileengpass|Materialengpass|Fehlteile\b",                   re.I),
-    re.compile(r"\bReifenverschleiß|Verschleiß\s+kritisch\b",                  re.I),
-    re.compile(r"\bMotorwarnleuchte|MIL\s+an\b",                               re.I),
-    re.compile(r"\bKupplungsverschleiß|Kupplungsschlupf\b",                    re.I),
-    re.compile(r"\bGetriebefehler|Getriebeöl\s+alt\b",                        re.I),
-    re.compile(r"\bP0171|P0172|P0420|P0440\b"),                                # Emissionen/Katalysator
-    re.compile(r"\bRückruf|Recall\b",                                          re.I),
-    re.compile(r"\b(Takt|Zykluszeit)\s+(überschritten|\+\d+%)\b",              re.I),
+    re.compile(r"\bÜberfällig|überfällig|Fälligkeit\s+überschritten\b", re.I),
+    re.compile(r"\bQualitätsmangel|Nacharbeit\s+erforderlich\b", re.I),
+    re.compile(r"\bTeileengpass|Materialengpass|Fehlteile\b", re.I),
+    re.compile(r"\bReifenverschleiß|Verschleiß\s+kritisch\b", re.I),
+    re.compile(r"\bMotorwarnleuchte|MIL\s+an\b", re.I),
+    re.compile(r"\bKupplungsverschleiß|Kupplungsschlupf\b", re.I),
+    re.compile(r"\bGetriebefehler|Getriebeöl\s+alt\b", re.I),
+    re.compile(r"\bP0171|P0172|P0420|P0440\b"),  # Emissionen/Katalysator
+    re.compile(r"\bRückruf|Recall\b", re.I),
+    re.compile(r"\b(Takt|Zykluszeit)\s+(überschritten|\+\d+%)\b", re.I),
 ]
 
 # Kilometerstand-basierte Eskalation
 _KM_UEBERFAELLIG = re.compile(r"Kilometerstand\s*[:\s]+([\d.,]+)", re.I)
-_SERVICE_FAELLIG  = re.compile(r"nächster\s+Service\s*[:\s]+([\d.,]+)\s*km", re.I)
+_SERVICE_FAELLIG = re.compile(r"nächster\s+Service\s*[:\s]+([\d.,]+)\s*km", re.I)
 
 
 @dataclass
@@ -124,12 +124,12 @@ class TriageAgent:
     # ------------------------------------------------------------------
 
     def _check_km_faelligkeit(self, text: str) -> str | None:
-        km_match      = _KM_UEBERFAELLIG.search(text)
+        km_match = _KM_UEBERFAELLIG.search(text)
         service_match = _SERVICE_FAELLIG.search(text)
 
         if km_match and service_match:
-            km_aktuell  = int(km_match.group(1).replace(".", "").replace(",", ""))
-            km_faellig  = int(service_match.group(1).replace(".", "").replace(",", ""))
+            km_aktuell = int(km_match.group(1).replace(".", "").replace(",", ""))
+            km_faellig = int(service_match.group(1).replace(".", "").replace(",", ""))
             if km_aktuell > km_faellig:
                 ueberzug = km_aktuell - km_faellig
                 return f"Service überfällig um {ueberzug:,} km"
@@ -137,12 +137,12 @@ class TriageAgent:
 
     def _type_based_priority(self, doc_type: DocumentType) -> ProcessPriority:
         mapping = {
-            DocumentType.OBD_FEHLERCODE:     ProcessPriority.P2_DRINGEND,
-            DocumentType.QA_PRUEFBERICHT:    ProcessPriority.P2_DRINGEND,
-            DocumentType.WARTUNGSPROTOKOLL:  ProcessPriority.P3_ROUTINE,
+            DocumentType.OBD_FEHLERCODE: ProcessPriority.P2_DRINGEND,
+            DocumentType.QA_PRUEFBERICHT: ProcessPriority.P2_DRINGEND,
+            DocumentType.WARTUNGSPROTOKOLL: ProcessPriority.P3_ROUTINE,
             DocumentType.PRODUKTIONSAUFTRAG: ProcessPriority.P3_ROUTINE,
-            DocumentType.LIEFERSCHEIN:       ProcessPriority.P3_ROUTINE,
-            DocumentType.ARBEITSPLAN:        ProcessPriority.P3_ROUTINE,
-            DocumentType.FREITEXT:           ProcessPriority.P3_ROUTINE,
+            DocumentType.LIEFERSCHEIN: ProcessPriority.P3_ROUTINE,
+            DocumentType.ARBEITSPLAN: ProcessPriority.P3_ROUTINE,
+            DocumentType.FREITEXT: ProcessPriority.P3_ROUTINE,
         }
         return mapping.get(doc_type, ProcessPriority.P3_ROUTINE)

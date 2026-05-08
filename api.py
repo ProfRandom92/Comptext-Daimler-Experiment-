@@ -24,7 +24,9 @@ import time
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 # Showcase modules (root-level scripts – add parent to sys.path)
@@ -45,7 +47,7 @@ from src.utils.logging import get_logger
 
 log = get_logger("comptext.api")
 
-START_TIME                 = time.time()
+START_TIME = time.time()
 PROCESSED_COMPRESSED_BYTES = 0
 
 app = FastAPI(
@@ -59,6 +61,12 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    return JSONResponse(status_code=400, content={"detail": exc.errors(), "body": exc.body})
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -70,13 +78,11 @@ app.add_middleware(
 # Singleton agents + cache
 # ---------------------------------------------------------------------------
 
-_strategy      = IndustrialKVTCStrategy(
-    DEFAULT_CONFIG.kvtc_header_lines, DEFAULT_CONFIG.kvtc_window_lines
-)
-_intake        = IntakeAgent(_strategy)
-_triage        = TriageAgent()
-_result_cache  = AnalysisResultCache(max_size=int(os.getenv("CACHE_MAX_SIZE", "256")))
-_analysis      = AnalysisAgent(DEFAULT_CONFIG.analysis, cache=_result_cache)
+_strategy = IndustrialKVTCStrategy(DEFAULT_CONFIG.kvtc_header_lines, DEFAULT_CONFIG.kvtc_window_lines)
+_intake = IntakeAgent(_strategy)
+_triage = TriageAgent()
+_result_cache = AnalysisResultCache(max_size=int(os.getenv("CACHE_MAX_SIZE", "256")))
+_analysis = AnalysisAgent(DEFAULT_CONFIG.analysis, cache=_result_cache)
 
 
 # ---------------------------------------------------------------------------
@@ -84,15 +90,20 @@ _analysis      = AnalysisAgent(DEFAULT_CONFIG.analysis, cache=_result_cache)
 # {"status": "success", "data": {...}, "metrics": {"original": int, "compressed": int, "savings": float}}
 # ---------------------------------------------------------------------------
 
+
 def _n8n_success(data: dict[str, Any], original: int, compressed: int) -> dict[str, Any]:
+    import base64
+
     savings = round((1 - compressed / original) * 100, 4) if original > 0 else 0.0
+    next_cursor = base64.b64encode(b"end_of_data").decode("utf-8")
     return {
-        "status":  "success",
-        "data":    data,
+        "status": "success",
+        "data": data,
+        "nextCursor": next_cursor,
         "metrics": {
-            "original":   original,
+            "original": original,
             "compressed": compressed,
-            "savings":    savings,
+            "savings": savings,
         },
     }
 
@@ -100,12 +111,12 @@ def _n8n_success(data: dict[str, Any], original: int, compressed: int) -> dict[s
 def _n8n_error(code: str, detail: str, recovery_hint: str = "") -> dict[str, Any]:
     """Structured error object that n8n can parse to trigger a Recovery Workflow."""
     return {
-        "status":        "error",
-        "error_code":    code,
-        "detail":        detail,
+        "status": "error",
+        "error_code": code,
+        "detail": detail,
         "recovery_hint": recovery_hint or "Trigger Recovery Workflow via n8n Error Branch",
-        "data":          None,
-        "metrics":       {"original": 0, "compressed": 0, "savings": 0.0},
+        "data": None,
+        "metrics": {"original": 0, "compressed": 0, "savings": 0.0},
     }
 
 
@@ -113,8 +124,9 @@ def _n8n_error(code: str, detail: str, recovery_hint: str = "") -> dict[str, Any
 # Standard Request/Response models
 # ---------------------------------------------------------------------------
 
+
 class AnalyzeRequest(BaseModel):
-    text:   str = Field(..., min_length=1)
+    text: str = Field(..., min_length=1)
     quelle: str = Field(default="API")
 
 
@@ -123,40 +135,40 @@ class CompressRequest(BaseModel):
 
 
 class TriageRequest(BaseModel):
-    text:     str          = Field(..., min_length=1)
+    text: str = Field(..., min_length=1)
     doc_type: DocumentType = DocumentType.FREITEXT
 
 
 class KVTCResponse(BaseModel):
-    original_tokens:     int
-    compressed_tokens:   int
+    original_tokens: int
+    compressed_tokens: int
     token_reduction_pct: float
-    frame:               str
-    checksum:            str
-    latency_ms:          float
+    frame: str
+    checksum: str
+    latency_ms: float
 
 
 class TriageResponse(BaseModel):
-    prioritaet:         ProcessPriority
-    begruendung:        str
+    prioritaet: ProcessPriority
+    begruendung: str
     ausgeloeste_regeln: list[str]
     eskalations_hinweis: str
 
 
 class AnalyzeResponse(BaseModel):
-    eingabe_checksum:     str
-    prioritaet:           ProcessPriority
-    zusammenfassung:      str
-    massnahmen:           list[str]
+    eingabe_checksum: str
+    prioritaet: ProcessPriority
+    zusammenfassung: str
+    massnahmen: list[str]
     erkannte_fehlercodes: list[str]
-    konfidenz:            float
-    token_original:       int
-    token_komprimiert:    int
+    konfidenz: float
+    token_original: int
+    token_komprimiert: int
     token_einsparung_pct: float
-    latenz_ms:            float
-    bereinigungen:        list[str]
-    doc_type:             DocumentType
-    modell_id:            str
+    latenz_ms: float
+    bereinigungen: list[str]
+    doc_type: DocumentType
+    modell_id: str
 
 
 class BatchAnalyzeRequest(BaseModel):
@@ -164,42 +176,48 @@ class BatchAnalyzeRequest(BaseModel):
 
 
 class BatchItemResult(BaseModel):
-    index:   int
+    index: int
     success: bool
-    result:  AnalyzeResponse | None = None
-    error:   str | None             = None
+    result: AnalyzeResponse | None = None
+    error: str | None = None
 
 
 class BatchAnalyzeResponse(BaseModel):
-    total:     int
+    total: int
     succeeded: int
-    failed:    int
-    results:   list[BatchItemResult]
+    failed: int
+    results: list[BatchItemResult]
 
 
 # ---------------------------------------------------------------------------
 # Industrial Showcase Request models
 # ---------------------------------------------------------------------------
 
+
 class XentryRequest(BaseModel):
-    log_text:  str | None = Field(default=None, description="Raw Xentry log. If omitted, a synthetic log is generated.")
-    log_lines: int        = Field(default=500, ge=100, le=10000)
-    debug:     bool       = Field(default=False)
+    log_text: str | None = Field(
+        default=None, description="Raw Xentry log. If omitted, a synthetic log is generated."
+    )
+    log_lines: int = Field(default=500, ge=100, le=10000)
+    debug: bool = Field(default=False)
 
 
 class MO360Request(BaseModel):
-    shift_report: str | None = Field(default=None, description="Raw MO360 shift report. If omitted, sample data is used.")
-    debug:        bool        = Field(default=False)
+    shift_report: str | None = Field(
+        default=None, description="Raw MO360 shift report. If omitted, sample data is used."
+    )
+    debug: bool = Field(default=False)
 
 
 class SupplyChainRequest(BaseModel):
     updates: list[str] | None = Field(default=None, description="List of supply-chain update strings.")
-    debug:   bool              = Field(default=False)
+    debug: bool = Field(default=False)
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _build_analyze_response(intake_result: Any, analyse_result: Any) -> AnalyzeResponse:
     return AnalyzeResponse(
@@ -223,14 +241,15 @@ def _build_analyze_response(intake_result: Any, analyse_result: Any) -> AnalyzeR
 # Standard Endpoints
 # ---------------------------------------------------------------------------
 
+
 @app.get("/health")
 def health() -> dict[str, Any]:
     return {
-        "status":          "ok",
-        "service":         "comptext-daimler",
-        "version":         "0.3.0",
-        "cache_size":      _result_cache.size,
-        "cache_hit_rate":  round(_result_cache.stats.hit_rate, 3),
+        "status": "ok",
+        "service": "comptext-daimler",
+        "version": "0.3.0",
+        "cache_size": _result_cache.size,
+        "cache_hit_rate": round(_result_cache.stats.hit_rate, 3),
         "telemetry_active": bool(os.getenv("TINYBIRD_TOKEN")),
     }
 
@@ -238,10 +257,10 @@ def health() -> dict[str, Any]:
 @app.get("/stats")
 def stats() -> dict[str, Any]:
     return {
-        "uptime_seconds":            round(time.time() - START_TIME, 2),
+        "uptime_seconds": round(time.time() - START_TIME, 2),
         "processed_compressed_bytes": PROCESSED_COMPRESSED_BYTES,
-        "cache_hit_rate":            round(_result_cache.stats.hit_rate, 3),
-        "version":                   "0.3.0",
+        "cache_hit_rate": round(_result_cache.stats.hit_rate, 3),
+        "version": "0.3.0",
     }
 
 
@@ -268,7 +287,8 @@ def compress(req: CompressRequest) -> KVTCResponse:
 def triage(req: TriageRequest) -> TriageResponse:
     try:
         from src.models.schemas import EingabeDokument
-        doc    = EingabeDokument(raw_text=req.text, doc_type=req.doc_type)
+
+        doc = EingabeDokument(raw_text=req.text, doc_type=req.doc_type)
         result = _triage.classify(doc)
         return TriageResponse(
             prioritaet=result.prioritaet,
@@ -286,9 +306,9 @@ def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
     global PROCESSED_COMPRESSED_BYTES
     log.info("Analyze request", extra={"quelle": req.quelle, "text_len": len(req.text)})
     try:
-        intake_result  = _intake.process(req.text, quelle=req.quelle)
+        intake_result = _intake.process(req.text, quelle=req.quelle)
         PROCESSED_COMPRESSED_BYTES += len(intake_result.kvtc.frame.encode("utf-8"))
-        triage_result  = _triage.classify(intake_result.dokument)
+        triage_result = _triage.classify(intake_result.dokument)
         analyse_result = _analysis.analyze(intake_result.dokument, intake_result.kvtc, triage_result)
         return _build_analyze_response(intake_result, analyse_result)
     except Exception as e:
@@ -303,30 +323,41 @@ def batch_analyze(req: BatchAnalyzeRequest) -> BatchAnalyzeResponse:
     results: list[BatchItemResult] = []
     for idx, doc_req in enumerate(req.documents):
         try:
-            intake_result  = _intake.process(doc_req.text, quelle=doc_req.quelle)
+            intake_result = _intake.process(doc_req.text, quelle=doc_req.quelle)
             PROCESSED_COMPRESSED_BYTES += len(intake_result.kvtc.frame.encode("utf-8"))
-            triage_result  = _triage.classify(intake_result.dokument)
+            triage_result = _triage.classify(intake_result.dokument)
             analyse_result = _analysis.analyze(intake_result.dokument, intake_result.kvtc, triage_result)
-            results.append(BatchItemResult(
-                index=idx, success=True,
-                result=_build_analyze_response(intake_result, analyse_result),
-            ))
+            results.append(
+                BatchItemResult(
+                    index=idx,
+                    success=True,
+                    result=_build_analyze_response(intake_result, analyse_result),
+                )
+            )
         except Exception as e:
             log.error("batch item failed", extra={"index": idx, "error": str(e)})
             results.append(BatchItemResult(index=idx, success=False, error=str(e)))
     succeeded = sum(1 for r in results if r.success)
     return BatchAnalyzeResponse(
-        total=len(results), succeeded=succeeded,
-        failed=len(results) - succeeded, results=results,
+        total=len(results),
+        succeeded=succeeded,
+        failed=len(results) - succeeded,
+        results=results,
     )
 
 
 @app.get("/benchmark")
 def benchmark() -> dict[str, Any]:
     cases = [
-        {"label": "Wartungsprotokoll",  "text": "Wartungsauftrag 001\nKilometerstand: 80000\nFehlercode: P0300"},
-        {"label": "OBD Fehlerspeicher", "text": "\n".join(f"P{1000+i}: Sensor {i}" for i in range(20))},
-        {"label": "QA Prüfbericht",     "text": "\n".join(f"Prüfpunkt {i}: OK" for i in range(30))},
+        {
+            "label": "Wartungsprotokoll",
+            "text": "Wartungsauftrag 001\nKilometerstand: 80000\nFehlercode: P0300",
+        },
+        {
+            "label": "OBD Fehlerspeicher",
+            "text": "\n".join(f"P{1000 + i}: Sensor {i}" for i in range(20)),
+        },
+        {"label": "QA Prüfbericht", "text": "\n".join(f"Prüfpunkt {i}: OK" for i in range(30))},
     ]
     return run_benchmark(cases)
 
@@ -334,6 +365,7 @@ def benchmark() -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 # INDUSTRIAL SHOWCASE ENDPOINTS – n8n kompatibel
 # ---------------------------------------------------------------------------
+
 
 @app.post("/v1/optimize/xentry")
 def optimize_xentry(req: XentryRequest) -> dict[str, Any]:
@@ -351,11 +383,11 @@ def optimize_xentry(req: XentryRequest) -> dict[str, Any]:
         if not filtered.strip():
             filtered = "[NO_CRITICAL_EVENTS]"
 
-        result          = _strategy.compress(filtered)
-        orig_tokens     = _strategy.estimate_tokens(raw_log)
-        comp_tokens     = result.compressed_tokens
-        savings         = round((1 - comp_tokens / orig_tokens) * 100, 4) if orig_tokens > 0 else 0.0
-        latency_ms      = round((time.perf_counter() - t0) * 1000, 2)
+        result = _strategy.compress(filtered)
+        orig_tokens = _strategy.estimate_tokens(raw_log)
+        comp_tokens = result.compressed_tokens
+        savings = round((1 - comp_tokens / orig_tokens) * 100, 4) if orig_tokens > 0 else 0.0
+        latency_ms = round((time.perf_counter() - t0) * 1000, 2)
         PROCESSED_COMPRESSED_BYTES += len(result.frame.encode("utf-8"))
 
         tb_queued = tracker.track(
@@ -368,12 +400,12 @@ def optimize_xentry(req: XentryRequest) -> dict[str, Any]:
         )
 
         data = {
-            "scenario":           "xentry_diagnostic_compression",
-            "raw_lines":          len(raw_log.splitlines()),
-            "filtered_lines":     len(filtered.splitlines()),
-            "kvtc_frame":         result.frame,
-            "checksum":           result.checksum,
-            "latency_ms":         latency_ms,
+            "scenario": "xentry_diagnostic_compression",
+            "raw_lines": len(raw_log.splitlines()),
+            "filtered_lines": len(filtered.splitlines()),
+            "kvtc_frame": result.frame,
+            "checksum": result.checksum,
+            "latency_ms": latency_ms,
         }
         if req.debug:
             data["tinybird_queued"] = tb_queued
@@ -401,15 +433,15 @@ def filter_mo360(req: MO360Request) -> dict[str, Any]:
     try:
         raw_report = req.shift_report if req.shift_report else get_sample_shift_report()
 
-        structured  = extract_deviations(raw_report)
+        structured = extract_deviations(raw_report)
         if not structured.strip():
             structured = "[NO_DEVIATIONS_DETECTED]"
 
-        result      = _strategy.compress(structured)
+        result = _strategy.compress(structured)
         orig_tokens = _strategy.estimate_tokens(raw_report)
         comp_tokens = result.compressed_tokens
-        savings     = round((1 - comp_tokens / orig_tokens) * 100, 4) if orig_tokens > 0 else 0.0
-        latency_ms  = round((time.perf_counter() - t0) * 1000, 2)
+        savings = round((1 - comp_tokens / orig_tokens) * 100, 4) if orig_tokens > 0 else 0.0
+        latency_ms = round((time.perf_counter() - t0) * 1000, 2)
         PROCESSED_COMPRESSED_BYTES += len(result.frame.encode("utf-8"))
 
         tb_queued = tracker.track(
@@ -422,11 +454,11 @@ def filter_mo360(req: MO360Request) -> dict[str, Any]:
         )
 
         data = {
-            "scenario":           "mo360_shift_filter",
-            "structured_report":  structured,
-            "kvtc_frame":         result.frame,
-            "checksum":           result.checksum,
-            "latency_ms":         latency_ms,
+            "scenario": "mo360_shift_filter",
+            "structured_report": structured,
+            "kvtc_frame": result.frame,
+            "checksum": result.checksum,
+            "latency_ms": latency_ms,
         }
         if req.debug:
             data["tinybird_queued"] = tb_queued
@@ -453,17 +485,18 @@ def dedup_supply_chain(req: SupplyChainRequest) -> dict[str, Any]:
     t0 = time.perf_counter()
     try:
         from showcase.supply_chain_dedup import get_supplier_updates
-        updates     = req.updates if req.updates else get_supplier_updates()
-        raw_text    = "\n".join(updates)
 
-        deduped     = semantic_dedup(updates)
-        dedup_text  = "\n".join(deduped)
+        updates = req.updates if req.updates else get_supplier_updates()
+        raw_text = "\n".join(updates)
 
-        result      = _strategy.compress(dedup_text)
+        deduped = semantic_dedup(updates)
+        dedup_text = "\n".join(deduped)
+
+        result = _strategy.compress(dedup_text)
         orig_tokens = _strategy.estimate_tokens(raw_text)
         comp_tokens = result.compressed_tokens
-        savings     = round((1 - comp_tokens / orig_tokens) * 100, 4) if orig_tokens > 0 else 0.0
-        latency_ms  = round((time.perf_counter() - t0) * 1000, 2)
+        savings = round((1 - comp_tokens / orig_tokens) * 100, 4) if orig_tokens > 0 else 0.0
+        latency_ms = round((time.perf_counter() - t0) * 1000, 2)
         PROCESSED_COMPRESSED_BYTES += len(result.frame.encode("utf-8"))
 
         tb_queued = tracker.track(
@@ -476,14 +509,14 @@ def dedup_supply_chain(req: SupplyChainRequest) -> dict[str, Any]:
         )
 
         data = {
-            "scenario":         "supply_chain_deduplication",
-            "total_updates":    len(updates),
-            "unique_updates":   len(deduped),
+            "scenario": "supply_chain_deduplication",
+            "total_updates": len(updates),
+            "unique_updates": len(deduped),
             "duplicates_removed": len(updates) - len(deduped),
             "deduplicated_text": dedup_text,
-            "kvtc_frame":       result.frame,
-            "checksum":         result.checksum,
-            "latency_ms":       latency_ms,
+            "kvtc_frame": result.frame,
+            "checksum": result.checksum,
+            "latency_ms": latency_ms,
         }
         if req.debug:
             data["tinybird_queued"] = tb_queued
@@ -503,8 +536,10 @@ def dedup_supply_chain(req: SupplyChainRequest) -> dict[str, Any]:
 # Main
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     import uvicorn
+
     uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=False)
 
 

@@ -31,39 +31,34 @@ logger = logging.getLogger(__name__)
 # PYDANTIC MODELS
 # ============================================================================
 
+
 class FHIRBundle(BaseModel):
     """FHIR R4 Bundle"""
+
     resourceType: str = "Bundle"
     type: str = "transaction"
     entry: list[dict[str, Any]] = []
 
     class Config:
-        schema_extra = {
-            "example": {
-                "resourceType": "Bundle",
-                "type": "transaction",
-                "entry": []
-            }
-        }
+        schema_extra = {"example": {"resourceType": "Bundle", "type": "transaction", "entry": []}}
 
 
 class PipelineRequest(BaseModel):
     """Pipeline processing request"""
+
     bundle: FHIRBundle | None = None
-    scenario: str | None = Field(None, description="Built-in scenario: STEMI, SEPSIS, STROKE, ANAPHYLAXIE, DM_HYPO")
+    scenario: str | None = Field(
+        None, description="Built-in scenario: STEMI, SEPSIS, STROKE, ANAPHYLAXIE, DM_HYPO"
+    )
     include_benchmark: bool = Field(False, description="Include token metrics in response")
 
     class Config:
-        schema_extra = {
-            "example": {
-                "scenario": "STEMI",
-                "include_benchmark": True
-            }
-        }
+        schema_extra = {"example": {"scenario": "STEMI", "include_benchmark": True}}
 
 
 class PipelineResponse(BaseModel):
     """Pipeline processing response"""
+
     id: str
     scenario: str
     frame: str
@@ -77,43 +72,37 @@ class PipelineResponse(BaseModel):
                 "id": "proc-123456",
                 "scenario": "STEMI",
                 "frame": "CT:v5 SC:STEMI TRI:P1\nVS[hr:118 sbp:82 spo2:91]\n...",
-                "metrics": {
-                    "reduction_pct": 93.9,
-                    "tokens_input": 1847,
-                    "tokens_final": 112
-                },
+                "metrics": {"reduction_pct": 93.9, "tokens_input": 1847, "tokens_final": 112},
                 "safety": {
                     "allergies_preserved": 1,
                     "medications_preserved": 1,
-                    "triage_accurate": "P1"
+                    "triage_accurate": "P1",
                 },
-                "timestamp": "2026-04-23T12:00:00Z"
+                "timestamp": "2026-04-23T12:00:00Z",
             }
         }
 
 
 class BenchmarkRequest(BaseModel):
     """Benchmark request"""
+
     scenarios: list[str] = Field(["ALL"], description="Scenarios to benchmark")
     detailed: bool = Field(False, description="Include stage-by-stage metrics")
 
     class Config:
-        schema_extra = {
-            "example": {
-                "scenarios": ["STEMI", "SEPSIS", "STROKE"],
-                "detailed": True
-            }
-        }
+        schema_extra = {"example": {"scenarios": ["STEMI", "SEPSIS", "STROKE"], "detailed": True}}
 
 
 class ValidationRequest(BaseModel):
     """Frame validation request"""
+
     frame: str
     checks: list[str] = Field(["syntax", "safety", "gdpr"], description="Checks to run")
 
 
 class ValidationResponse(BaseModel):
     """Frame validation response"""
+
     valid: bool
     checks: dict[str, Any]
     issues: list[str] = []
@@ -121,6 +110,7 @@ class ValidationResponse(BaseModel):
 
 class ScenarioInfo(BaseModel):
     """Clinical scenario information"""
+
     id: str
     name: str
     icd10: list[str]
@@ -130,6 +120,7 @@ class ScenarioInfo(BaseModel):
 
 class HealthStatus(BaseModel):
     """Health check response"""
+
     status: str
     mcp_connected: bool
     services: dict[str, str]
@@ -139,6 +130,7 @@ class HealthStatus(BaseModel):
 # ============================================================================
 # MCP CLIENT WRAPPER
 # ============================================================================
+
 
 class MCPClient:
     """Wrapper for CompText MCP Server communication"""
@@ -162,10 +154,7 @@ class MCPClient:
     async def call_tool(self, tool_name: str, args: dict[str, Any]) -> dict[str, Any]:
         """Call MCP tool"""
         try:
-            response = await self.client.post(
-                f"{self.mcp_url}/tools/{tool_name}",
-                json=args
-            )
+            response = await self.client.post(f"{self.mcp_url}/tools/{tool_name}", json=args)
             response.raise_for_status()
             return response.json()
         except Exception as e:
@@ -183,10 +172,7 @@ class MCPClient:
 
     async def benchmark(self, scenarios: list[str], detailed: bool = False) -> dict:
         """Run benchmarks"""
-        args = {
-            "scenarios": scenarios if scenarios != ["ALL"] else None,
-            "detailed": detailed
-        }
+        args = {"scenarios": scenarios if scenarios != ["ALL"] else None, "detailed": detailed}
         return await self.call_tool("comptext_benchmark", {k: v for k, v in args.items() if v is not None})
 
     async def scenarios(self, filter: str = "all") -> dict:
@@ -205,7 +191,7 @@ class MCPClient:
 app = FastAPI(
     title="CompText Daimler Dashboard API",
     description="Clinical FHIR processing via CompText pipeline",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # Add CORS middleware
@@ -229,6 +215,7 @@ benchmark_store: dict[str, dict] = {}
 # ============================================================================
 # HEALTH & STATUS ENDPOINTS
 # ============================================================================
+
 
 @app.on_event("startup")
 async def startup():
@@ -255,9 +242,9 @@ async def health_check():
         services={
             "mcp_server": "connected" if is_connected else "unreachable",
             "api": "operational",
-            "database": "connected"
+            "database": "connected",
         },
-        timestamp=datetime.utcnow()
+        timestamp=datetime.utcnow(),
     )
 
 
@@ -265,14 +252,14 @@ async def health_check():
 # PIPELINE ENDPOINTS
 # ============================================================================
 
+
 @app.post("/api/pipeline/process", response_model=PipelineResponse)
 async def process_pipeline(request: PipelineRequest):
     """Process FHIR bundle through CompText pipeline"""
     try:
         # Call MCP server
         mcp_result = await mcp_client.pipeline(
-            bundle=request.bundle.dict() if request.bundle else None,
-            scenario=request.scenario
+            bundle=request.bundle.dict() if request.bundle else None, scenario=request.scenario
         )
 
         # Handle errors from MCP
@@ -287,7 +274,7 @@ async def process_pipeline(request: PipelineRequest):
             frame=mcp_result.get("frame", ""),
             metrics=mcp_result.get("metrics", {}),
             safety=mcp_result.get("safety", {}),
-            timestamp=datetime.utcnow()
+            timestamp=datetime.utcnow(),
         )
 
         # Store result
@@ -335,6 +322,7 @@ async def get_result(process_id: str):
 # SCENARIOS ENDPOINTS
 # ============================================================================
 
+
 @app.get("/api/scenarios", response_model=dict[str, Any])
 async def list_scenarios(filter: str = "all"):
     """List available clinical scenarios"""
@@ -360,6 +348,7 @@ async def process_scenario(scenario_id: str):
 # BENCHMARK ENDPOINTS
 # ============================================================================
 
+
 @app.post("/api/benchmark")
 async def run_benchmark(request: BenchmarkRequest, background_tasks: BackgroundTasks):
     """Run benchmarks on specified scenarios"""
@@ -369,15 +358,12 @@ async def run_benchmark(request: BenchmarkRequest, background_tasks: BackgroundT
         # Run in background
         async def execute_benchmark():
             try:
-                result = await mcp_client.benchmark(
-                    scenarios=request.scenarios,
-                    detailed=request.detailed
-                )
+                result = await mcp_client.benchmark(scenarios=request.scenarios, detailed=request.detailed)
                 benchmark_store[benchmark_id] = {
                     "id": benchmark_id,
                     "status": "completed",
                     "result": result,
-                    "timestamp": datetime.utcnow().isoformat()
+                    "timestamp": datetime.utcnow().isoformat(),
                 }
                 logger.info(f"Benchmark completed: {benchmark_id}")
             except Exception as e:
@@ -385,7 +371,7 @@ async def run_benchmark(request: BenchmarkRequest, background_tasks: BackgroundT
                     "id": benchmark_id,
                     "status": "failed",
                     "error": str(e),
-                    "timestamp": datetime.utcnow().isoformat()
+                    "timestamp": datetime.utcnow().isoformat(),
                 }
 
         background_tasks.add_task(execute_benchmark)
@@ -394,7 +380,7 @@ async def run_benchmark(request: BenchmarkRequest, background_tasks: BackgroundT
             "benchmark_id": benchmark_id,
             "status": "started",
             "poll_url": f"/api/benchmark/results/{benchmark_id}",
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
 
     except Exception as e:
@@ -415,19 +401,17 @@ async def get_benchmark_results(benchmark_id: str):
 # VALIDATION ENDPOINTS
 # ============================================================================
 
+
 @app.post("/api/validate", response_model=ValidationResponse)
 async def validate_frame(request: ValidationRequest):
     """Validate CompText frame"""
     try:
-        result = await mcp_client.validate(
-            frame=request.frame,
-            checks=request.checks
-        )
+        result = await mcp_client.validate(frame=request.frame, checks=request.checks)
 
         return ValidationResponse(
             valid=result.get("frame_valid", False),
             checks=result.get("checks", {}),
-            issues=[] if result.get("frame_valid") else ["Frame validation failed"]
+            issues=[] if result.get("frame_valid") else ["Frame validation failed"],
         )
 
     except Exception as e:
@@ -439,6 +423,7 @@ async def validate_frame(request: ValidationRequest):
 # UTILITY ENDPOINTS
 # ============================================================================
 
+
 @app.get("/api/stats")
 async def get_statistics():
     """Get processing statistics"""
@@ -446,7 +431,7 @@ async def get_statistics():
         "processed_total": len(results_store),
         "benchmarks_run": len(benchmark_store),
         "recent_results": list(results_store.keys())[-5:],
-        "timestamp": datetime.utcnow().isoformat()
+        "timestamp": datetime.utcnow().isoformat(),
     }
 
 
@@ -459,7 +444,7 @@ async def export_csv():
 
     return {
         "content": csv_content,
-        "filename": f"comptext-results-{datetime.utcnow().isoformat()}.csv"
+        "filename": f"comptext-results-{datetime.utcnow().isoformat()}.csv",
     }
 
 
@@ -470,9 +455,4 @@ async def export_csv():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(
-        app,
-        host="0.0.0.0",
-        port=8000,
-        log_level="info"
-    )
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")

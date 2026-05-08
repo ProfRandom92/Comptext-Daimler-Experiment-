@@ -24,10 +24,10 @@
 ## 🚀 TL;DR – Die Challenge
 
 CompText ist **nicht einfach ein Komprimierungsalgorithmus**. Es ist ein:
-- ✅ **Multi-Agent-System** mit 3 spezialisierten LLM-Pipelines  
-- ✅ **Privacy-by-Design-Architektur** (DSGVO Art. 25 zertifiziert)  
-- ✅ **Challenge**: OBD-Fehlercode-DB (70+ Codes) mit kritischen vs. Routine-Prioritäten  
-- ✅ **Exploit-Oberflächr**: KVTC-Frame-Injection, Prompt-Injection, Cache-Poisoning-Szenarien  
+- ✅ **Multi-Agent-System** mit 3 spezialisierten LLM-Pipelines
+- ✅ **Privacy-by-Design-Architektur** (DSGVO Art. 25 zertifiziert)
+- ✅ **Challenge**: OBD-Fehlercode-DB (70+ Codes) mit kritischen vs. Routine-Prioritäten
+- ✅ **Exploit-Oberflächr**: KVTC-Frame-Injection, Prompt-Injection, Cache-Poisoning-Szenarien
 - ✅ **Production-Audit**: Vollständig getestet (62 Tests, ~0.5s Laufzeit)
 
 ---
@@ -325,8 +325,8 @@ CACHE_DEBUG=true python -m api
 KVTC_DEBUG=true python -c "from src.core.kvtc import IndustrialKVTCStrategy; ..."
 
 # OBD-Database-Audit: Alle erkannten Codes mit Schweregrad
-python -c "from src.core.obd_database import OBD_DATABASE; 
-for code, info in sorted(OBD_DATABASE.items()): 
+python -c "from src.core.obd_database import OBD_DATABASE;
+for code, info in sorted(OBD_DATABASE.items()):
     print(f'{code}: {info.beschreibung} → {info.schweregrad.value}')"
 
 # Triage-Pattern-Match-Trace
@@ -629,7 +629,7 @@ ANTHROPIC_API_KEY=sk-ant-... LLM_BACKEND=anthropic uvicorn api:app --port 8000
 ### Academic Foundations
 - **KVTC Algorithm**: Multi-Layer Token Compression Strategy (CompText-Original)
 - **DSGVO Art. 25**: Privacy-by-Design & Data Protection by Default
-- **OBD/EOBD Standards**: 
+- **OBD/EOBD Standards**:
   - SAE J2012: Diagnostic Trouble Code Definitions
   - ISO 14229-1: Unified Diagnostic Services (UDS)
   - Daimler-spezifische Netzwerkbusses: CAN, CAN-FD, MOST
@@ -649,11 +649,11 @@ ANTHROPIC_API_KEY=sk-ant-... LLM_BACKEND=anthropic uvicorn api:app --port 8000
 ## 📞 Support & Feedback
 
 ### Issues & Feature Requests
-🐛 **Bug Report**: https://github.com/ProfRandom92/comptext-daimler-experiment-/issues  
-💡 **Feature Request**: https://github.com/ProfRandom92/comptext-daimler-experiment-/discussions  
+🐛 **Bug Report**: https://github.com/ProfRandom92/comptext-daimler-experiment-/issues
+💡 **Feature Request**: https://github.com/ProfRandom92/comptext-daimler-experiment-/discussions
 
 ### Security Vulnerability Disclosure
-🔒 **Sicherheitslücken bitte NICHT öffentlich melden!**  
+🔒 **Sicherheitslücken bitte NICHT öffentlich melden!**
 📧 Schreib eine E-Mail an: `security@example.com` (verschlüsselt mit GPG bevorzugt)
 
 ---
@@ -678,8 +678,8 @@ Zusammenfassung:
 
 *Basiert auf [MedGemma-CompText](https://github.com/ProfRandom92/Medgemma-CompText) & [CompText-Monorepo-X](https://github.com/ProfRandom92/comptext-monorepo-X) von ProfRandom92*
 
-**Challenge Version**: Ready for Security & Performance Testing  
-**Status**: Production-Ready with Audit Trail  
+**Challenge Version**: Ready for Security & Performance Testing
+**Status**: Production-Ready with Audit Trail
 **Last Updated**: 2026-04-23
 
 ---

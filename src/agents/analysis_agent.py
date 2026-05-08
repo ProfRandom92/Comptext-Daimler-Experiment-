@@ -27,8 +27,8 @@ _log = get_logger("comptext.analysis_agent")
 
 class ModelBackend(StrEnum):
     OLLAMA_GEMMA = "ollama_gemma"
-    ANTHROPIC    = "anthropic"
-    MOCK         = "mock"
+    ANTHROPIC = "anthropic"
+    MOCK = "mock"
 
 
 @dataclass
@@ -131,9 +131,9 @@ class AnalysisAgent:
 
     def _infer(self, prompt: str) -> str:
         dispatch = {
-            ModelBackend.MOCK:         self._mock_infer,
+            ModelBackend.MOCK: self._mock_infer,
             ModelBackend.OLLAMA_GEMMA: self._ollama_infer,
-            ModelBackend.ANTHROPIC:    self._anthropic_infer,
+            ModelBackend.ANTHROPIC: self._anthropic_infer,
         }
         return dispatch.get(self._config.backend, self._mock_infer)(prompt)
 
@@ -146,28 +146,35 @@ class AnalysisAgent:
         else:
             prio = ProcessPriority.P3_ROUTINE.value
 
-        return json.dumps({
-            "zusammenfassung": (
-                "Mock-Analyse: Das Dokument wurde verarbeitet. "
-                "Keine kritischen Muster erkannt (Mock-Modus). "
-                "Bitte Produktionsmodus für reale Analyse aktivieren."
-            ),
-            "massnahmen": ["Dokument archivieren", "Nächste planmäßige Inspektion einhalten"],
-            "erkannte_fehlercodes": [],
-            "konfidenz": 0.5,
-            "prioritaet_bestaetigung": prio,
-        }, ensure_ascii=False)
+        return json.dumps(
+            {
+                "zusammenfassung": (
+                    "Mock-Analyse: Das Dokument wurde verarbeitet. "
+                    "Keine kritischen Muster erkannt (Mock-Modus). "
+                    "Bitte Produktionsmodus für reale Analyse aktivieren."
+                ),
+                "massnahmen": ["Dokument archivieren", "Nächste planmäßige Inspektion einhalten"],
+                "erkannte_fehlercodes": [],
+                "konfidenz": 0.5,
+                "prioritaet_bestaetigung": prio,
+            },
+            ensure_ascii=False,
+        )
 
     def _ollama_infer(self, prompt: str) -> str:
         try:
             import requests  # type: ignore
+
             response = requests.post(
                 f"{self._config.ollama_base_url}/api/generate",
                 json={
                     "model": self._config.model_id,
                     "prompt": f"{_SYSTEM_PROMPT}\n\n{prompt}",
                     "stream": False,
-                    "options": {"temperature": self._config.temperature, "num_predict": self._config.max_tokens},
+                    "options": {
+                        "temperature": self._config.temperature,
+                        "num_predict": self._config.max_tokens,
+                    },
                 },
                 timeout=60,
             )
@@ -179,6 +186,7 @@ class AnalysisAgent:
     def _anthropic_infer(self, prompt: str) -> str:
         try:
             import anthropic  # type: ignore
+
             if self._anthropic_client is None:
                 self._anthropic_client = anthropic.Anthropic()
             system_blocks: list[dict[str, Any]] = [
@@ -213,13 +221,27 @@ class AnalysisAgent:
     def _parse_output(self, raw: str, fallback_priority: ProcessPriority) -> dict[str, Any]:
         match = _JSON_BLOCK.search(raw)
         if not match:
-            return {"zusammenfassung": raw[:300], "massnahmen": [], "erkannte_fehlercodes": [],
-                    "konfidenz": 0.3, "prioritaet": fallback_priority}
+            return {
+                "zusammenfassung": raw[:300],
+                "massnahmen": [],
+                "erkannte_fehlercodes": [],
+                "konfidenz": 0.3,
+                "prioritaet": fallback_priority,
+            }
         try:
             data = json.loads(match.group(0))
             prio_str = data.get("prioritaet_bestaetigung", fallback_priority.value)
-            data["prioritaet"] = ProcessPriority(prio_str) if prio_str in ProcessPriority._value2member_map_ else fallback_priority
+            data["prioritaet"] = (
+                ProcessPriority(prio_str)
+                if prio_str in ProcessPriority._value2member_map_
+                else fallback_priority
+            )
             return data
         except json.JSONDecodeError:
-            return {"zusammenfassung": raw[:300], "massnahmen": [], "erkannte_fehlercodes": [],
-                    "konfidenz": 0.2, "prioritaet": fallback_priority}
+            return {
+                "zusammenfassung": raw[:300],
+                "massnahmen": [],
+                "erkannte_fehlercodes": [],
+                "konfidenz": 0.2,
+                "prioritaet": fallback_priority,
+            }

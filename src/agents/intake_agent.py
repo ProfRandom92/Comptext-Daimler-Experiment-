@@ -23,6 +23,8 @@ import re
 import time
 from dataclasses import dataclass
 
+import nh3
+
 from src.core.kvtc import IndustrialKVTCStrategy, KVTCResult
 from src.models.schemas import DocumentType, EingabeDokument
 
@@ -31,26 +33,33 @@ from src.models.schemas import DocumentType, EingabeDokument
 # ---------------------------------------------------------------------------
 
 # Vollständige FIN (17 Zeichen, ISO 3779)
-_FIN_FULL    = re.compile(r"\b([A-HJ-NPR-Z0-9]{11})([A-HJ-NPR-Z0-9]{6})\b")
+_FIN_FULL = re.compile(r"\b([A-HJ-NPR-Z0-9]{11})([A-HJ-NPR-Z0-9]{6})\b")
 # Personal-/Mitarbeiternummern (P + 5-8 Ziffern, oder nur 6-8 Ziffern allein)
 _PERSONAL_NR = re.compile(r"\bP\d{5,8}\b|\b(?<!\d)\d{6,8}(?!\d)\b")
 # E-Mail
-_EMAIL       = re.compile(r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}")
+_EMAIL = re.compile(r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}")
 # Telefon (diverse Formate)
-_TELEFON     = re.compile(r"(\+49|0)\s?[\d\s\-/]{8,18}")
+_TELEFON = re.compile(r"(\+49|0)\s?[\d\s\-/]{8,18}")
 # Kundennamen-Hinweise (Zeilen die mit "Kunde:", "Auftraggeber:" beginnen)
-_KUNDEN_ZEILE = re.compile(
-    r"(Kunde|Auftraggeber|Besteller|Halter)\s*:\s*.+", re.IGNORECASE
-)
+_KUNDEN_ZEILE = re.compile(r"(Kunde|Auftraggeber|Besteller|Halter)\s*:\s*.+", re.IGNORECASE)
 
 # Typ-Erkennung nach Schlüsselwörtern
 _TYPE_PATTERNS: list[tuple[re.Pattern[str], DocumentType]] = [
-    (re.compile(r"Wartungsauftrag|Werkstattauftrag|Inspektion|Service", re.I), DocumentType.WARTUNGSPROTOKOLL),
-    (re.compile(r"\b[PBCU]\d{4}\b"),                                          DocumentType.OBD_FEHLERCODE),
-    (re.compile(r"Prüfbericht|QA|Qualitätsprüfung|Beanstandung",   re.I),    DocumentType.QA_PRUEFBERICHT),
-    (re.compile(r"Produktionsauftrag|Fertigungsauftrag|Takt",       re.I),    DocumentType.PRODUKTIONSAUFTRAG),
-    (re.compile(r"Lieferschein|Wareneingang|Lieferant",             re.I),    DocumentType.LIEFERSCHEIN),
-    (re.compile(r"Arbeitsplan|Arbeitsschritte|Montageanleitung",    re.I),    DocumentType.ARBEITSPLAN),
+    (
+        re.compile(r"Wartungsauftrag|Werkstattauftrag|Inspektion|Service", re.I),
+        DocumentType.WARTUNGSPROTOKOLL,
+    ),
+    (re.compile(r"\b[PBCU]\d{4}\b"), DocumentType.OBD_FEHLERCODE),
+    (
+        re.compile(r"Prüfbericht|QA|Qualitätsprüfung|Beanstandung", re.I),
+        DocumentType.QA_PRUEFBERICHT,
+    ),
+    (
+        re.compile(r"Produktionsauftrag|Fertigungsauftrag|Takt", re.I),
+        DocumentType.PRODUKTIONSAUFTRAG,
+    ),
+    (re.compile(r"Lieferschein|Wareneingang|Lieferant", re.I), DocumentType.LIEFERSCHEIN),
+    (re.compile(r"Arbeitsplan|Arbeitsschritte|Montageanleitung", re.I), DocumentType.ARBEITSPLAN),
 ]
 
 
@@ -58,7 +67,7 @@ _TYPE_PATTERNS: list[tuple[re.Pattern[str], DocumentType]] = [
 class IntakeResult:
     dokument: EingabeDokument
     kvtc: KVTCResult
-    bereinigungen: list[str]       # Log welche Daten entfernt wurden
+    bereinigungen: list[str]  # Log welche Daten entfernt wurden
     latenz_ms: float
 
 
@@ -112,6 +121,7 @@ class IntakeAgent:
     # ------------------------------------------------------------------
 
     def _sanitize(self, text: str, log: list[str]) -> str:
+        text = nh3.clean(text)
         text = self._mask_fin(text, log)
         text = self._hash_personal_nr(text, log)
         text = self._remove_email(text, log)
@@ -121,6 +131,7 @@ class IntakeAgent:
 
     def _mask_fin(self, text: str, log: list[str]) -> str:
         """Behält nur die letzten 6 Zeichen der FIN (eindeutige Seriennummer)."""
+
         def replacer(m: re.Match) -> str:
             log.append("FIN maskiert")
             return f"FIN_***{m.group(2)}"
@@ -129,6 +140,7 @@ class IntakeAgent:
 
     def _hash_personal_nr(self, text: str, log: list[str]) -> str:
         """Ersetzt Personalnummern durch 8-stelligen MD5-Hash (One-Way, aus Monorepo-X)."""
+
         def replacer(m: re.Match) -> str:
             log.append("Personalnummer gehasht")
             hashed = hashlib.md5(m.group(0).encode()).hexdigest()[:8].upper()
@@ -152,6 +164,7 @@ class IntakeAgent:
         def replacer(m: re.Match) -> str:
             log.append("Kundenzeile entfernt")
             return "[KUNDE_ENTFERNT]"
+
         return _KUNDEN_ZEILE.sub(replacer, text)
 
     # ------------------------------------------------------------------

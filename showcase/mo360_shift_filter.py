@@ -1,12 +1,13 @@
-import sys
 import os
-import time
 import re
+import sys
+import time
 
 # Add root to sys.path to import src
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from src.core.kvtc import IndustrialKVTCStrategy
+
 
 def get_sample_shift_report():
     return """
@@ -28,6 +29,7 @@ Linie: Montage 2
 11:00: Normalbetrieb.
 12:00: Schichtende. Zusammenfassung: 2 größere Stopps, 1 Kleinstopp.
 """
+
 
 def extract_deviations(report_text):
     lines = report_text.splitlines()
@@ -54,10 +56,11 @@ def extract_deviations(report_text):
 
     return "\n".join(deviations)
 
+
 def main():
-    print("="*60)
+    print("=" * 60)
     print("CASE 2: MO360 SCHICHTBERICHT-FILTER")
-    print("="*60)
+    print("=" * 60)
 
     raw_report = get_sample_shift_report()
     strategy = IndustrialKVTCStrategy()
@@ -80,7 +83,8 @@ def main():
     print("-" * 60)
     print("OPTIMIZED KVTC FRAME (Final):")
     print(result.frame)
-    print("="*60 + "\n")
+    print("=" * 60 + "\n")
+
 
 if __name__ == "__main__":
     main()

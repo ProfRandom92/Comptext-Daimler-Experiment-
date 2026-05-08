@@ -10,9 +10,10 @@ client = TestClient(app)
 
 
 def test_batch_single_document():
-    resp = client.post("/batch/analyze", json={
-        "documents": [{"text": "Wartungsauftrag: Routineinspektion abgeschlossen.", "quelle": "Test"}]
-    })
+    resp = client.post(
+        "/batch/analyze",
+        json={"documents": [{"text": "Wartungsauftrag: Routineinspektion abgeschlossen.", "quelle": "Test"}]},
+    )
     assert resp.status_code == 200
     data = resp.json()
     assert data["total"] == 1
@@ -23,10 +24,7 @@ def test_batch_single_document():
 
 
 def test_batch_multiple_documents():
-    docs = [
-        {"text": f"Dokument {i}: Kilometerstand {i * 10000}", "quelle": "Test"}
-        for i in range(3)
-    ]
+    docs = [{"text": f"Dokument {i}: Kilometerstand {i * 10000}", "quelle": "Test"} for i in range(3)]
     resp = client.post("/batch/analyze", json={"documents": docs})
     assert resp.status_code == 200
     data = resp.json()
@@ -38,12 +36,12 @@ def test_batch_multiple_documents():
 def test_batch_max_10_enforced():
     docs = [{"text": f"Dokument {i}", "quelle": "T"} for i in range(11)]
     resp = client.post("/batch/analyze", json={"documents": docs})
-    assert resp.status_code == 422
+    assert resp.status_code == 400
 
 
 def test_batch_empty_list_rejected():
     resp = client.post("/batch/analyze", json={"documents": []})
-    assert resp.status_code == 422
+    assert resp.status_code == 400
 
 
 def test_batch_preserves_index_order():
@@ -55,9 +53,10 @@ def test_batch_preserves_index_order():
 
 
 def test_batch_result_has_required_fields():
-    resp = client.post("/batch/analyze", json={
-        "documents": [{"text": "Fehler P0300 erkannt – Zündaussetzer", "quelle": "SAP"}]
-    })
+    resp = client.post(
+        "/batch/analyze",
+        json={"documents": [{"text": "Fehler P0300 erkannt – Zündaussetzer", "quelle": "SAP"}]},
+    )
     assert resp.status_code == 200
     result = resp.json()["results"][0]["result"]
     assert "prioritaet" in result
