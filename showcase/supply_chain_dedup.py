@@ -33,7 +33,7 @@ def semantic_dedup(updates):
         # 2. Extract semantic core (remove redundant phrases)
         semantic_core = content.replace("Status unverändert.", "").strip()
 
-        # 3. Hash
+        # 3. Hash with SHA-256 and deduplicate via set
         h = hashlib.sha256(semantic_core.encode()).hexdigest()
 
         if h not in seen_hashes:
