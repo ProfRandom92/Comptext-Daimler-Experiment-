@@ -106,19 +106,33 @@ class IndustrialKVTCStrategy:
 
     def _extract_kvtc(self, text: str) -> dict[str, list[str]]:
         keys, values, types = [], [], []
+        seen_k, seen_v, seen_t = set(), set(), set()
+
         for match in _KV_PAIR.finditer(text):
             k, v = match.group(1).strip(), match.group(2).strip()
-            keys.append(k)
-            values.append(v)
-            types.append(self._classify_type(v))
+            if k not in seen_k:
+                seen_k.add(k)
+                keys.append(k)
+            if v not in seen_v:
+                seen_v.add(v)
+                values.append(v)
+            t = self._classify_type(v)
+            if t not in seen_t:
+                seen_t.add(t)
+                types.append(t)
 
-        codes = _OBD_PATTERN.findall(text) + _SAP_PATTERN.findall(text) + _FIN_FRAGMENT.findall(text)
+        codes = []
+        seen_c = set()
+        for c in _OBD_PATTERN.findall(text) + _SAP_PATTERN.findall(text) + _FIN_FRAGMENT.findall(text):
+            if c not in seen_c:
+                seen_c.add(c)
+                codes.append(c)
 
         return {
-            "K": list(dict.fromkeys(keys)),
-            "V": list(dict.fromkeys(values)),
-            "T": list(dict.fromkeys(types)),
-            "C": list(dict.fromkeys(codes)),
+            "K": keys,
+            "V": values,
+            "T": types,
+            "C": codes,
         }
 
     @staticmethod
