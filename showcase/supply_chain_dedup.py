@@ -21,7 +21,7 @@ def get_supplier_updates():
 
 
 def semantic_dedup(updates):
-    seen_hashes = set()
+    seen_cores = set()
     unique_updates = []
 
     for update in updates:
@@ -36,11 +36,9 @@ def semantic_dedup(updates):
         # 2. Extract semantic core (remove redundant phrases)
         semantic_core = content.replace("Status unverändert.", "").strip()
 
-        # 3. Hash
-        h = hashlib.md5(semantic_core.encode()).hexdigest()
-
-        if h not in seen_hashes:
-            seen_hashes.add(h)
+        # 3. Deduplicate based on semantic core
+        if semantic_core not in seen_cores:
+            seen_cores.add(semantic_core)
             unique_updates.append(update)
 
     return unique_updates
