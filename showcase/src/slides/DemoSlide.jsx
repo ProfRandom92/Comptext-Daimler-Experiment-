@@ -215,7 +215,7 @@ export default function DemoSlide() {
           >
             <div className="text-[10px] font-mono text-[#445566] uppercase tracking-widest mb-2">Tech-Stack</div>
             <div className="flex flex-wrap gap-1.5">
-              {['Python 3.11', 'FastAPI', 'Streamlit', 'Anthropic Claude', 'Ollama Gemma 2B', 'Docker', 'pytest · 62 Tests'].map((t) => (
+              {['Python 3.11', 'FastAPI', 'React', 'Anthropic Claude', 'Ollama Gemma 2B', 'Docker', 'pytest · 62 Tests'].map((t) => (
                 <span key={t} className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0D1526] text-[#556677] border border-[rgba(0,160,220,0.12)]">
                   {t}
                 </span>

@@ -9,7 +9,10 @@ def test_track_disabled():
     tracker._executor = MagicMock()
 
     result = tracker.track(
-        endpoint="/test", original_tokens=100, compressed_tokens=50, savings_percentage=50.0
+        endpoint="/test",
+        original_tokens=100,
+        compressed_tokens=50,
+        savings_percentage=50.0,
     )
 
     assert result is False

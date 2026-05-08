@@ -1,6 +1,6 @@
 """
 IntakeAgent – Daten-Aufnahme & Bereinigung
-Entspricht dem NurseAgent aus MedGemma-CompText.
+Data intake and sanitization agent for Daimler Buses.
 
 Aufgaben:
   1. Vertrauliche Geschäftsdaten entfernen / anonymisieren (DSGVO Art. 25)
@@ -41,7 +41,9 @@ _EMAIL = re.compile(r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}")
 # Telefon (diverse Formate)
 _TELEFON = re.compile(r"(\+49|0)\s?[\d\s\-/]{8,18}")
 # Kundennamen-Hinweise (Zeilen die mit "Kunde:", "Auftraggeber:" beginnen)
-_KUNDEN_ZEILE = re.compile(r"(Kunde|Auftraggeber|Besteller|Halter)\s*:\s*.+", re.IGNORECASE)
+_KUNDEN_ZEILE = re.compile(
+    r"(Kunde|Auftraggeber|Besteller|Halter)\s*:\s*.+", re.IGNORECASE
+)
 
 # Typ-Erkennung nach Schlüsselwörtern
 _TYPE_PATTERNS: list[tuple[re.Pattern[str], DocumentType]] = [
@@ -58,8 +60,14 @@ _TYPE_PATTERNS: list[tuple[re.Pattern[str], DocumentType]] = [
         re.compile(r"Produktionsauftrag|Fertigungsauftrag|Takt", re.I),
         DocumentType.PRODUKTIONSAUFTRAG,
     ),
-    (re.compile(r"Lieferschein|Wareneingang|Lieferant", re.I), DocumentType.LIEFERSCHEIN),
-    (re.compile(r"Arbeitsplan|Arbeitsschritte|Montageanleitung", re.I), DocumentType.ARBEITSPLAN),
+    (
+        re.compile(r"Lieferschein|Wareneingang|Lieferant", re.I),
+        DocumentType.LIEFERSCHEIN,
+    ),
+    (
+        re.compile(r"Arbeitsplan|Arbeitsschritte|Montageanleitung", re.I),
+        DocumentType.ARBEITSPLAN,
+    ),
 ]
 
 

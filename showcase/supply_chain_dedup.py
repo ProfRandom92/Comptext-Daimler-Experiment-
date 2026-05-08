@@ -28,7 +28,7 @@ def semantic_dedup(updates):
         # 1. Normalize: Extract the message part after HH:MM:
         # We find the index after the first HH:MM:
         match = re.search(r"\d{2}:\d{2}: ", update)
-        content = update[match.end():].strip() if match else update.strip()
+        content = update[match.end() :].strip() if match else update.strip()
 
         # 2. Extract semantic core (remove redundant phrases)
         semantic_core = content.replace("Status unverändert.", "").strip()
@@ -68,7 +68,9 @@ def main():
     print(f"Unique Updates:        {len(deduplicated_updates)}")
     print(f"Original Tokens:       {orig_tokens}")
     print(f"Compressed Tokens:      {result.compressed_tokens}")
-    print(f"Reduction Ratio:        {round((1 - result.compressed_tokens / orig_tokens) * 100, 2)}%")
+    print(
+        f"Reduction Ratio:        {round((1 - result.compressed_tokens / orig_tokens) * 100, 2)}%"
+    )
     print(f"Processing Latency:     {duration:.2f} ms")
     print("-" * 60)
     print("INCREMENTAL UPDATES (POL Deduplicated):")

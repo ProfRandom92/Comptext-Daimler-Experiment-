@@ -69,7 +69,10 @@ async def validation_exception_handler(request, exc):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv("ALLOWED_ORIGINS", "http://localhost:8501,http://localhost:8000").split(","),
+    allow_origins=os.getenv(
+        "ALLOWED_ORIGINS",
+        "https://comptext-daimler-api.onrender.com,http://localhost:5173,http://localhost:3000",
+    ).split(","),
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
@@ -78,7 +81,9 @@ app.add_middleware(
 # Singleton agents + cache
 # ---------------------------------------------------------------------------
 
-_strategy = IndustrialKVTCStrategy(DEFAULT_CONFIG.kvtc_header_lines, DEFAULT_CONFIG.kvtc_window_lines)
+_strategy = IndustrialKVTCStrategy(
+    DEFAULT_CONFIG.kvtc_header_lines, DEFAULT_CONFIG.kvtc_window_lines
+)
 _intake = IntakeAgent(_strategy)
 _triage = TriageAgent()
 _result_cache = AnalysisResultCache(max_size=int(os.getenv("CACHE_MAX_SIZE", "256")))
@@ -91,7 +96,9 @@ _analysis = AnalysisAgent(DEFAULT_CONFIG.analysis, cache=_result_cache)
 # ---------------------------------------------------------------------------
 
 
-def _n8n_success(data: dict[str, Any], original: int, compressed: int) -> dict[str, Any]:
+def _n8n_success(
+    data: dict[str, Any], original: int, compressed: int
+) -> dict[str, Any]:
     import base64
 
     savings = round((1 - compressed / original) * 100, 4) if original > 0 else 0.0
@@ -114,7 +121,8 @@ def _n8n_error(code: str, detail: str, recovery_hint: str = "") -> dict[str, Any
         "status": "error",
         "error_code": code,
         "detail": detail,
-        "recovery_hint": recovery_hint or "Trigger Recovery Workflow via n8n Error Branch",
+        "recovery_hint": recovery_hint
+        or "Trigger Recovery Workflow via n8n Error Branch",
         "data": None,
         "metrics": {"original": 0, "compressed": 0, "savings": 0.0},
     }
@@ -196,7 +204,8 @@ class BatchAnalyzeResponse(BaseModel):
 
 class XentryRequest(BaseModel):
     log_text: str | None = Field(
-        default=None, description="Raw Xentry log. If omitted, a synthetic log is generated."
+        default=None,
+        description="Raw Xentry log. If omitted, a synthetic log is generated.",
     )
     log_lines: int = Field(default=500, ge=100, le=10000)
     debug: bool = Field(default=False)
@@ -204,13 +213,16 @@ class XentryRequest(BaseModel):
 
 class MO360Request(BaseModel):
     shift_report: str | None = Field(
-        default=None, description="Raw MO360 shift report. If omitted, sample data is used."
+        default=None,
+        description="Raw MO360 shift report. If omitted, sample data is used.",
     )
     debug: bool = Field(default=False)
 
 
 class SupplyChainRequest(BaseModel):
-    updates: list[str] | None = Field(default=None, description="List of supply-chain update strings.")
+    updates: list[str] | None = Field(
+        default=None, description="List of supply-chain update strings."
+    )
     debug: bool = Field(default=False)
 
 
@@ -309,7 +321,9 @@ def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
         intake_result = _intake.process(req.text, quelle=req.quelle)
         PROCESSED_COMPRESSED_BYTES += len(intake_result.kvtc.frame.encode("utf-8"))
         triage_result = _triage.classify(intake_result.dokument)
-        analyse_result = _analysis.analyze(intake_result.dokument, intake_result.kvtc, triage_result)
+        analyse_result = _analysis.analyze(
+            intake_result.dokument, intake_result.kvtc, triage_result
+        )
         return _build_analyze_response(intake_result, analyse_result)
     except Exception as e:
         log.error("analyze failed", exc_info=True)
@@ -326,7 +340,9 @@ def batch_analyze(req: BatchAnalyzeRequest) -> BatchAnalyzeResponse:
             intake_result = _intake.process(doc_req.text, quelle=doc_req.quelle)
             PROCESSED_COMPRESSED_BYTES += len(intake_result.kvtc.frame.encode("utf-8"))
             triage_result = _triage.classify(intake_result.dokument)
-            analyse_result = _analysis.analyze(intake_result.dokument, intake_result.kvtc, triage_result)
+            analyse_result = _analysis.analyze(
+                intake_result.dokument, intake_result.kvtc, triage_result
+            )
             results.append(
                 BatchItemResult(
                     index=idx,
@@ -357,7 +373,10 @@ def benchmark() -> dict[str, Any]:
             "label": "OBD Fehlerspeicher",
             "text": "\n".join(f"P{1000 + i}: Sensor {i}" for i in range(20)),
         },
-        {"label": "QA Prüfbericht", "text": "\n".join(f"Prüfpunkt {i}: OK" for i in range(30))},
+        {
+            "label": "QA Prüfbericht",
+            "text": "\n".join(f"Prüfpunkt {i}: OK" for i in range(30)),
+        },
     ]
     return run_benchmark(cases)
 
@@ -386,7 +405,9 @@ def optimize_xentry(req: XentryRequest) -> dict[str, Any]:
         result = _strategy.compress(filtered)
         orig_tokens = _strategy.estimate_tokens(raw_log)
         comp_tokens = result.compressed_tokens
-        savings = round((1 - comp_tokens / orig_tokens) * 100, 4) if orig_tokens > 0 else 0.0
+        savings = (
+            round((1 - comp_tokens / orig_tokens) * 100, 4) if orig_tokens > 0 else 0.0
+        )
         latency_ms = round((time.perf_counter() - t0) * 1000, 2)
         PROCESSED_COMPRESSED_BYTES += len(result.frame.encode("utf-8"))
 
@@ -440,7 +461,9 @@ def filter_mo360(req: MO360Request) -> dict[str, Any]:
         result = _strategy.compress(structured)
         orig_tokens = _strategy.estimate_tokens(raw_report)
         comp_tokens = result.compressed_tokens
-        savings = round((1 - comp_tokens / orig_tokens) * 100, 4) if orig_tokens > 0 else 0.0
+        savings = (
+            round((1 - comp_tokens / orig_tokens) * 100, 4) if orig_tokens > 0 else 0.0
+        )
         latency_ms = round((time.perf_counter() - t0) * 1000, 2)
         PROCESSED_COMPRESSED_BYTES += len(result.frame.encode("utf-8"))
 
@@ -495,7 +518,9 @@ def dedup_supply_chain(req: SupplyChainRequest) -> dict[str, Any]:
         result = _strategy.compress(dedup_text)
         orig_tokens = _strategy.estimate_tokens(raw_text)
         comp_tokens = result.compressed_tokens
-        savings = round((1 - comp_tokens / orig_tokens) * 100, 4) if orig_tokens > 0 else 0.0
+        savings = (
+            round((1 - comp_tokens / orig_tokens) * 100, 4) if orig_tokens > 0 else 0.0
+        )
         latency_ms = round((time.perf_counter() - t0) * 1000, 2)
         PROCESSED_COMPRESSED_BYTES += len(result.frame.encode("utf-8"))
 
@@ -524,7 +549,9 @@ def dedup_supply_chain(req: SupplyChainRequest) -> dict[str, Any]:
         return _n8n_success(data, orig_tokens, comp_tokens)
 
     except Exception as exc:
-        log.error("supply-chain endpoint failed", extra={"error": str(exc)}, exc_info=True)
+        log.error(
+            "supply-chain endpoint failed", extra={"error": str(exc)}, exc_info=True
+        )
         return _n8n_error(
             code="SUPPLY_CHAIN_PROCESSING_ERROR",
             detail="Internal processing error.",

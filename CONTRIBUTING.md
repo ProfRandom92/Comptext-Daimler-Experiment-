@@ -44,7 +44,6 @@ Was passiert tatsächlich?
 
 ## Logs
 ```bash
-LOG_LEVEL=DEBUG streamlit run dashboard.py
 # ... copy output here ...
 ```
 
@@ -194,7 +193,6 @@ pip install -r requirements.txt
 pip install pytest pytest-cov mypy ruff black
 
 # Development
-streamlit run dashboard.py
 
 # Testing
 pytest tests/ -v --cov=src

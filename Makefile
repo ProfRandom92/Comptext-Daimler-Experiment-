@@ -71,7 +71,7 @@ clean: ## Remove build artifacts and caches
 
 dev: ## Run in development mode (Mock LLM, debug logging)
 	@echo "$(BLUE)Starting development server...$(NC)"
-	LLM_BACKEND=mock LOG_LEVEL=DEBUG streamlit run dashboard.py
+	$(MAKE) dev-api
 
 dev-api: ## Run FastAPI dev server (auto-reload)
 	@echo "$(BLUE)Starting API development server...$(NC)"
@@ -80,7 +80,7 @@ dev-api: ## Run FastAPI dev server (auto-reload)
 dev-ollama: ## Run with Ollama Gemma 2B (requires: ollama pull gemma2:2b)
 	@echo "$(BLUE)Starting with Ollama Gemma 2B...$(NC)"
 	ollama pull gemma2:2b > /dev/null 2>&1 || echo "$(YELLOW)Warning: Ollama not installed or gemma2:2b not pulled$(NC)"
-	LLM_BACKEND=ollama_gemma OLLAMA_URL=http://localhost:11434 streamlit run dashboard.py
+	cd showcase && npm start
 
 dev-claude: ## Run with Claude Haiku (requires: ANTHROPIC_API_KEY)
 	@echo "$(BLUE)Starting with Claude Haiku...$(NC)"
@@ -88,17 +88,17 @@ dev-claude: ## Run with Claude Haiku (requires: ANTHROPIC_API_KEY)
 		echo "$(RED)Error: ANTHROPIC_API_KEY not set$(NC)"; \
 		exit 1; \
 	fi
-	LLM_BACKEND=anthropic streamlit run dashboard.py
+	cd showcase && npm start
 
 docker-build: ## Build Docker image
 	@echo "$(BLUE)Building Docker image...$(NC)"
 	docker build -t comptext-daimler:latest .
 	@echo "$(GREEN)✓ Image built$(NC)"
 
-docker-up: ## Start services with Docker Compose (dashboard + api + ollama)
+docker-up: ## Start services with Docker Compose (React UI + api + ollama)
 	@echo "$(BLUE)Starting Docker Compose stack...$(NC)"
 	docker-compose up
-	@echo "$(GREEN)✓ Services running at http://localhost:8501 (Dashboard) & http://localhost:8000 (API)$(NC)"
+	@echo "$(GREEN)✓ Services running (React Frontend) & http://localhost:8000 (API)$(NC)"
 
 docker-down: ## Stop Docker Compose services
 	@echo "$(BLUE)Stopping Docker Compose services...$(NC)"
@@ -111,7 +111,7 @@ docker-logs: ## Show Docker Compose logs
 
 debug: ## Run with full debug logging
 	@echo "$(BLUE)Starting with DEBUG logging...$(NC)"
-	LOG_FORMAT=json LOG_LEVEL=DEBUG CACHE_DEBUG=true KVTC_DEBUG=true streamlit run dashboard.py
+	cd showcase && npm run dev
 
 benchmark: ## Run performance benchmark
 	@echo "$(BLUE)Running benchmark...$(NC)"
@@ -158,7 +158,7 @@ run-batch-test: ## Test batch analysis endpoint
 
 logs-json: ## Show logs in JSON format (structured)
 	@echo "$(BLUE)Setting LOG_FORMAT=json...$(NC)"
-	LOG_FORMAT=json streamlit run dashboard.py
+	cd showcase && npm start
 
 cache-stats: ## Show cache statistics
 	@echo "$(BLUE)Showing cache stats...$(NC)"

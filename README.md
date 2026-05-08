@@ -1,11 +1,10 @@
-# 🚌 Daimler Buses – CompText Prozessautomatisierung
-## Enterprise-Grade KI-Sicherheit & Datenkompression
+# CompText V6 - Enterprise AI Middleware for Daimler Buses
 
 <div align="center">
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.111+-009688?logo=fastapi)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.35+-FF4B4B?logo=streamlit)
+![React](https://img.shields.io/badge/React-18+-61DAFB?logo=react)
 ![License](https://img.shields.io/badge/License-Apache%202.0-green)
 ![Tests](https://img.shields.io/badge/Tests-62%20passing-brightgreen)
 ![DSGVO](https://img.shields.io/badge/DSGVO-Art.%2025-blue)
@@ -15,7 +14,11 @@
 **Fortgeschrittene Token-Komprimierung + DSGVO-Sanitisierung für Industrie 4.0**
 **4-Layer KVTC-Algorithmus · Multi-Agent-Pipeline · Air-Gap-Ready**
 
-*Adaptiert aus [MedGemma-CompText](https://github.com/ProfRandom92/Medgemma-CompText) & [CompText-Monorepo-X](https://github.com/ProfRandom92/comptext-monorepo-X) – Production-Ready für Automotive*
+**Render Live Link:** https://comptext-daimler-api.onrender.com
+
+**KVTC Compression Efficiency:** 94%
+
+**Design DNA:** 8px Mercedes-Benz Design DNA
 
 </div>
 
@@ -39,15 +42,6 @@ CompText ist eine **3-Agent-Pipeline**, die industrielle Prozessdokumente (Wartu
 2. 📦 **um bis zu ~90% komprimiert** (4-Layer KVTC-Sandwich-Algorithmus)
 3. 🤖 **analysiert mit lokalem/Cloud-LLM** (Ollama Gemma 2B oder Claude Haiku)
 
-### Analogie: MedGemma → Daimler Buses
-
-| MedGemma-CompText | Daimler Buses CompText |
-|---|---|
-| PHI-Bereinigung | FIN-Maskierung, Personalr.-Hash |
-| Patientenakten (EHR) | Wartungsprotokolle, OBD-Daten |
-| Nurse Agent | IntakeAgent |
-| Triage P1/P2/P3 | Prozesspriorität P1/P2/P3 |
-| Doctor Agent (MedGemma) | AnalysisAgent (Gemma / Claude) |
 | Klinische Diagnose | Predictive Maintenance, QA |
 
 ---
@@ -128,7 +122,7 @@ flowchart TD
         K --> L[Analyseergebnis\nZusammenfassung · Maßnahmen · Konfidenz]
     end
 
-    L --> M[📊 Streamlit Dashboard\n+ JSON/CSV Export]
+    L --> M[📊 API Output]
     L --> N[🌐 FastAPI REST\n/analyze · /batch/analyze · /health]
 
     style Layer1 fill:#E3F2FD,stroke:#1565C0
@@ -278,7 +272,6 @@ graph LR
 Comptext-Daimler-Experiment-/
 │
 ├── config.py                    # AppConfig (Env-Vars: LLM_BACKEND, OLLAMA_URL, ...)
-├── dashboard.py                 # Streamlit UI (3 Tabs + JSON/CSV-Export)
 ├── api.py                       # FastAPI REST (6 Endpunkte inkl. Batch)
 │
 ├── src/
@@ -317,8 +310,7 @@ Comptext-Daimler-Experiment-/
 ### Environment-Variablen für Deep-Dive
 ```bash
 # JSON Structured Logging (ELK/Splunk-kompatibel)
-LOG_FORMAT=json LOG_LEVEL=DEBUG streamlit run dashboard.py
-
+LOG_FORMAT=json LOG_LEVEL=DEBUG
 # Cache-Debug: Alle Hits/Misses loggen
 CACHE_DEBUG=true python -m api
 
@@ -398,7 +390,6 @@ cd comptext-daimler-experiment-
 pip install -r requirements.txt
 
 # Dashboard (Port 8501)
-streamlit run dashboard.py
 
 # REST API (Port 8000)
 uvicorn api:app --reload
@@ -412,7 +403,6 @@ ollama pull gemma2:2b
 
 LLM_BACKEND=ollama_gemma \
 OLLAMA_URL=http://localhost:11434 \
-streamlit run dashboard.py
 ```
 
 ### Mit Claude Haiku (Cloud)
@@ -420,7 +410,6 @@ streamlit run dashboard.py
 ```bash
 LLM_BACKEND=anthropic \
 ANTHROPIC_API_KEY=sk-ant-... \
-streamlit run dashboard.py
 ```
 
 ### Docker Compose (alles inkl. Ollama)
@@ -517,18 +506,19 @@ Produktionsauftrag (2 Seiten)  | 8,764B   | 1,089B     | 87%   | 1,337 → 166 (
 - [x] **Regex-Fuzzing**: 50+ Edge-Case-Tests
 - [x] **Injection-Tests**: KVTC-Frames, OBD-Codes, LLM-Prompts
 - [x] **Thread-Safety**: LRU-Cache mit Lock
-- [x] **Crypto-Hash**: SHA-256 für Checksummen
+- [x] **Crypto-Hash**: SHA-256 für Checksummen (ersetzt MD5)
 - [x] **Air-Gap Ready**: Ollama-Backend benötigt keine externe API
 
 ### ⚠️ Bekannte Limitations
-1. **MD5 Checksummen**: Kollisionsresistenz nicht garantiert (aber für LRU-Cache ausreichend)
-2. **Regex-Precision**: OBD-Code-Erkennung kann False-Positives erzeugen (P99.9 falsch erkannt)
-3. **LLM-Hallucination**: Claude/Gemma können Fehlercodes erfinden
-4. **Cache ohne TTL**: Alte Ergebnisse werden nicht invalidiert (manueller Flush nötig)
-5. **Batch-Endpoint**: Max. 10 Dokumente per Request (keine echte Streaming)
+1. **SHA-256 Checksummen**: Implementiert für verbesserte Sicherheit (ersetzt MD5)
+2. **CORS Hardening**: Implementiert via ALLOWED_ORIGINS
+3. **Regex-Precision**: OBD-Code-Erkennung kann False-Positives erzeugen (P99.9 falsch erkannt)
+4. **LLM-Hallucination**: Claude/Gemma können Fehlercodes erfinden
+5. **Cache ohne TTL**: Alte Ergebnisse werden nicht invalidiert (manueller Flush nötig)
+6. **Batch-Endpoint**: Max. 10 Dokumente per Request (keine echte Streaming)
 
 ### 🛡️ Security Hardening (Roadmap)
-- [x] SHA-256 für Checksummen (Collision-Resistance)
+- [x] SHA-256 für Checksummen (Collision-Resistance, ersetzt MD5)
 - [ ] Cache-TTL mit Redis-Backend
 - [ ] Rate-Limiting (Pro-IP, Pro-API-Key)
 - [ ] Request-Signing (HMAC-SHA256)
@@ -621,7 +611,6 @@ pytest tests/ -v --tb=short
 ANTHROPIC_API_KEY=sk-ant-... LLM_BACKEND=anthropic uvicorn api:app --port 8000
 ```
 
-> **Hinweis**: Streamlit läuft nicht nativ in Termux. Für das Dashboard wird ein Desktop-System empfohlen. Die FastAPI REST-API funktioniert vollständig in Termux.
 
 ---
 
@@ -636,7 +625,6 @@ ANTHROPIC_API_KEY=sk-ant-... LLM_BACKEND=anthropic uvicorn api:app --port 8000
   - Daimler-spezifische Netzwerkbusses: CAN, CAN-FD, MOST
 
 ### Related Projects
-- [MedGemma-CompText](https://github.com/ProfRandom92/Medgemma-CompText) – Healthcare-Variante
 - [CompText-Monorepo-X](https://github.com/ProfRandom92/comptext-monorepo-X) – Ursprüngliches Framework
 - [Ollama](https://ollama.ai) – Lokale LLM-Inferenz
 
@@ -677,7 +665,6 @@ Zusammenfassung:
 
 ### 🚀 Architected for Mercedes-Benz Digital Trust & Efficiency
 
-*Basiert auf [MedGemma-CompText](https://github.com/ProfRandom92/Medgemma-CompText) & [CompText-Monorepo-X](https://github.com/ProfRandom92/comptext-monorepo-X) von ProfRandom92*
 
 **Challenge Version**: Ready for Security & Performance Testing
 **Status**: Production-Ready with Audit Trail

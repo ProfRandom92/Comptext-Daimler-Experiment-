@@ -53,7 +53,9 @@ def main():
     print(f"Filtered Log Size:   {len(filtered_log.splitlines())} lines")
     print(f"Original Tokens (est): {orig_tokens}")
     print(f"Compressed Tokens:    {result.compressed_tokens}")
-    print(f"Reduction Ratio:      {round((1 - result.compressed_tokens / orig_tokens) * 100, 2)}%")
+    print(
+        f"Reduction Ratio:      {round((1 - result.compressed_tokens / orig_tokens) * 100, 2)}%"
+    )
     print(f"Processing Latency:   {duration:.2f} ms")
     print(f"KVTC Checksum:        {result.checksum}")
     print("-" * 60)

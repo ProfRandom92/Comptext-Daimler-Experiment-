@@ -21,7 +21,7 @@ Datenschutz und Sicherheit sind für CompText Daimler Buses zentral. Diese Richt
 - ✅ **PII-Masking** – FIN, Personaldaten, E-Mails automatisch bereinigt
 - ✅ **Input Validation** – Regex-Fuzzing für OBD-Codes
 - ✅ **SQL-Injection-Schutz** – Kein direktes SQL (SQLite nur für Tests)
-- ✅ **XSS-Prävention** – Dashboard-Inputs sanitisiert (Streamlit-native)
+- ✅ **XSS-Prävention** – Dashboard-Inputs sanitisiert (React-native)
 - ✅ **CSRF-Token** – FastAPI-Session-Security
 - ✅ **Rate-Limiting (Roadmap)** – In v2.1 geplant
 - ✅ **Secrets Rotation** – Anthropic API-Key aus Env-Variablen

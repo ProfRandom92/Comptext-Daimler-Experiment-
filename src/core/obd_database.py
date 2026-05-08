@@ -36,12 +36,24 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         ProcessPriority.P1_KRITISCH,
         "Zündanlage",
     ),
-    "P0301": OBDCodeInfo("P0301", "Zündaussetzer Zylinder 1", ProcessPriority.P1_KRITISCH, "Zündanlage"),
-    "P0302": OBDCodeInfo("P0302", "Zündaussetzer Zylinder 2", ProcessPriority.P1_KRITISCH, "Zündanlage"),
-    "P0303": OBDCodeInfo("P0303", "Zündaussetzer Zylinder 3", ProcessPriority.P1_KRITISCH, "Zündanlage"),
-    "P0304": OBDCodeInfo("P0304", "Zündaussetzer Zylinder 4", ProcessPriority.P1_KRITISCH, "Zündanlage"),
-    "P0305": OBDCodeInfo("P0305", "Zündaussetzer Zylinder 5", ProcessPriority.P1_KRITISCH, "Zündanlage"),
-    "P0306": OBDCodeInfo("P0306", "Zündaussetzer Zylinder 6", ProcessPriority.P1_KRITISCH, "Zündanlage"),
+    "P0301": OBDCodeInfo(
+        "P0301", "Zündaussetzer Zylinder 1", ProcessPriority.P1_KRITISCH, "Zündanlage"
+    ),
+    "P0302": OBDCodeInfo(
+        "P0302", "Zündaussetzer Zylinder 2", ProcessPriority.P1_KRITISCH, "Zündanlage"
+    ),
+    "P0303": OBDCodeInfo(
+        "P0303", "Zündaussetzer Zylinder 3", ProcessPriority.P1_KRITISCH, "Zündanlage"
+    ),
+    "P0304": OBDCodeInfo(
+        "P0304", "Zündaussetzer Zylinder 4", ProcessPriority.P1_KRITISCH, "Zündanlage"
+    ),
+    "P0305": OBDCodeInfo(
+        "P0305", "Zündaussetzer Zylinder 5", ProcessPriority.P1_KRITISCH, "Zündanlage"
+    ),
+    "P0306": OBDCodeInfo(
+        "P0306", "Zündaussetzer Zylinder 6", ProcessPriority.P1_KRITISCH, "Zündanlage"
+    ),
     "P0335": OBDCodeInfo(
         "P0335",
         "Kurbelwellenpositionssensor A – Signalkreis",
@@ -49,7 +61,9 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         "Motorsensor",
     ),
     # ── P1: Schmier- / Kühlsystem ─────────────────────────────────────────────
-    "P0217": OBDCodeInfo("P0217", "Motorüberhitzung erkannt", ProcessPriority.P1_KRITISCH, "Kühlsystem"),
+    "P0217": OBDCodeInfo(
+        "P0217", "Motorüberhitzung erkannt", ProcessPriority.P1_KRITISCH, "Kühlsystem"
+    ),
     "P0520": OBDCodeInfo(
         "P0520",
         "Motoröldrucksensor – Signalkreis Fehlfunktion",
@@ -57,12 +71,20 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         "Schmiersystem",
     ),
     "P0521": OBDCodeInfo(
-        "P0521", "Motoröldruck – Bereich/Leistung", ProcessPriority.P1_KRITISCH, "Schmiersystem"
+        "P0521",
+        "Motoröldruck – Bereich/Leistung",
+        ProcessPriority.P1_KRITISCH,
+        "Schmiersystem",
     ),
-    "P0524": OBDCodeInfo("P0524", "Motoröldruck zu niedrig", ProcessPriority.P1_KRITISCH, "Schmiersystem"),
+    "P0524": OBDCodeInfo(
+        "P0524", "Motoröldruck zu niedrig", ProcessPriority.P1_KRITISCH, "Schmiersystem"
+    ),
     # ── P1: Steuergeräte / Kommunikation ─────────────────────────────────────
     "P0600": OBDCodeInfo(
-        "P0600", "CAN-Bus – Kommunikationsfehler allgemein", ProcessPriority.P1_KRITISCH, "CAN-Bus"
+        "P0600",
+        "CAN-Bus – Kommunikationsfehler allgemein",
+        ProcessPriority.P1_KRITISCH,
+        "CAN-Bus",
     ),
     "P0601": OBDCodeInfo(
         "P0601",
@@ -71,10 +93,16 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         "Steuergerät",
     ),
     "P0605": OBDCodeInfo(
-        "P0605", "Motorsteuergerät – ROM-Fehler", ProcessPriority.P1_KRITISCH, "Steuergerät"
+        "P0605",
+        "Motorsteuergerät – ROM-Fehler",
+        ProcessPriority.P1_KRITISCH,
+        "Steuergerät",
     ),
     "P0606": OBDCodeInfo(
-        "P0606", "Motorsteuergerät – Prozessorfehler", ProcessPriority.P1_KRITISCH, "Steuergerät"
+        "P0606",
+        "Motorsteuergerät – Prozessorfehler",
+        ProcessPriority.P1_KRITISCH,
+        "Steuergerät",
     ),
     # ── P2: Abgassystem / Emissionen ─────────────────────────────────────────
     "P0100": OBDCodeInfo(
@@ -102,7 +130,10 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         "Kühlsystem",
     ),
     "P0125": OBDCodeInfo(
-        "P0125", "Unzureichende Kühlmitteltemperatur", ProcessPriority.P2_DRINGEND, "Kühlsystem"
+        "P0125",
+        "Unzureichende Kühlmitteltemperatur",
+        ProcessPriority.P2_DRINGEND,
+        "Kühlsystem",
     ),
     "P0128": OBDCodeInfo(
         "P0128",
@@ -111,16 +142,28 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         "Thermostat",
     ),
     "P0171": OBDCodeInfo(
-        "P0171", "Gemisch zu mager – Bank 1", ProcessPriority.P2_DRINGEND, "Kraftstoffsystem"
+        "P0171",
+        "Gemisch zu mager – Bank 1",
+        ProcessPriority.P2_DRINGEND,
+        "Kraftstoffsystem",
     ),
     "P0172": OBDCodeInfo(
-        "P0172", "Gemisch zu fett – Bank 1", ProcessPriority.P2_DRINGEND, "Kraftstoffsystem"
+        "P0172",
+        "Gemisch zu fett – Bank 1",
+        ProcessPriority.P2_DRINGEND,
+        "Kraftstoffsystem",
     ),
     "P0174": OBDCodeInfo(
-        "P0174", "Gemisch zu mager – Bank 2", ProcessPriority.P2_DRINGEND, "Kraftstoffsystem"
+        "P0174",
+        "Gemisch zu mager – Bank 2",
+        ProcessPriority.P2_DRINGEND,
+        "Kraftstoffsystem",
     ),
     "P0175": OBDCodeInfo(
-        "P0175", "Gemisch zu fett – Bank 2", ProcessPriority.P2_DRINGEND, "Kraftstoffsystem"
+        "P0175",
+        "Gemisch zu fett – Bank 2",
+        ProcessPriority.P2_DRINGEND,
+        "Kraftstoffsystem",
     ),
     "P0190": OBDCodeInfo(
         "P0190",
@@ -188,13 +231,23 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         ProcessPriority.P2_DRINGEND,
         "Fahrdynamik",
     ),
-    "P0562": OBDCodeInfo("P0562", "Systemspannung zu niedrig", ProcessPriority.P2_DRINGEND, "Elektrik"),
-    "P0563": OBDCodeInfo("P0563", "Systemspannung zu hoch", ProcessPriority.P2_DRINGEND, "Elektrik"),
+    "P0562": OBDCodeInfo(
+        "P0562", "Systemspannung zu niedrig", ProcessPriority.P2_DRINGEND, "Elektrik"
+    ),
+    "P0563": OBDCodeInfo(
+        "P0563", "Systemspannung zu hoch", ProcessPriority.P2_DRINGEND, "Elektrik"
+    ),
     "P0700": OBDCodeInfo(
-        "P0700", "Getriebesteuerung – Fehlfunktion erkannt", ProcessPriority.P2_DRINGEND, "Getriebe"
+        "P0700",
+        "Getriebesteuerung – Fehlfunktion erkannt",
+        ProcessPriority.P2_DRINGEND,
+        "Getriebe",
     ),
     "P0706": OBDCodeInfo(
-        "P0706", "Schaltbereichsensor – Bereich/Leistung", ProcessPriority.P2_DRINGEND, "Getriebe"
+        "P0706",
+        "Schaltbereichsensor – Bereich/Leistung",
+        ProcessPriority.P2_DRINGEND,
+        "Getriebe",
     ),
     "P0720": OBDCodeInfo(
         "P0720",
@@ -203,15 +256,29 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         "Getriebe",
     ),
     "P0730": OBDCodeInfo(
-        "P0730", "Falsche Übersetzungsstufe erkannt", ProcessPriority.P2_DRINGEND, "Getriebe"
+        "P0730",
+        "Falsche Übersetzungsstufe erkannt",
+        ProcessPriority.P2_DRINGEND,
+        "Getriebe",
     ),
     "P0740": OBDCodeInfo(
-        "P0740", "Drehmomentwandler-Überbrückungskupplung", ProcessPriority.P2_DRINGEND, "Getriebe"
+        "P0740",
+        "Drehmomentwandler-Überbrückungskupplung",
+        ProcessPriority.P2_DRINGEND,
+        "Getriebe",
     ),
     "P2200": OBDCodeInfo(
-        "P2200", "NOx-Sensor – Leitungsunterbrechung", ProcessPriority.P2_DRINGEND, "Abgassystem"
+        "P2200",
+        "NOx-Sensor – Leitungsunterbrechung",
+        ProcessPriority.P2_DRINGEND,
+        "Abgassystem",
     ),
-    "P2201": OBDCodeInfo("P2201", "NOx-Sensor – Bereichsfehler", ProcessPriority.P2_DRINGEND, "Abgassystem"),
+    "P2201": OBDCodeInfo(
+        "P2201",
+        "NOx-Sensor – Bereichsfehler",
+        ProcessPriority.P2_DRINGEND,
+        "Abgassystem",
+    ),
     "P229F": OBDCodeInfo(
         "P229F",
         "SCR-Reduktionsmittel (AdBlue) – zu niedrig",
@@ -226,7 +293,10 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
     ),
     # ── P3: Routine ───────────────────────────────────────────────────────────
     "P0030": OBDCodeInfo(
-        "P0030", "Lambdasonde vor Kat – Heizkreis Fehler", ProcessPriority.P3_ROUTINE, "Lambdasonde"
+        "P0030",
+        "Lambdasonde vor Kat – Heizkreis Fehler",
+        ProcessPriority.P3_ROUTINE,
+        "Lambdasonde",
     ),
     "P0102": OBDCodeInfo(
         "P0102",
@@ -253,10 +323,16 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         "Zündanlage",
     ),
     "P0410": OBDCodeInfo(
-        "P0410", "Sekundärlufteinblasung – Fehlfunktion", ProcessPriority.P3_ROUTINE, "Abgassystem"
+        "P0410",
+        "Sekundärlufteinblasung – Fehlfunktion",
+        ProcessPriority.P3_ROUTINE,
+        "Abgassystem",
     ),
     "P1000": OBDCodeInfo(
-        "P1000", "OBD-Systemprüfung nicht abgeschlossen", ProcessPriority.P3_ROUTINE, "OBD-System"
+        "P1000",
+        "OBD-Systemprüfung nicht abgeschlossen",
+        ProcessPriority.P3_ROUTINE,
+        "OBD-System",
     ),
     # ── C0xxx: Fahrwerk / Bremse ─────────────────────────────────────────────
     "C0031": OBDCodeInfo(
@@ -283,7 +359,9 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         ProcessPriority.P1_KRITISCH,
         "ABS/ESP",
     ),
-    "C0045": OBDCodeInfo("C0045", "ABS – Regelkreis Fehlfunktion", ProcessPriority.P1_KRITISCH, "ABS"),
+    "C0045": OBDCodeInfo(
+        "C0045", "ABS – Regelkreis Fehlfunktion", ProcessPriority.P1_KRITISCH, "ABS"
+    ),
     "C0051": OBDCodeInfo(
         "C0051",
         "Lenkwinkelsensor – Signalkreis Fehlfunktion",
@@ -296,10 +374,15 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         ProcessPriority.P1_KRITISCH,
         "Bremsanlage",
     ),
-    "C0121": OBDCodeInfo("C0121", "ABS-Ventil – Relaisfehler", ProcessPriority.P1_KRITISCH, "ABS"),
+    "C0121": OBDCodeInfo(
+        "C0121", "ABS-Ventil – Relaisfehler", ProcessPriority.P1_KRITISCH, "ABS"
+    ),
     # ── B0xxx: Karosserie / SRS ───────────────────────────────────────────────
     "B0001": OBDCodeInfo(
-        "B0001", "Airbag – Zünder Fahrseite Fehlfunktion", ProcessPriority.P1_KRITISCH, "SRS/Airbag"
+        "B0001",
+        "Airbag – Zünder Fahrseite Fehlfunktion",
+        ProcessPriority.P1_KRITISCH,
+        "SRS/Airbag",
     ),
     "B0002": OBDCodeInfo(
         "B0002",
@@ -308,13 +391,22 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         "SRS/Airbag",
     ),
     "B0051": OBDCodeInfo(
-        "B0051", "SRS-Steuergerät – interner Fehler", ProcessPriority.P1_KRITISCH, "SRS/Airbag"
+        "B0051",
+        "SRS-Steuergerät – interner Fehler",
+        ProcessPriority.P1_KRITISCH,
+        "SRS/Airbag",
     ),
     "B0084": OBDCodeInfo(
-        "B0084", "Gurtstraffer Fahrseite – Steuerkreis Fehler", ProcessPriority.P1_KRITISCH, "SRS"
+        "B0084",
+        "Gurtstraffer Fahrseite – Steuerkreis Fehler",
+        ProcessPriority.P1_KRITISCH,
+        "SRS",
     ),
     "B1000": OBDCodeInfo(
-        "B1000", "BCM – Hauptsteuergerät Fehlfunktion", ProcessPriority.P2_DRINGEND, "Karosserie-SG"
+        "B1000",
+        "BCM – Hauptsteuergerät Fehlfunktion",
+        ProcessPriority.P2_DRINGEND,
+        "Karosserie-SG",
     ),
     # ── U0xxx: Netzwerk / CAN ─────────────────────────────────────────────────
     "U0001": OBDCodeInfo(
@@ -336,7 +428,10 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         "CAN-Bus",
     ),
     "U0073": OBDCodeInfo(
-        "U0073", "CAN-Bus A – Kommunikation unterbrochen", ProcessPriority.P1_KRITISCH, "CAN-Bus"
+        "U0073",
+        "CAN-Bus A – Kommunikation unterbrochen",
+        ProcessPriority.P1_KRITISCH,
+        "CAN-Bus",
     ),
     "U0100": OBDCodeInfo(
         "U0100",
@@ -351,7 +446,10 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         "Getriebe-SG",
     ),
     "U0121": OBDCodeInfo(
-        "U0121", "Kommunikationsverlust mit ABS-Steuergerät", ProcessPriority.P1_KRITISCH, "ABS-SG"
+        "U0121",
+        "Kommunikationsverlust mit ABS-Steuergerät",
+        ProcessPriority.P1_KRITISCH,
+        "ABS-SG",
     ),
     "U0126": OBDCodeInfo(
         "U0126",
@@ -378,10 +476,16 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         "Instrumente",
     ),
     "U0184": OBDCodeInfo(
-        "U0184", "Kommunikationsverlust mit Radio-SG", ProcessPriority.P3_ROUTINE, "Infotainment"
+        "U0184",
+        "Kommunikationsverlust mit Radio-SG",
+        ProcessPriority.P3_ROUTINE,
+        "Infotainment",
     ),
     "U1100": OBDCodeInfo(
-        "U1100", "FlexRay-Bus Kommunikationsfehler", ProcessPriority.P1_KRITISCH, "FlexRay-Bus"
+        "U1100",
+        "FlexRay-Bus Kommunikationsfehler",
+        ProcessPriority.P1_KRITISCH,
+        "FlexRay-Bus",
     ),
 }
 

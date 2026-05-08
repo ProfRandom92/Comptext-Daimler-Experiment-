@@ -28,7 +28,9 @@ _TIMEOUT_SEC = 2.0
 # Initialize OpenTelemetry
 if _OTEL_EXPORTER_OTLP_ENDPOINT:
     provider = TracerProvider()
-    processor = BatchSpanProcessor(OTLPSpanExporter(endpoint=_OTEL_EXPORTER_OTLP_ENDPOINT))
+    processor = BatchSpanProcessor(
+        OTLPSpanExporter(endpoint=_OTEL_EXPORTER_OTLP_ENDPOINT)
+    )
     provider.add_span_processor(processor)
     trace.set_tracer_provider(provider)
     otel_tracer = trace.get_tracer(__name__)

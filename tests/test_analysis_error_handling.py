@@ -32,6 +32,7 @@ def test_parse_output_no_json_block():
     assert result["konfidenz"] == 0.3
     assert result["prioritaet"] == fallback
 
+
 def test_parse_output_invalid_json():
     """Test _parse_output when a JSON-like block is found but it's invalid JSON."""
     agent = AnalysisAgent()
@@ -47,15 +48,16 @@ def test_parse_output_invalid_json():
     assert result["konfidenz"] == 0.2
     assert result["prioritaet"] == fallback
 
+
 def test_analyze_with_invalid_json_infer(monkeypatch):
     """Test the full analyze method when the inference returns invalid JSON."""
     agent = AnalysisAgent(AnalysisConfig(backend=ModelBackend.MOCK))
 
     # Mock _infer to return invalid JSON
     # Must contain both { and } to be considered a JSON block by the greedy regex
-    invalid_raw = "Incomplete response: { \"zusammenfassung\": \"incomplete\" }"
+    invalid_raw = 'Incomplete response: { "zusammenfassung": "incomplete" }'
     # Make it invalid JSON by removing a colon
-    invalid_raw = invalid_raw.replace("\":", "\"")
+    invalid_raw = invalid_raw.replace('":', '"')
 
     monkeypatch.setattr(agent, "_infer", lambda prompt: invalid_raw)
 
@@ -67,12 +69,12 @@ def test_analyze_with_invalid_json_infer(monkeypatch):
         zones={},
         frame="compressed_data",
         checksum="test_sum",
-        latency_ms=1.5
+        latency_ms=1.5,
     )
     triage = TriageResult(
         prioritaet=ProcessPriority.P3_ROUTINE,
         begruendung="test triage",
-        ausgeloeste_regeln=[]
+        ausgeloeste_regeln=[],
     )
 
     result = agent.analyze(doc, kvtc, triage)

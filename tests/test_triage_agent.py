@@ -28,13 +28,18 @@ def test_produktionsstopp_ist_p1(triage):
 
 
 def test_sperrung_ist_p1(triage):
-    doc = _doc("Gesamt-Bewertung: SPERRUNG – kritischer Mangel", DocumentType.QA_PRUEFBERICHT)
+    doc = _doc(
+        "Gesamt-Bewertung: SPERRUNG – kritischer Mangel", DocumentType.QA_PRUEFBERICHT
+    )
     result = triage.classify(doc)
     assert result.prioritaet == ProcessPriority.P1_KRITISCH
 
 
 def test_obd_p0300_ist_p1(triage):
-    doc = _doc("Fehlercode P0300 erkannt – Zündaussetzer Zylinder 1", DocumentType.OBD_FEHLERCODE)
+    doc = _doc(
+        "Fehlercode P0300 erkannt – Zündaussetzer Zylinder 1",
+        DocumentType.OBD_FEHLERCODE,
+    )
     result = triage.classify(doc)
     assert result.prioritaet == ProcessPriority.P1_KRITISCH
 
@@ -58,7 +63,10 @@ def test_rueckruf_ist_p2(triage):
 
 
 def test_routine_wartung_ist_p3(triage):
-    doc = _doc("Routineinspektion durchgeführt, alle Werte im Normbereich.", DocumentType.WARTUNGSPROTOKOLL)
+    doc = _doc(
+        "Routineinspektion durchgeführt, alle Werte im Normbereich.",
+        DocumentType.WARTUNGSPROTOKOLL,
+    )
     result = triage.classify(doc)
     assert result.prioritaet == ProcessPriority.P3_ROUTINE
 

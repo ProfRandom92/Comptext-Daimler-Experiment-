@@ -15,3 +15,7 @@ services:
         value: "256"
       - key: LOG_LEVEL
         value: INFO
+      - key: ALLOWED_ORIGINS
+        value: "https://comptext-daimler-api.onrender.com"
+      - key: TINYBIRD_TOKEN
+        sync: false
