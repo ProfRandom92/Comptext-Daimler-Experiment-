@@ -53,11 +53,10 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **CompText Pipeline**: IntakeAgent → TriageAgent → AnalysisAgent
 - **KVTC 4-Layer Compression**: Key-Value-Type-Code Sandwich-Algorithmus
 - **Multi-LLM Backend**: Support für Ollama (Gemma 2B) und Claude Haiku
-- **Streamlit Dashboard**: UI für Analyse und Ergebnis-Export (JSON/CSV)
 - **Unit Tests**: 62 Tests für alle Core-Module
 
 ### 🔧 Changed
-- Initial project setup mit FastAPI und Streamlit
+- Initial project setup mit FastAPI und React
 
 ---
 

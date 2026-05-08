@@ -40,7 +40,9 @@ class FHIRBundle(BaseModel):
     entry: list[dict[str, Any]] = []
 
     class Config:
-        schema_extra = {"example": {"resourceType": "Bundle", "type": "transaction", "entry": []}}
+        schema_extra = {
+            "example": {"resourceType": "Bundle", "type": "transaction", "entry": []}
+        }
 
 
 class PipelineRequest(BaseModel):
@@ -48,9 +50,12 @@ class PipelineRequest(BaseModel):
 
     bundle: FHIRBundle | None = None
     scenario: str | None = Field(
-        None, description="Built-in scenario: STEMI, SEPSIS, STROKE, ANAPHYLAXIE, DM_HYPO"
+        None,
+        description="Built-in scenario: STEMI, SEPSIS, STROKE, ANAPHYLAXIE, DM_HYPO",
     )
-    include_benchmark: bool = Field(False, description="Include token metrics in response")
+    include_benchmark: bool = Field(
+        False, description="Include token metrics in response"
+    )
 
     class Config:
         schema_extra = {"example": {"scenario": "STEMI", "include_benchmark": True}}
@@ -72,7 +77,11 @@ class PipelineResponse(BaseModel):
                 "id": "proc-123456",
                 "scenario": "STEMI",
                 "frame": "CT:v5 SC:STEMI TRI:P1\nVS[hr:118 sbp:82 spo2:91]\n...",
-                "metrics": {"reduction_pct": 93.9, "tokens_input": 1847, "tokens_final": 112},
+                "metrics": {
+                    "reduction_pct": 93.9,
+                    "tokens_input": 1847,
+                    "tokens_final": 112,
+                },
                 "safety": {
                     "allergies_preserved": 1,
                     "medications_preserved": 1,
@@ -90,7 +99,9 @@ class BenchmarkRequest(BaseModel):
     detailed: bool = Field(False, description="Include stage-by-stage metrics")
 
     class Config:
-        schema_extra = {"example": {"scenarios": ["STEMI", "SEPSIS", "STROKE"], "detailed": True}}
+        schema_extra = {
+            "example": {"scenarios": ["STEMI", "SEPSIS", "STROKE"], "detailed": True}
+        }
 
 
 class ValidationRequest(BaseModel):
@@ -154,14 +165,18 @@ class MCPClient:
     async def call_tool(self, tool_name: str, args: dict[str, Any]) -> dict[str, Any]:
         """Call MCP tool"""
         try:
-            response = await self.client.post(f"{self.mcp_url}/tools/{tool_name}", json=args)
+            response = await self.client.post(
+                f"{self.mcp_url}/tools/{tool_name}", json=args
+            )
             response.raise_for_status()
             return response.json()
         except Exception as e:
             logger.error(f"MCP tool call failed: {tool_name}: {e}")
             raise
 
-    async def pipeline(self, bundle: dict | None = None, scenario: str | None = None) -> dict:
+    async def pipeline(
+        self, bundle: dict | None = None, scenario: str | None = None
+    ) -> dict:
         """Run CompText pipeline"""
         args = {}
         if bundle:
@@ -172,8 +187,13 @@ class MCPClient:
 
     async def benchmark(self, scenarios: list[str], detailed: bool = False) -> dict:
         """Run benchmarks"""
-        args = {"scenarios": scenarios if scenarios != ["ALL"] else None, "detailed": detailed}
-        return await self.call_tool("comptext_benchmark", {k: v for k, v in args.items() if v is not None})
+        args = {
+            "scenarios": scenarios if scenarios != ["ALL"] else None,
+            "detailed": detailed,
+        }
+        return await self.call_tool(
+            "comptext_benchmark", {k: v for k, v in args.items() if v is not None}
+        )
 
     async def scenarios(self, filter: str = "all") -> dict:
         """List scenarios"""
@@ -181,7 +201,9 @@ class MCPClient:
 
     async def validate(self, frame: str, checks: list[str]) -> dict:
         """Validate frame"""
-        return await self.call_tool("comptext_validate", {"frame": frame, "checks": checks})
+        return await self.call_tool(
+            "comptext_validate", {"frame": frame, "checks": checks}
+        )
 
 
 # ============================================================================
@@ -222,7 +244,9 @@ async def startup():
     """Initialize on startup"""
     logger.info("Daimler Dashboard starting...")
     mcp_connected = await mcp_client.health_check()
-    logger.info(f"MCP Server connection: {'✓ Connected' if mcp_connected else '✗ Failed'}")
+    logger.info(
+        f"MCP Server connection: {'✓ Connected' if mcp_connected else '✗ Failed'}"
+    )
 
 
 @app.on_event("shutdown")
@@ -259,7 +283,8 @@ async def process_pipeline(request: PipelineRequest):
     try:
         # Call MCP server
         mcp_result = await mcp_client.pipeline(
-            bundle=request.bundle.dict() if request.bundle else None, scenario=request.scenario
+            bundle=request.bundle.dict() if request.bundle else None,
+            scenario=request.scenario,
         )
 
         # Handle errors from MCP
@@ -358,7 +383,9 @@ async def run_benchmark(request: BenchmarkRequest, background_tasks: BackgroundT
         # Run in background
         async def execute_benchmark():
             try:
-                result = await mcp_client.benchmark(scenarios=request.scenarios, detailed=request.detailed)
+                result = await mcp_client.benchmark(
+                    scenarios=request.scenarios, detailed=request.detailed
+                )
                 benchmark_store[benchmark_id] = {
                     "id": benchmark_id,
                     "status": "completed",
@@ -392,7 +419,9 @@ async def run_benchmark(request: BenchmarkRequest, background_tasks: BackgroundT
 async def get_benchmark_results(benchmark_id: str):
     """Get benchmark results"""
     if benchmark_id not in benchmark_store:
-        raise HTTPException(status_code=404, detail=f"Benchmark not found: {benchmark_id}")
+        raise HTTPException(
+            status_code=404, detail=f"Benchmark not found: {benchmark_id}"
+        )
 
     return benchmark_store[benchmark_id]
 

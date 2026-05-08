@@ -25,3 +25,10 @@ The UI/UX is built to seamlessly blend with the Mercedes-Benz corporate identity
 The platform incorporates enterprise-grade security measures suitable for Daimler's operational requirements:
 - **Sanitization**: Advanced `nh3` HTML sanitization logic is used to neutralize potential XSS and injection attacks on inputs and rendered markdown.
 - **Data Privacy**: Complete **DSGVO-compliant telemetry routing**, ensuring all PII (such as FIN numbers) is masked or stripped before transmission to analytics backends or LLM providers. OpenTelemetry configuration securely manages distributed tracing without leaking sensitive context.
+
+## Infrastructure
+The backend is deployed via Render.
+- **Live Demo:** https://comptext-daimler-api.onrender.com
+- **Region:** Frankfurt
+- **Persistent Cache:** 10GB disk mounted at `/cache`
+- **Security Hardening:** Strict CORS enforced via `ALLOWED_ORIGINS`. Checksum hashing utilizes collision-resistant SHA-256 (replaced MD5).

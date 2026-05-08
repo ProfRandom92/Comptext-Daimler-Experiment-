@@ -42,7 +42,12 @@ def extract_deviations(report_text):
 
     # Extract deviations with structured KV approach
     for line in lines:
-        if "Normalbetrieb" in line or "Schichtbeginn" in line or "Pause" in line or "Wiederaufnahme" in line:
+        if (
+            "Normalbetrieb" in line
+            or "Schichtbeginn" in line
+            or "Pause" in line
+            or "Wiederaufnahme" in line
+        ):
             continue
 
         # Match timestamped lines: HH:MM: Text
@@ -52,7 +57,9 @@ def extract_deviations(report_text):
             # Convert to a KV structure
             deviations.append(f"Timestamp={ts} | Event={msg}")
         elif "Zusammenfassung" in line:
-            deviations.append(f"Summary={line.split(':', 1)[1].strip() if ':' in line else line.strip()}")
+            deviations.append(
+                f"Summary={line.split(':', 1)[1].strip() if ':' in line else line.strip()}"
+            )
 
     return "\n".join(deviations)
 
@@ -74,7 +81,9 @@ def main():
 
     print(f"Original Report Tokens: {orig_tokens}")
     print(f"Compressed Tokens:      {result.compressed_tokens}")
-    print(f"Reduction Ratio:        {round((1 - result.compressed_tokens / orig_tokens) * 100, 2)}%")
+    print(
+        f"Reduction Ratio:        {round((1 - result.compressed_tokens / orig_tokens) * 100, 2)}%"
+    )
     print(f"Processing Latency:     {duration:.2f} ms")
     print(f"KVTC Checksum:          {result.checksum}")
     print("-" * 60)

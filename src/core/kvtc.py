@@ -65,7 +65,9 @@ class IndustrialKVTCStrategy:
         self.header_lines = header_lines
         self.window_lines = window_lines
 
-    def compress(self, text: str, context_metadata: dict[str, Any] | None = None) -> KVTCResult:
+    def compress(
+        self, text: str, context_metadata: dict[str, Any] | None = None
+    ) -> KVTCResult:
         t0 = time.perf_counter()
         lines = text.splitlines()
         original_tokens = self.estimate_tokens(text)
@@ -80,10 +82,14 @@ class IndustrialKVTCStrategy:
         }
 
         full_compressed = "\n\n".join(
-            f"[{zone.upper()}]\n{content}" for zone, content in zones.items() if content.strip()
+            f"[{zone.upper()}]\n{content}"
+            for zone, content in zones.items()
+            if content.strip()
         )
 
-        frame = self._serialize_frame(self._extract_kvtc(full_compressed), context_metadata or {})
+        frame = self._serialize_frame(
+            self._extract_kvtc(full_compressed), context_metadata or {}
+        )
         compressed_tokens = self.estimate_tokens(frame)
         ratio = compressed_tokens / original_tokens if original_tokens > 0 else 1.0
 
@@ -123,7 +129,11 @@ class IndustrialKVTCStrategy:
 
         codes = []
         seen_c = set()
-        for c in _OBD_PATTERN.findall(text) + _SAP_PATTERN.findall(text) + _FIN_FRAGMENT.findall(text):
+        for c in (
+            _OBD_PATTERN.findall(text)
+            + _SAP_PATTERN.findall(text)
+            + _FIN_FRAGMENT.findall(text)
+        ):
             if c not in seen_c:
                 seen_c.add(c)
                 codes.append(c)
@@ -141,13 +151,17 @@ class IndustrialKVTCStrategy:
             return "DATE"
         if _OBD_PATTERN.search(value):
             return "OBD_CODE"
-        if _NUMERIC_VALUE.match(value.strip()):  # fix: was re.fullmatch() compiled per call
+        if _NUMERIC_VALUE.match(
+            value.strip()
+        ):  # fix: was re.fullmatch() compiled per call
             return "NUMERIC"
         if value.isupper() and len(value) <= 20:
             return "ENUM"
         return "TEXT"
 
-    def _serialize_frame(self, layers: dict[str, list[str]], meta: dict[str, Any]) -> str:
+    def _serialize_frame(
+        self, layers: dict[str, list[str]], meta: dict[str, Any]
+    ) -> str:
         parts = [
             f"{layer_key}:{','.join(str(i) for i in items[:20])}"
             for layer_key, items in layers.items()
@@ -162,7 +176,11 @@ class IndustrialKVTCStrategy:
         h = min(self.header_lines, total)
         w = max(min(self.window_lines, total - h), 0)
         m_end = total - w
-        return lines[:h], (lines[h:m_end] if m_end > h else []), (lines[m_end:] if w > 0 else [])
+        return (
+            lines[:h],
+            (lines[h:m_end] if m_end > h else []),
+            (lines[m_end:] if w > 0 else []),
+        )
 
     def _compress_middle(self, lines: list[str]) -> str:
         if not lines:
@@ -211,7 +229,11 @@ def run_benchmark(test_cases: list[dict[str, str]]) -> dict[str, Any]:
             "checksum": r.checksum,
         }
         for case in test_cases
-        for r in [strategy.compress(case["text"], context_metadata={"label": case.get("label", "")})]
+        for r in [
+            strategy.compress(
+                case["text"], context_metadata={"label": case.get("label", "")}
+            )
+        ]
     ]
     count = len(results)
     return {
@@ -219,6 +241,8 @@ def run_benchmark(test_cases: list[dict[str, str]]) -> dict[str, Any]:
         "avg_token_reduction_pct": (
             round(sum(r["reduction_pct"] for r in results) / count, 2) if count else 0
         ),
-        "avg_latency_ms": round(sum(r["latency_ms"] for r in results) / count, 3) if count else 0,
+        "avg_latency_ms": (
+            round(sum(r["latency_ms"] for r in results) / count, 3) if count else 0
+        ),
         "total_cases": count,
     }

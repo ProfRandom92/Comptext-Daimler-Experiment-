@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
-from src.core.obd_database import OBD_DATABASE, find_codes_in_text, lookup, lookup_severity
+from src.core.obd_database import (
+    OBD_DATABASE,
+    find_codes_in_text,
+    lookup,
+    lookup_severity,
+)
 from src.models.schemas import ProcessPriority
 
 
@@ -72,7 +77,9 @@ def test_triage_agent_uses_obd_database_for_p1():
 
     # P0520 (Öldrucksensor) ist in der DB als P1, aber NICHT in den bestehenden triage Regex-Patterns
     triage = TriageAgent()
-    doc = EingabeDokument(raw_text="Fehler P0520 – Öldrucksensor Signalkreis außer Bereich")
+    doc = EingabeDokument(
+        raw_text="Fehler P0520 – Öldrucksensor Signalkreis außer Bereich"
+    )
     result = triage.classify(doc)
     assert result.prioritaet == ProcessPriority.P1_KRITISCH
 
@@ -93,6 +100,8 @@ def test_triage_existing_p1_regex_still_works():
     from src.models.schemas import EingabeDokument
 
     triage = TriageAgent()
-    doc = EingabeDokument(raw_text="Bremsversagen am Vorderrad – sofortige Sperrung eingeleitet")
+    doc = EingabeDokument(
+        raw_text="Bremsversagen am Vorderrad – sofortige Sperrung eingeleitet"
+    )
     result = triage.classify(doc)
     assert result.prioritaet == ProcessPriority.P1_KRITISCH
