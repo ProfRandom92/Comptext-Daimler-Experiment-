@@ -11,6 +11,10 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 
 import requests
+from opentelemetry import trace
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 from src.utils.logging import get_logger
 
@@ -20,6 +24,16 @@ _TINYBIRD_URL = "https://eu.tinybird.co/v0/events"
 _TINYBIRD_TOKEN = os.getenv("TINYBIRD_TOKEN", "")
 _OTEL_EXPORTER_OTLP_ENDPOINT = os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "")
 _TIMEOUT_SEC = 2.0
+
+# Initialize OpenTelemetry
+if _OTEL_EXPORTER_OTLP_ENDPOINT:
+    provider = TracerProvider()
+    processor = BatchSpanProcessor(OTLPSpanExporter(endpoint=_OTEL_EXPORTER_OTLP_ENDPOINT))
+    provider.add_span_processor(processor)
+    trace.set_tracer_provider(provider)
+    otel_tracer = trace.get_tracer(__name__)
+else:
+    otel_tracer = None
 
 
 class TinybirdTracker:
