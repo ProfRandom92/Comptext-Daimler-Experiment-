@@ -23,7 +23,7 @@ import sys
 import time
 from typing import Any
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -31,6 +31,9 @@ from pydantic import BaseModel, Field
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 from config import DEFAULT_CONFIG
+from showcase.mo360_shift_filter import extract_deviations, get_sample_shift_report
+from showcase.supply_chain_dedup import semantic_dedup
+from showcase.xentry_optimizer import filter_log, generate_xentry_log
 from src.agents.analysis_agent import AnalysisAgent
 from src.agents.intake_agent import IntakeAgent
 from src.agents.triage_agent import TriageAgent
@@ -39,11 +42,6 @@ from src.core.result_cache import AnalysisResultCache
 from src.models.schemas import DocumentType, ProcessPriority
 from src.telemetry import tracker
 from src.utils.logging import get_logger
-
-# Showcase strategy functions
-from showcase.xentry_optimizer import filter_log, generate_xentry_log
-from showcase.mo360_shift_filter import extract_deviations, get_sample_shift_report
-from showcase.supply_chain_dedup import semantic_dedup
 
 log = get_logger("comptext.api")
 
