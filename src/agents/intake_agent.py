@@ -10,7 +10,7 @@ Aufgaben:
 
 Vertrauliche Daten (analog zu PHI im medizinischen Kontext):
   - Vollständige FIN / VIN           → letzten 6 Zeichen behalten
-  - Mitarbeiter-IDs / Personalnummern → One-Way-Hash (MD5, 8 Zeichen)
+  - Mitarbeiter-IDs / Personalnummern → One-Way-Hash (SHA-256, 8 Zeichen)
   - Kundennamen / Firmennamen        → [KUNDE_ENTFERNT]
   - Interne SAP-Auftragsnummern      → optional maskierbar
   - E-Mail-Adressen, Telefonnummern  → vollständig entfernt
@@ -139,11 +139,11 @@ class IntakeAgent:
         return _FIN_FULL.sub(replacer, text)
 
     def _hash_personal_nr(self, text: str, log: list[str]) -> str:
-        """Ersetzt Personalnummern durch 8-stelligen MD5-Hash (One-Way, aus Monorepo-X)."""
+        """Ersetzt Personalnummern durch 8-stelligen SHA-256-Hash (One-Way, aus Monorepo-X)."""
 
         def replacer(m: re.Match) -> str:
             log.append("Personalnummer gehasht")
-            hashed = hashlib.md5(m.group(0).encode()).hexdigest()[:8].upper()
+            hashed = hashlib.sha256(m.group(0).encode()).hexdigest()[:8].upper()
             return f"PERS_{hashed}"
 
         return _PERSONAL_NR.sub(replacer, text)

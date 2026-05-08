@@ -37,7 +37,7 @@ def semantic_dedup(updates):
         semantic_core = content.replace("Status unverändert.", "").strip()
 
         # 3. Hash
-        h = hashlib.md5(semantic_core.encode()).hexdigest()
+        h = hashlib.sha256(semantic_core.encode()).hexdigest()
 
         if h not in seen_hashes:
             seen_hashes.add(h)
