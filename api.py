@@ -69,7 +69,7 @@ async def validation_exception_handler(request, exc):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=os.getenv("ALLOWED_ORIGINS", "http://localhost:8501,http://localhost:8000").split(","),
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )

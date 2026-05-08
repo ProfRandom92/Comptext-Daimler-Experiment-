@@ -28,10 +28,7 @@ def semantic_dedup(updates):
         # 1. Normalize: Extract the message part after HH:MM:
         # We find the index after the first HH:MM:
         match = re.search(r"\d{2}:\d{2}: ", update)
-        if match:
-            content = update[match.end() :].strip()
-        else:
-            content = update.strip()
+        content = update[match.end():].strip() if match else update.strip()
 
         # 2. Extract semantic core (remove redundant phrases)
         semantic_core = content.replace("Status unverändert.", "").strip()
