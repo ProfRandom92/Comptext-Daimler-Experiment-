@@ -12,11 +12,11 @@ if "nh3" not in sys.modules:
     mock_nh3.clean.side_effect = lambda x: x
     sys.modules["nh3"] = mock_nh3
 
-import pytest
 from src.agents.analysis_agent import AnalysisAgent, AnalysisConfig, ModelBackend
-from src.models.schemas import ProcessPriority, EingabeDokument
-from src.core.kvtc import KVTCResult
 from src.agents.triage_agent import TriageResult
+from src.core.kvtc import KVTCResult
+from src.models.schemas import EingabeDokument, ProcessPriority
+
 
 def test_parse_output_no_json_block():
     """Test _parse_output when no JSON block is found in the raw output."""
