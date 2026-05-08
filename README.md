@@ -4,7 +4,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.111+-009688?logo=fastapi)
-
+![React](https://img.shields.io/badge/React-18+-61DAFB?logo=react)
 ![License](https://img.shields.io/badge/License-Apache%202.0-green)
 ![Tests](https://img.shields.io/badge/Tests-62%20passing-brightgreen)
 ![DSGVO](https://img.shields.io/badge/DSGVO-Art.%2025-blue)
@@ -13,8 +13,6 @@
 
 **Fortgeschrittene Token-Komprimierung + DSGVO-Sanitisierung für Industrie 4.0**
 **4-Layer KVTC-Algorithmus · Multi-Agent-Pipeline · Air-Gap-Ready**
-
-*Adaptiert aus [MedGemma-CompText](https://github.com/ProfRandom92/Medgemma-CompText) & [CompText-Monorepo-X](https://github.com/ProfRandom92/comptext-monorepo-X) – Production-Ready für Automotive*
 
 **Render Live Link:** https://comptext-daimler-api.onrender.com
 
@@ -44,15 +42,6 @@ CompText ist eine **3-Agent-Pipeline**, die industrielle Prozessdokumente (Wartu
 2. 📦 **um bis zu ~90% komprimiert** (4-Layer KVTC-Sandwich-Algorithmus)
 3. 🤖 **analysiert mit lokalem/Cloud-LLM** (Ollama Gemma 2B oder Claude Haiku)
 
-### Analogie: MedGemma → Daimler Buses
-
-| MedGemma-CompText | Daimler Buses CompText |
-|---|---|
-| PHI-Bereinigung | FIN-Maskierung, Personalr.-Hash |
-| Patientenakten (EHR) | Wartungsprotokolle, OBD-Daten |
-| Nurse Agent | IntakeAgent |
-| Triage P1/P2/P3 | Prozesspriorität P1/P2/P3 |
-| Doctor Agent (MedGemma) | AnalysisAgent (Gemma / Claude) |
 | Klinische Diagnose | Predictive Maintenance, QA |
 
 ---
@@ -524,9 +513,9 @@ Produktionsauftrag (2 Seiten)  | 8,764B   | 1,089B     | 87%   | 1,337 → 166 (
 1. **SHA-256 Checksummen**: Implementiert für verbesserte Sicherheit (ersetzt MD5)
 2. **CORS Hardening**: Implementiert via ALLOWED_ORIGINS
 3. **Regex-Precision**: OBD-Code-Erkennung kann False-Positives erzeugen (P99.9 falsch erkannt)
-3. **LLM-Hallucination**: Claude/Gemma können Fehlercodes erfinden
-4. **Cache ohne TTL**: Alte Ergebnisse werden nicht invalidiert (manueller Flush nötig)
-5. **Batch-Endpoint**: Max. 10 Dokumente per Request (keine echte Streaming)
+4. **LLM-Hallucination**: Claude/Gemma können Fehlercodes erfinden
+5. **Cache ohne TTL**: Alte Ergebnisse werden nicht invalidiert (manueller Flush nötig)
+6. **Batch-Endpoint**: Max. 10 Dokumente per Request (keine echte Streaming)
 
 ### 🛡️ Security Hardening (Roadmap)
 - [x] SHA-256 für Checksummen (Collision-Resistance, ersetzt MD5)
@@ -636,7 +625,6 @@ ANTHROPIC_API_KEY=sk-ant-... LLM_BACKEND=anthropic uvicorn api:app --port 8000
   - Daimler-spezifische Netzwerkbusses: CAN, CAN-FD, MOST
 
 ### Related Projects
-- [MedGemma-CompText](https://github.com/ProfRandom92/Medgemma-CompText) – Healthcare-Variante
 - [CompText-Monorepo-X](https://github.com/ProfRandom92/comptext-monorepo-X) – Ursprüngliches Framework
 - [Ollama](https://ollama.ai) – Lokale LLM-Inferenz
 
@@ -677,7 +665,6 @@ Zusammenfassung:
 
 ### 🚀 Architected for Mercedes-Benz Digital Trust & Efficiency
 
-*Basiert auf [MedGemma-CompText](https://github.com/ProfRandom92/Medgemma-CompText) & [CompText-Monorepo-X](https://github.com/ProfRandom92/comptext-monorepo-X) von ProfRandom92*
 
 **Challenge Version**: Ready for Security & Performance Testing
 **Status**: Production-Ready with Audit Trail

@@ -76,7 +76,7 @@ curl http://localhost:3000/health
 │       COMPTEXT CORE PIPELINE                                 │
 │  ├─ NURSE Stage: PHI Scrubbing (GDPR Art. 25)              │
 │  ├─ KVTC Stage: 4-layer Compression                         │
-│  ├─ Triage: Clinical Priority Assessment (ESC/AHA)          │
+│  ├─ Triage: Priority Assessment                             │
 │  └─ Output: Compact CompText Frame (100-130 tokens)         │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -85,7 +85,7 @@ curl http://localhost:3000/health
 
 | Component | Technology | Purpose | Port |
 |-----------|-----------|---------|------|
-| **Dashboard** | FastAPI + React | Clinical data upload, results visualization | 8000 |
+| **Dashboard** | FastAPI + React | Industrial data upload, results visualization | 8000 |
 | **MCP Server** | Python | Universal tool interface, pipeline orchestration | 3000 |
 | **Pipeline** | Python | FHIR processing, token reduction, triage | Internal |
 | **Visualizer** | React + Recharts | Token charts, frame viewer, safety badges | 5173 |
@@ -212,7 +212,7 @@ npm run dev
 
 ## API Usage
 
-### Processing a Clinical Scenario
+### Processing an Industrial Scenario
 
 ```bash
 # Request (STEMI scenario)

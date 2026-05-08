@@ -1,6 +1,6 @@
 """
 TriageAgent – Prozesspriorität-Klassifizierung
-Entspricht dem TriageAgent aus MedGemma-CompText (P1/P2/P3).
+Priority assessment agent for Daimler Buses (P1/P2/P3).
 
 Klassifizierungsregeln (regelbasiert, deterministisch):
   P1 Kritisch  – Sicherheitsrelevant, Produktionsstopp, Fahrzeugausfall

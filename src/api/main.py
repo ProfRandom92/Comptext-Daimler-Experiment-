@@ -1,10 +1,10 @@
 """
 Daimler Dashboard FastAPI Backend
-Integrates CompText MCP Server with clinical FHIR processing and visualization.
+Integrates CompText MCP Server with industrial log processing and visualization.
 
 API Endpoints:
 - POST /api/pipeline/process      Process FHIR bundle via CompText
-- GET  /api/scenarios             List available clinical scenarios
+- GET  /api/scenarios             List available industrial scenarios
 - POST /api/benchmark             Run performance benchmarks
 - GET  /api/benchmark/results/{id} Retrieve benchmark results
 - POST /api/validate              Validate CompText frame
@@ -120,7 +120,7 @@ class ValidationResponse(BaseModel):
 
 
 class ScenarioInfo(BaseModel):
-    """Clinical scenario information"""
+    """Industrial scenario information"""
 
     id: str
     name: str
@@ -212,14 +212,17 @@ class MCPClient:
 
 app = FastAPI(
     title="CompText Daimler Dashboard API",
-    description="Clinical FHIR processing via CompText pipeline",
+    description="Industrial log processing via CompText pipeline",
     version="1.0.0",
 )
 
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=os.getenv(
+        "ALLOWED_ORIGINS",
+        "https://comptext-daimler-api.onrender.com,http://localhost:5173,http://localhost:3000",
+    ).split(","),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -350,7 +353,7 @@ async def get_result(process_id: str):
 
 @app.get("/api/scenarios", response_model=dict[str, Any])
 async def list_scenarios(filter: str = "all"):
-    """List available clinical scenarios"""
+    """List available industrial scenarios"""
     try:
         result = await mcp_client.scenarios(filter=filter)
         return result

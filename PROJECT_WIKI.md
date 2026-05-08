@@ -27,7 +27,7 @@ The platform incorporates enterprise-grade security measures suitable for Daimle
 - **Data Privacy**: Complete **DSGVO-compliant telemetry routing**, ensuring all PII (such as FIN numbers) is masked or stripped before transmission to analytics backends or LLM providers. OpenTelemetry configuration securely manages distributed tracing without leaking sensitive context.
 
 ## Infrastructure
-The backend is deployed via Render.
+The backend is deployed via Render, and the frontend is built with React.
 - **Live Demo:** https://comptext-daimler-api.onrender.com
 - **Region:** Frankfurt
 - **Persistent Cache:** 10GB disk mounted at `/cache`

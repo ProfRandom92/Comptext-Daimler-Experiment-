@@ -1,6 +1,6 @@
 """
 AnalysisAgent – LLM-Inferenz für industrielle Prozessanalyse
-Entspricht dem DoctorAgent aus MedGemma-CompText.
+Deep analysis agent for Daimler Buses.
 
 Modell-Unterstützung:
   - Gemma 2B / 7B via Ollama (lokaler Edge-Betrieb, kein Cloud-Zwang)

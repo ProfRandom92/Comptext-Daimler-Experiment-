@@ -1,6 +1,6 @@
 """
 KVTC (Key-Value-Type-Code) Compression – Industrial Edition
-Adapted from MedGemma-CompText / CompText-Monorepo-X for Daimler Buses.
+Industrial KVTC Compression implementation for Daimler Buses.
 
 4-Layer architecture (from Monorepo-X):
   K (Key)   → Feldbezeichner extrahieren

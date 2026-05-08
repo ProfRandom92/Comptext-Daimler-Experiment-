@@ -1,6 +1,6 @@
 """
 IntakeAgent – Daten-Aufnahme & Bereinigung
-Entspricht dem NurseAgent aus MedGemma-CompText.
+Data intake and sanitization agent for Daimler Buses.
 
 Aufgaben:
   1. Vertrauliche Geschäftsdaten entfernen / anonymisieren (DSGVO Art. 25)
