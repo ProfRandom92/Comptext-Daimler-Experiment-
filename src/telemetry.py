@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import os
 import time
-import threading
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 
 import requests
@@ -27,6 +27,7 @@ class TinybirdTracker:
     def __init__(self, datasource: str = "comptext_metrics") -> None:
         self._datasource = datasource
         self._enabled    = bool(_TINYBIRD_TOKEN)
+        self._executor   = ThreadPoolExecutor(max_workers=4)
         if not self._enabled:
             log.info("TinybirdTracker disabled – TINYBIRD_TOKEN not set")
 
@@ -59,8 +60,7 @@ class TinybirdTracker:
             safe_keys = {"doc_type", "quelle_system", "scenario", "priority"}
             payload.update({k: v for k, v in extra.items() if k in safe_keys})
 
-        thread = threading.Thread(target=self._send, args=(payload,), daemon=True)
-        thread.start()
+        self._executor.submit(self._send, payload)
         return True
 
     def _send(self, payload: dict[str, Any]) -> None:

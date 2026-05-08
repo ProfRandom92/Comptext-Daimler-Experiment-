@@ -45,7 +45,7 @@ def main():
     result = strategy.compress(filtered_log)
     duration = (time.perf_counter() - start_time) * 1000
 
-    orig_tokens = strategy._estimate_tokens(raw_log)
+    orig_tokens = strategy.estimate_tokens(raw_log)
 
     print(f"Original Log Size:   {len(raw_log.splitlines())} lines")
     print(f"Filtered Log Size:   {len(filtered_log.splitlines())} lines")

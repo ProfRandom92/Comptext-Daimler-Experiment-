@@ -62,7 +62,7 @@ def main():
     result = strategy.compress(dedup_text)
     duration = (time.perf_counter() - start_time) * 1000
 
-    orig_tokens = strategy._estimate_tokens(raw_text)
+    orig_tokens = strategy.estimate_tokens(raw_text)
 
     print(f"Total Updates:         {len(updates)}")
     print(f"Unique Updates:        {len(deduplicated_updates)}")

@@ -344,6 +344,7 @@ def optimize_xentry(req: XentryRequest) -> dict[str, Any]:
     Filtert relevante Ereignisse, komprimiert via KVTC.
     n8n Response: {"status","data","metrics"}
     """
+    global PROCESSED_COMPRESSED_BYTES
     t0 = time.perf_counter()
     try:
         raw_log = req.log_text if req.log_text else generate_xentry_log(req.log_lines)
@@ -353,10 +354,11 @@ def optimize_xentry(req: XentryRequest) -> dict[str, Any]:
             filtered = "[NO_CRITICAL_EVENTS]"
 
         result          = _strategy.compress(filtered)
-        orig_tokens     = _strategy._estimate_tokens(raw_log)
+        orig_tokens     = _strategy.estimate_tokens(raw_log)
         comp_tokens     = result.compressed_tokens
         savings         = round((1 - comp_tokens / orig_tokens) * 100, 4) if orig_tokens > 0 else 0.0
         latency_ms      = round((time.perf_counter() - t0) * 1000, 2)
+        PROCESSED_COMPRESSED_BYTES += len(result.frame.encode("utf-8"))
 
         tb_queued = tracker.track(
             endpoint="xentry",
@@ -381,10 +383,10 @@ def optimize_xentry(req: XentryRequest) -> dict[str, Any]:
         return _n8n_success(data, orig_tokens, comp_tokens)
 
     except Exception as exc:
-        log.error("xentry endpoint failed", exc_info=True)
+        log.error("xentry endpoint failed", extra={"error": str(exc)}, exc_info=True)
         return _n8n_error(
             code="XENTRY_PROCESSING_ERROR",
-            detail=str(exc),
+            detail="Internal processing error.",
             recovery_hint="Check log_text format. Trigger n8n Recovery Workflow: xentry-fallback.",
         )
 
@@ -396,6 +398,7 @@ def filter_mo360(req: MO360Request) -> dict[str, Any]:
     Extrahiert Abweichungen, komprimiert via KVTC.
     n8n Response: {"status","data","metrics"}
     """
+    global PROCESSED_COMPRESSED_BYTES
     t0 = time.perf_counter()
     try:
         raw_report = req.shift_report if req.shift_report else get_sample_shift_report()
@@ -405,10 +408,11 @@ def filter_mo360(req: MO360Request) -> dict[str, Any]:
             structured = "[NO_DEVIATIONS_DETECTED]"
 
         result      = _strategy.compress(structured)
-        orig_tokens = _strategy._estimate_tokens(raw_report)
+        orig_tokens = _strategy.estimate_tokens(raw_report)
         comp_tokens = result.compressed_tokens
         savings     = round((1 - comp_tokens / orig_tokens) * 100, 4) if orig_tokens > 0 else 0.0
         latency_ms  = round((time.perf_counter() - t0) * 1000, 2)
+        PROCESSED_COMPRESSED_BYTES += len(result.frame.encode("utf-8"))
 
         tb_queued = tracker.track(
             endpoint="mo360",
@@ -432,10 +436,10 @@ def filter_mo360(req: MO360Request) -> dict[str, Any]:
         return _n8n_success(data, orig_tokens, comp_tokens)
 
     except Exception as exc:
-        log.error("mo360 endpoint failed", exc_info=True)
+        log.error("mo360 endpoint failed", extra={"error": str(exc)}, exc_info=True)
         return _n8n_error(
             code="MO360_PROCESSING_ERROR",
-            detail=str(exc),
+            detail="Internal processing error.",
             recovery_hint="Check shift_report format. Trigger n8n Recovery Workflow: mo360-fallback.",
         )
 
@@ -447,6 +451,7 @@ def dedup_supply_chain(req: SupplyChainRequest) -> dict[str, Any]:
     Dedupliziert Lieferanten-Updates, komprimiert via KVTC.
     n8n Response: {"status","data","metrics"}
     """
+    global PROCESSED_COMPRESSED_BYTES
     t0 = time.perf_counter()
     try:
         from showcase.supply_chain_dedup import get_supplier_updates
@@ -457,10 +462,11 @@ def dedup_supply_chain(req: SupplyChainRequest) -> dict[str, Any]:
         dedup_text  = "\n".join(deduped)
 
         result      = _strategy.compress(dedup_text)
-        orig_tokens = _strategy._estimate_tokens(raw_text)
+        orig_tokens = _strategy.estimate_tokens(raw_text)
         comp_tokens = result.compressed_tokens
         savings     = round((1 - comp_tokens / orig_tokens) * 100, 4) if orig_tokens > 0 else 0.0
         latency_ms  = round((time.perf_counter() - t0) * 1000, 2)
+        PROCESSED_COMPRESSED_BYTES += len(result.frame.encode("utf-8"))
 
         tb_queued = tracker.track(
             endpoint="supply-chain",
@@ -487,10 +493,10 @@ def dedup_supply_chain(req: SupplyChainRequest) -> dict[str, Any]:
         return _n8n_success(data, orig_tokens, comp_tokens)
 
     except Exception as exc:
-        log.error("supply-chain endpoint failed", exc_info=True)
+        log.error("supply-chain endpoint failed", extra={"error": str(exc)}, exc_info=True)
         return _n8n_error(
             code="SUPPLY_CHAIN_PROCESSING_ERROR",
-            detail=str(exc),
+            detail="Internal processing error.",
             recovery_hint="Check updates list format. Trigger n8n Recovery Workflow: supply-chain-fallback.",
         )
 

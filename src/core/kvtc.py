@@ -68,7 +68,7 @@ class IndustrialKVTCStrategy:
     def compress(self, text: str, context_metadata: dict[str, Any] | None = None) -> KVTCResult:
         t0 = time.perf_counter()
         lines = text.splitlines()
-        original_tokens = self._estimate_tokens(text)
+        original_tokens = self.estimate_tokens(text)
 
         header_lines, middle_lines, window_lines = self._split_zones(lines)
 
@@ -86,7 +86,7 @@ class IndustrialKVTCStrategy:
         )
 
         frame = self._serialize_frame(self._extract_kvtc(full_compressed), context_metadata or {})
-        compressed_tokens = self._estimate_tokens(frame)
+        compressed_tokens = self.estimate_tokens(frame)
         ratio = compressed_tokens / original_tokens if original_tokens > 0 else 1.0
 
         return KVTCResult(
@@ -187,7 +187,7 @@ class IndustrialKVTCStrategy:
         return score * 0.5 if len(stripped) < 10 else score
 
     @staticmethod
-    def _estimate_tokens(text: str) -> int:
+    def estimate_tokens(text: str) -> int:
         return max(1, len(text) // IndustrialKVTCStrategy._CHARS_PER_TOKEN)
 
 
