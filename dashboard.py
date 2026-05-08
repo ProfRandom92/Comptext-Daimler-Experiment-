@@ -258,7 +258,7 @@ with tab_szenarien:
     with s1:
         with st.expander("🔧 **XENTRY Diagnose-Logs**", expanded=True):
             st.info("**After-Sales After-Hours Optimization**")
-            st.write("Reduktion von logs mit 10.000 Zeilen auf die relevanten 20 Zeilen "Fault State".")
+            st.write("Reduktion von logs mit 10.000 Zeilen auf die relevanten 20 Zeilen 'Fault State'.")
             st.success("**Impact:** Massive Token-Ersparnis und schnellere Inferenz bei der Fehleranalyse.")
 
         with st.expander("📦 **Supply Chain Reporting**", expanded=True):
@@ -269,7 +269,7 @@ with tab_szenarien:
     with s2:
         with st.expander("🏭 **MO360 Produktion (Factory 56)**", expanded=True):
             st.info("**Relevanzfilter für Schichtberichte**")
-            st.write("Filtert redundantes "Normalbetrieb-Rauschen" aus Berichten.")
+            st.write("Filtert redundantes 'Normalbetrieb-Rauschen' aus Berichten.")
             st.success("**Impact:** Qualitätsingenieure erhalten präzise Fehleridentifikationen.")
 
         with st.expander("📊 **Wirtschaftlicher Impact (KPIs)**", expanded=True):
@@ -280,52 +280,52 @@ with tab_szenarien:
 
 
     with tab_benchmark:
-    st.header("KVTC-Benchmark")
-    st.markdown(
-        "Simuliert Komprimierung über typische Daimler-Buses-Dokumente "
-        "und misst Token-Einsparung sowie Latenz."
+        st.header("KVTC-Benchmark")
+        st.markdown(
+            "Simuliert Komprimierung über typische Daimler-Buses-Dokumente "
+            "und misst Token-Einsparung sowie Latenz."
     )
 
-    if st.button("Benchmark starten", type="primary"):
-        test_cases = [
-            {
-                "label": "Kurzes Wartungsprotokoll",
-                "text": (
-                    "Wartungsauftrag 2024-001\nFahrzeug: Citaro G\nKilometerstand: 80.000\n"
-                    "Fehler: Klimaanlage ausgefallen\nMaßnahme: Kältemittel nachgefüllt"
-                ),
-            },
-            {
-                "label": "OBD-Fehlerspeicher (lang)",
-                "text": "\n".join(
-                    f"P{1000+i}: Fehler in Steuergerät {i % 5} – Sensor außer Bereich"
-                    for i in range(50)
-                ),
-            },
-            {
-                "label": "QA-Prüfbericht",
-                "text": (
-                    "Prüfbericht QA-2024-0815\nFahrzeug-FIN: WDB906232N3123456\n"
-                    "Prüfdatum: 15.08.2024\nPrüfer: P54321\n"
-                    + "\n".join(
-                        f"Prüfpunkt {i+1}: {'OK' if i % 3 != 0 else 'NACHARBEIT'} – "
-                        f"{'Bremse' if i % 2 == 0 else 'Lenkung'} {i}"
-                        for i in range(40)
-                    )
-                ),
-            },
-            {
-                "label": "Produktionsauftrag Taktblatt",
-                "text": (
-                    "Produktionsauftrag: PA-2024-4567\nFahrzeugtyp: Tourismo RHD\n"
-                    "Arbeitsstation: Station 12 – Innenausbau\n"
-                    "Soll-Takt: 45 min\nIst-Takt: 52 min (+15%)\n"
-                    "Abweichung: Teileengpass Sitzgestell PN 9876543\n"
-                    + "\n".join(f"Schritt {i+1}: Arbeitsschritt abgeschlossen" for i in range(30))
-                ),
-            },
-            {
-                "label": "Historisches Wartungsarchiv (Stress)",
+        if st.button("Benchmark starten", type="primary"):
+            test_cases = [
+                {
+                    "label": "Kurzes Wartungsprotokoll",
+                    "text": (
+                        "Wartungsauftrag 2024-001\nFahrzeug: Citaro G\nKilometerstand: 80.000\n"
+                        "Fehler: Klimaanlage ausgefallen\nMaßnahme: Kältemittel nachgefüllt"
+                    ),
+                },
+                {
+                    "label": "OBD-Fehlerspeicher (lang)",
+                    "text": "\n".join(
+                        f"P{1000+i}: Fehler in Steuergerät {i % 5} – Sensor außer Bereich"
+                        for i in range(50)
+                    ),
+                },
+                {
+                    "label": "QA-Prüfbericht",
+                    "text": (
+                        "Prüfbericht QA-2024-0815\nFahrzeug-FIN: WDB906232N3123456\n"
+                        "Prüfdatum: 15.08.2024\nPrüfer: P54321\n"
+                        + "\n".join(
+                            f"Prüfpunkt {i+1}: {'OK' if i % 3 != 0 else 'NACHARBEIT'} – "
+                            f"{'Bremse' if i % 2 == 0 else 'Lenkung'} {i}"
+                            for i in range(40)
+                        )
+                    ),
+                },
+                {
+                    "label": "Produktionsauftrag Taktblatt",
+                    "text": (
+                        "Produktionsauftrag: PA-2024-4567\nFahrzeugtyp: Tourismo RHD\n"
+                        "Arbeitsstation: Station 12 – Innenausbau\n"
+                        "Soll-Takt: 45 min\nIst-Takt: 52 min (+15%)\n"
+                        "Abweichung: Teileengpass Sitzgestell PN 9876543\n"
+                        + "\n".join(f"Schritt {i+1}: Arbeitsschritt abgeschlossen" for i in range(30))
+                    ),
+                },
+                {
+                    "label": "Historisches Wartungsarchiv (Stress)",
                 "text": "\n".join(
                     f"Eintrag {i+1} | Datum: {(i%28)+1:02d}.{(i%12)+1:02d}.202{i%4} | "
                     f"km: {50000 + i*2000} | Maßnahme: Routineinspektion {i%5}"
