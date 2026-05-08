@@ -60,7 +60,7 @@ Dieses Projekt bietet mehrere technische Challenges für Security-Analysen:
 | Challenge | Schwierigkeit | Beschreibung |
 |-----------|--------------|-------------|
 | **Prompt Injection** | ⭐⭐⭐ | KVTC-Frames können mit LLM-Prompts injiziert werden → Prüfe `_build_prompt()` in `analysis_agent.py` |
-| **Cache Poisoning** | ⭐⭐⭐⭐ | MD5-Checksummen sind kollidierbar → Teste `result_cache.py` LRU-Eviction |
+| **Cache Poisoning** | ⭐⭐⭐⭐ | Checksummen-Kollisionen testen → Teste `result_cache.py` LRU-Eviction |
 | **OBD-Code Spoofing** | ⭐⭐ | Fake OBD-Codes können P1-Eskalation erzwingen → Regex-Pattern in `triage_agent.py` |
 | **DSGVO Bypass** | ⭐⭐⭐⭐⭐ | Kann man PII-Maskierung umgehen? Teste `intake_agent.py` edge cases |
 | **Token Leakage** | ⭐⭐⭐ | LLM-Output enthält ggf. ursprüngliche Tokens → Prüfe `_anthropic_infer()` Logging |
@@ -82,9 +82,10 @@ C: "); system('rm -rf /'); --
 payload = "P0300 U0100 C0110 P99999_FAKE_CODE B0001"
 
 # Test 3: Cache Collision
-doc1_hash = md5("Kritischer Fehler")
-doc2_hash = md5("... crafted collision ...")
-# → Können zwei verschiedene Docs gleiche MD5 haben?
+# SHA-256 Checksummen-Kollisionen testen
+doc1_hash = "..."
+doc2_hash = "..."
+# → Können zwei verschiedene Docs gleiche Checksummen haben?
 
 # Test 4: PII Bypass
 payload = """
@@ -211,7 +212,7 @@ sequenceDiagram
 
     Note over IA: DSGVO-Sanitisierung
     IA->>IA: FIN WDB906232N3123456 → FIN_***123456
-    IA->>IA: P12345 → PERS_A1B2C3D4 (MD5)
+    IA->>IA: P12345 → PERS_A1B2C3D4 (SHA-256)
     IA->>IA: max.muster@daimler.com → [EMAIL_ENTFERNT]
     IA->>IA: +49 711 1234 → [TEL_ENTFERNT]
     IA->>IA: Kunde: Müller → [KUNDE_ENTFERNT]
@@ -225,7 +226,7 @@ sequenceDiagram
 | Datentyp | Methode | Ergebnis |
 |----------|---------|---------|
 | FIN / VIN (vollständig) | Letzten 6 Zeichen behalten | `FIN_***XXXXXX` |
-| Personalnummer | One-Way-MD5-Hash (8 Zeichen) | `PERS_A1B2C3D4` |
+| Personalnummer | One-Way-SHA-256-Hash (8 Zeichen) | `PERS_A1B2C3D4` |
 | E-Mail-Adressen | Entfernen | `[EMAIL_ENTFERNT]` |
 | Telefonnummern | Entfernen | `[TEL_ENTFERNT]` |
 | Kundenzeilen | Entfernen | `[KUNDE_ENTFERNT]` |
@@ -242,7 +243,7 @@ graph LR
     Dispatch -->|LLM_BACKEND=ollama_gemma| Ollama["🏠 Ollama Gemma 2B\n• Lokal / Air-Gap\n• Kein Cloud-Zwang\n• DSGVO-Maximum"]
     Dispatch -->|LLM_BACKEND=anthropic| Claude["☁️ Claude Haiku\n• Höchste Qualität\n• Prompt Caching\n• API-Key nötig"]
 
-    Mock & Ollama & Claude --> Cache["💾 Ergebnis-Cache\nMD5 LRU 256 Slots"]
+    Mock & Ollama & Claude --> Cache["💾 Ergebnis-Cache\nSHA-256 LRU 256 Slots"]
     Cache --> Result[Analyseergebnis]
 ```
 
@@ -516,7 +517,7 @@ Produktionsauftrag (2 Seiten)  | 8,764B   | 1,089B     | 87%   | 1,337 → 166 (
 - [x] **Regex-Fuzzing**: 50+ Edge-Case-Tests
 - [x] **Injection-Tests**: KVTC-Frames, OBD-Codes, LLM-Prompts
 - [x] **Thread-Safety**: LRU-Cache mit Lock
-- [x] **Crypto-Hash**: MD5 für Checksummen (non-cryptographic use case)
+- [x] **Crypto-Hash**: SHA-256 für Checksummen
 - [x] **Air-Gap Ready**: Ollama-Backend benötigt keine externe API
 
 ### ⚠️ Bekannte Limitations
@@ -527,7 +528,7 @@ Produktionsauftrag (2 Seiten)  | 8,764B   | 1,089B     | 87%   | 1,337 → 166 (
 5. **Batch-Endpoint**: Max. 10 Dokumente per Request (keine echte Streaming)
 
 ### 🛡️ Security Hardening (Roadmap)
-- [ ] SHA-256 für Checksummen (Collision-Resistance)
+- [x] SHA-256 für Checksummen (Collision-Resistance)
 - [ ] Cache-TTL mit Redis-Backend
 - [ ] Rate-Limiting (Pro-IP, Pro-API-Key)
 - [ ] Request-Signing (HMAC-SHA256)

@@ -258,7 +258,7 @@ with tab_szenarien:
     with s1:
         with st.expander("🔧 **XENTRY Diagnose-Logs**", expanded=True):
             st.info("**After-Sales After-Hours Optimization**")
-            st.write("Reduktion von logs mit 10.000 Zeilen auf die relevanten 20 Zeilen "Fault State".")
+            st.write("Reduktion von logs mit 10.000 Zeilen auf die relevanten 20 Zeilen 'Fault State'.")
             st.success("**Impact:** Massive Token-Ersparnis und schnellere Inferenz bei der Fehleranalyse.")
 
         with st.expander("📦 **Supply Chain Reporting**", expanded=True):
@@ -269,7 +269,7 @@ with tab_szenarien:
     with s2:
         with st.expander("🏭 **MO360 Produktion (Factory 56)**", expanded=True):
             st.info("**Relevanzfilter für Schichtberichte**")
-            st.write("Filtert redundantes "Normalbetrieb-Rauschen" aus Berichten.")
+            st.write("Filtert redundantes 'Normalbetrieb-Rauschen' aus Berichten.")
             st.success("**Impact:** Qualitätsingenieure erhalten präzise Fehleridentifikationen.")
 
         with st.expander("📊 **Wirtschaftlicher Impact (KPIs)**", expanded=True):
@@ -280,9 +280,9 @@ with tab_szenarien:
 
 
     with tab_benchmark:
-    st.header("KVTC-Benchmark")
-    st.markdown(
-        "Simuliert Komprimierung über typische Daimler-Buses-Dokumente "
+        st.header("KVTC-Benchmark")
+        st.markdown(
+            "Simuliert Komprimierung über typische Daimler-Buses-Dokumente "
         "und misst Token-Einsparung sowie Latenz."
     )
 

@@ -1,7 +1,7 @@
 """
 LRU-Cache für Analyseergebnisse.
 
-Cache-Key: MD5-Checksum des KVTC-Frames (KVTCResult.checksum).
+Cache-Key: SHA-256-Checksum des KVTC-Frames (KVTCResult.checksum).
 Gleicher Dokumentinhalt → gleicher Frame → gleiche Checksum → Cache-Hit.
 
 Thread-sicher via threading.Lock für FastAPI-Multithread-Betrieb.

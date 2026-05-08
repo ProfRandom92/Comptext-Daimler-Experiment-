@@ -21,24 +21,23 @@ def get_supplier_updates():
 
 
 def semantic_dedup(updates):
-    seen_cores = set()
+    seen_hashes = set()
     unique_updates = []
 
     for update in updates:
         # 1. Normalize: Extract the message part after HH:MM:
         # We find the index after the first HH:MM:
         match = re.search(r"\d{2}:\d{2}: ", update)
-        if match:
-            content = update[match.end() :].strip()
-        else:
-            content = update.strip()
+        content = update[match.end():].strip() if match else update.strip()
 
         # 2. Extract semantic core (remove redundant phrases)
         semantic_core = content.replace("Status unverändert.", "").strip()
 
-        # 3. Deduplicate based on semantic core
-        if semantic_core not in seen_cores:
-            seen_cores.add(semantic_core)
+        # 3. Hash with SHA-256 and deduplicate via set
+        h = hashlib.sha256(semantic_core.encode()).hexdigest()
+
+        if h not in seen_hashes:
+            seen_hashes.add(h)
             unique_updates.append(update)
 
     return unique_updates
