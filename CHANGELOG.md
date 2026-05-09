@@ -10,7 +10,7 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### ✨ Added (Neu)
 - **OBD Error Code Database**: 70+ Daimler Buses-spezifische Fehlercodes mit Schweregrad-Mapping (P1/P2/P3)
-- **Result Caching**: LRU-Cache mit MD5-Checksummen für Performance (256 Slots, Thread-Safe)
+- **Result Caching**: LRU-Cache mit SHA-256-Checksummen für Performance (256 Slots, Thread-Safe)
 - **Batch Analysis API**: Verarbeitung von bis zu 10 Dokumenten pro Request mit Fehlertoleranz
 - **Anthropic Claude Integration**: Prompt Caching für höhere Analysequalität (Claude Haiku)
 - **FastAPI Dashboard**: Professionelle REST-API mit 6 Endpunkten + OpenAPI/Swagger

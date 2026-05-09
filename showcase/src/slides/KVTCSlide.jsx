@@ -21,7 +21,7 @@ const KVTC_FRAME = [
   { k: 'V:', v: 'FIN_***123456, PERS_A1B2C3D4, SAP-88221-A, 183421, 94, P0300..P0303' },
   { k: 'T:', v: 'VIN, HASH, SAP_ID, NUMERIC, CELSIUS, OBD_MULTI' },
   { k: 'C:', v: 'P0300·P1·KRITISCH, OM936·290PS, KUEHL·94°C, KM·183421' },
-  { k: '✓:', v: 'MD5:a3f4b2c1  |  Tokens: 187  |  Ratio: 88%' },
+  { k: '✓:', v: 'SHA-256:a3f4b2c1  |  Tokens: 187  |  Ratio: 88%' },
 ]
 
 function Counter({ from, to, suffix = '', delay = 0 }) {

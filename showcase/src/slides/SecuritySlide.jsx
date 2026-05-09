@@ -14,14 +14,14 @@ const TRANSFORMS = [
     label: 'Personalausweis',
     before: 'P12345',
     after: 'PERS_A1B2C3D4',
-    method: 'One-Way MD5-Hash (8 Zeichen)',
+    method: 'One-Way SHA-256-Hash (8 Zeichen)',
     color: '#F57C00',
     icon: '👤',
   },
   {
     label: 'Kryptografische Spur',
     before: 'Event: Check-In',
-    after: 'MD5: a3f4b2c1...',
+    after: 'SHA-256: a3f4b2c1...',
     method: 'ISO 21434 Proof of Ingestion',
     color: '#00C853',
     icon: '🔒',
@@ -135,7 +135,7 @@ export default function SecuritySlide() {
             <div className="space-y-2">
               {[
                 { node: 'Rohdaten (z.B. XENTRY)', desc: 'Vollständige FIN & Klartext', color: '#E40520', arrow: true },
-                { node: 'KVTC Intake Layer', desc: 'Maskierung & MD5-Hashing', color: '#00A0DC', arrow: true },
+                { node: 'KVTC Intake Layer', desc: 'Maskierung & SHA-256-Hashing', color: '#00A0DC', arrow: true },
                 { node: 'Gemma 2B (Lokal)', desc: 'Kein Internet-Upload nötig', color: '#00C853', arrow: true },
                 { node: 'Compliance Audit', desc: '100% nachvollziehbar via Hash', color: '#8899AA', arrow: false },
               ].map((step) => (

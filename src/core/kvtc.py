@@ -239,10 +239,14 @@ def run_benchmark(test_cases: list[dict[str, str]]) -> dict[str, Any]:
     return {
         "cases": results,
         "avg_token_reduction_pct": (
-            round(sum(r["reduction_pct"] for r in results) / count, 2) if count else 0
+            round(sum(float(str(r["reduction_pct"])) for r in results) / count, 2)
+            if count
+            else 0
         ),
         "avg_latency_ms": (
-            round(sum(r["latency_ms"] for r in results) / count, 3) if count else 0
+            round(sum(float(str(r["latency_ms"])) for r in results) / count, 3)
+            if count
+            else 0
         ),
         "total_cases": count,
     }

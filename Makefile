@@ -62,6 +62,9 @@ mypy: ## Type-check with mypy
 	mypy src/ --strict --ignore-missing-imports
 	@echo "$(GREEN)✓ Type-check passed$(NC)"
 
+build-frontend: ## Build frontend
+	cd showcase && npm install && npm run build
+
 clean: ## Remove build artifacts and caches
 	@echo "$(BLUE)Cleaning up...$(NC)"
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true

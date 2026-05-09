@@ -11,8 +11,8 @@ Endpunkte (Standard):
   GET  /benchmark            – Standard-Benchmark
 
 Industrielle Showcase-Endpunkte (n8n-kompatibel):
-  POST /v1/optimize/xentry       – Diagnostic Log Compression (Xentry)
-  POST /v1/filter/mo360          – Production Shift Filtering (MO360)
+  POST /api/xentry/optimize       – Diagnostic Log Compression (Xentry)
+  POST /api/mo360/filter          – Production Shift Filtering (MO360)
   POST /v1/dedup/supply-chain    – Semantic Deduplication (Supply Chain)
 """
 
@@ -391,7 +391,7 @@ def benchmark() -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 
-@app.post("/v1/optimize/xentry")
+@app.post("/api/xentry/optimize")
 def optimize_xentry(req: XentryRequest) -> dict[str, Any]:
     """
     Xentry Diagnostic Log Compression.
@@ -447,7 +447,7 @@ def optimize_xentry(req: XentryRequest) -> dict[str, Any]:
         )
 
 
-@app.post("/v1/filter/mo360")
+@app.post("/api/mo360/filter")
 def filter_mo360(req: MO360Request) -> dict[str, Any]:
     """
     MO360 Production Shift Report Filtering.
