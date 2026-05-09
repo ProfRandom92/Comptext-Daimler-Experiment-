@@ -26,6 +26,7 @@ _OTEL_EXPORTER_OTLP_ENDPOINT = os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "")
 _TIMEOUT_SEC = 2.0
 
 # Initialize OpenTelemetry
+otel_tracer: trace.Tracer | None = None
 if _OTEL_EXPORTER_OTLP_ENDPOINT:
     provider = TracerProvider()
     processor = BatchSpanProcessor(
@@ -34,8 +35,6 @@ if _OTEL_EXPORTER_OTLP_ENDPOINT:
     provider.add_span_processor(processor)
     trace.set_tracer_provider(provider)
     otel_tracer = trace.get_tracer(__name__)
-else:
-    otel_tracer = None
 
 
 class TinybirdTracker:

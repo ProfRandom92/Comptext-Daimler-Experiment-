@@ -90,6 +90,11 @@ dev-claude: ## Run with Claude Haiku (requires: ANTHROPIC_API_KEY)
 	fi
 	cd showcase && npm start
 
+build-react: ## Build React frontend (showcase/)
+	@echo "$(BLUE)Building React frontend...$(NC)"
+	cd showcase && npm install && npm run build
+	@echo "$(GREEN)✓ React build complete (showcase/dist/)$(NC)"
+
 docker-build: ## Build Docker image
 	@echo "$(BLUE)Building Docker image...$(NC)"
 	docker build -t comptext-daimler:latest .
