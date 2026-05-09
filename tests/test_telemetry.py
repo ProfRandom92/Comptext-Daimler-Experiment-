@@ -81,7 +81,7 @@ def test_send_success(mock_post):
 
     mock_post.assert_called_once()
     args, kwargs = mock_post.call_args
-    assert args[0] == "https://eu.tinybird.co/v0/events"
+    assert args[0] == "https://api.gcp-europe-west2.tinybird.co/v0/events"
     assert kwargs["params"]["name"] == "comptext_metrics"
     assert "token" in kwargs["params"]
     assert kwargs["data"] == '{"test": "data"}'
