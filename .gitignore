@@ -67,8 +67,8 @@ Thumbs.db
 .cython_trace/
 
 # Environment-specific
-.streamlit/
-streamlit_app.py.bak
+
+
 .ollama/
 ollama_models/
 

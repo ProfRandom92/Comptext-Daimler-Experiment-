@@ -48,4 +48,4 @@ addopts      = "-v --tb=short"
 
 [tool.coverage.run]
 source = ["src"]
-omit   = ["tests/*", "dashboard.py", "api.py"]
+omit   = ["tests/*", "api.py"]

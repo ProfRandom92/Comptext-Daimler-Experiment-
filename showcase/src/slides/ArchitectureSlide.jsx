@@ -32,7 +32,7 @@ const NODES = [
     id: 'analysis',
     icon: '🤖',
     label: 'AnalysisAgent',
-    sub: 'LLM-Inferenz + MD5-LRU-Cache',
+    sub: 'LLM-Inferenz + SHA-256-LRU-Cache',
     color: '#00C853',
     bg: '#0A1F10',
     badge: 'Layer 3',
@@ -167,7 +167,7 @@ export default function ArchitectureSlide() {
             <div className="space-y-1.5">
               {[
                 ['FIN-Maskierung', 'WDB906232N3123456 → FIN_***123456'],
-                ['Personal-Hash', 'P12345 → PERS_A1B2C3D4 (MD5)'],
+                ['Personal-Hash', 'P12345 → PERS_A1B2C3D4 (SHA-256)'],
                 ['E-Mail entfernt', 'max@daimler.com → [EMAIL_ENTFERNT]'],
                 ['KVTC-Kompression', '1847 Tokens → 187 Tokens (−88%)'],
               ].map(([k, v]) => (
