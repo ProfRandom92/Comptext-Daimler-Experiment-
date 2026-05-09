@@ -31,7 +31,7 @@ CompText ist **nicht einfach ein Komprimierungsalgorithmus**. Es ist ein:
 - ✅ **Privacy-by-Design-Architektur** (DSGVO Art. 25 zertifiziert)
 - ✅ **Challenge**: OBD-Fehlercode-DB (70+ Codes) mit kritischen vs. Routine-Prioritäten
 - ✅ **Exploit-Oberflächr**: KVTC-Frame-Injection, Prompt-Injection, Cache-Poisoning-Szenarien
-- ✅ **Production-Audit**: Vollständig getestet (62 Tests, ~0.5s Laufzeit)
+- ✅ **Production-Audit**: Vollständig getestet (75 Tests, ~0.5s Laufzeit)
 
 ---
 
@@ -389,7 +389,7 @@ git clone https://github.com/ProfRandom92/comptext-daimler-experiment-
 cd comptext-daimler-experiment-
 pip install -r requirements.txt
 
-# Dashboard (Port 8501)
+# React Frontend (Port 5173)
 
 # REST API (Port 8000)
 uvicorn api:app --reload
@@ -501,7 +501,7 @@ Produktionsauftrag (2 Seiten)  | 8,764B   | 1,089B     | 87%   | 1,337 → 166 (
 
 ## 🔍 Sicherheits-Audit & Known Limitations
 
-### ✅ Sicherheit (Certified)
+### Sicherheit (Certified)
 - [x] **DSGVO Art. 25**: Privacy-by-Design implementiert
 - [x] **Regex-Fuzzing**: 50+ Edge-Case-Tests
 - [x] **Injection-Tests**: KVTC-Frames, OBD-Codes, LLM-Prompts
@@ -509,7 +509,7 @@ Produktionsauftrag (2 Seiten)  | 8,764B   | 1,089B     | 87%   | 1,337 → 166 (
 - [x] **Crypto-Hash**: SHA-256 für Checksummen (ersetzt MD5)
 - [x] **Air-Gap Ready**: Ollama-Backend benötigt keine externe API
 
-### ⚠️ Bekannte Limitations
+### Bekannte Limitations
 1. **SHA-256 Checksummen**: Implementiert für verbesserte Sicherheit (ersetzt MD5)
 2. **CORS Hardening**: Implementiert via ALLOWED_ORIGINS
 3. **Regex-Precision**: OBD-Code-Erkennung kann False-Positives erzeugen (P99.9 falsch erkannt)
@@ -517,7 +517,7 @@ Produktionsauftrag (2 Seiten)  | 8,764B   | 1,089B     | 87%   | 1,337 → 166 (
 5. **Cache ohne TTL**: Alte Ergebnisse werden nicht invalidiert (manueller Flush nötig)
 6. **Batch-Endpoint**: Max. 10 Dokumente per Request (keine echte Streaming)
 
-### 🛡️ Security Hardening (Roadmap)
+### Security Hardening (Roadmap)
 - [x] SHA-256 für Checksummen (Collision-Resistance, ersetzt MD5)
 - [ ] Cache-TTL mit Redis-Backend
 - [ ] Rate-Limiting (Pro-IP, Pro-API-Key)
@@ -527,7 +527,7 @@ Produktionsauftrag (2 Seiten)  | 8,764B   | 1,089B     | 87%   | 1,337 → 166 (
 
 ---
 
-## 🧪 Tests
+## Tests
 
 ```bash
 # Alle Tests
@@ -542,7 +542,21 @@ pytest tests/test_result_cache.py -v
 pytest tests/test_api_batch.py -v
 ```
 
-**62 Tests · 0 Fehler · ~0.5s Laufzeit**
+**75 Tests · 0 Fehler · ~0.7s Laufzeit
+
+```
+tests/test_kvtc.py                     8 Tests  – KVTC-Kompressionsalgorithmus
+tests/test_intake_agent.py            10 Tests  – DSGVO-Sanitisierung + Typdetection
+tests/test_triage_agent.py            10 Tests  – P1/P2/P3 Priorisierung
+tests/test_analysis_agent.py           4 Tests  – LLM-Dispatch + Mock-Backend
+tests/test_analysis_error_handling.py  3 Tests  – JSON-Fehlerbehandlung
+tests/test_obd_database.py            13 Tests  – OBD-Lookup + Triage-Integration
+tests/test_result_cache.py             9 Tests  – LRU-Cache + Thread-Safety
+tests/test_api_batch.py                7 Tests  – Batch-Endpoint + Health
+tests/test_showcase_scenarios.py       3 Tests  – XENTRY / MO360 / Supply Chain
+tests/test_stats.py                    2 Tests  – Stats-Endpoint
+tests/test_telemetry.py                5 Tests  – Telemetry Tracking
+```
 
 ---
 
@@ -614,7 +628,7 @@ ANTHROPIC_API_KEY=sk-ant-... LLM_BACKEND=anthropic uvicorn api:app --port 8000
 
 ---
 
-## 📚 Research & References
+## Research & References
 
 ### Academic Foundations
 - **KVTC Algorithm**: Multi-Layer Token Compression Strategy (CompText-Original)
@@ -635,7 +649,7 @@ ANTHROPIC_API_KEY=sk-ant-... LLM_BACKEND=anthropic uvicorn api:app --port 8000
 
 ---
 
-## 📞 Support & Feedback
+## Support & Feedback
 
 ### Issues & Feature Requests
 🐛 **Bug Report**: https://github.com/ProfRandom92/comptext-daimler-experiment-/issues
@@ -647,7 +661,7 @@ ANTHROPIC_API_KEY=sk-ant-... LLM_BACKEND=anthropic uvicorn api:app --port 8000
 
 ---
 
-## 📄 Lizenz
+## Lizenz
 
 **Apache License 2.0** – siehe [LICENSE](LICENSE)
 
