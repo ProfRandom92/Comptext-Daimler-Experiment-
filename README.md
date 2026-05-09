@@ -542,7 +542,7 @@ pytest tests/test_result_cache.py -v
 pytest tests/test_api_batch.py -v
 ```
 
-**75 Tests · 0 Fehler · ~0.7s Laufzeit
+**75 Tests · 0 Fehler · ~0.7s Laufzeit**
 
 ```
 tests/test_kvtc.py                     8 Tests  – KVTC-Kompressionsalgorithmus
