@@ -391,7 +391,7 @@ def benchmark() -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 
-@app.post("/api/xentry/optimize")
+@app.post("/v1/optimize/xentry")
 def optimize_xentry(req: XentryRequest) -> dict[str, Any]:
     """
     Xentry Diagnostic Log Compression.
@@ -447,7 +447,7 @@ def optimize_xentry(req: XentryRequest) -> dict[str, Any]:
         )
 
 
-@app.post("/api/mo360/filter")
+@app.post("/v1/filter/mo360")
 def filter_mo360(req: MO360Request) -> dict[str, Any]:
     """
     MO360 Production Shift Report Filtering.
@@ -568,8 +568,8 @@ def dedup_supply_chain(req: SupplyChainRequest) -> dict[str, Any]:
 # /api/ route aliases (React frontend convention)
 # ---------------------------------------------------------------------------
 
-app.post("/api/xentry/optimize")(optimize_xentry)
-app.post("/api/mo360/filter")(filter_mo360)
+app.post("/v1/optimize/xentry")(optimize_xentry)
+app.post("/v1/filter/mo360")(filter_mo360)
 app.post("/api/supply-chain/dedup")(dedup_supply_chain)
 
 # ---------------------------------------------------------------------------
