@@ -8,9 +8,9 @@ export default {
         daimler: {
           blue: '#00A0DC',
           red: '#E40520',
-          dark: '#080C14',
-          navy: '#0D1526',
-          card: '#111827',
+          dark: '#121212',
+          navy: '#1A1A2E',
+          card: '#1E1E1E',
         },
       },
       fontFamily: {
