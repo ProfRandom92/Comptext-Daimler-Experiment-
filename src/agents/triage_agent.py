@@ -7,8 +7,8 @@ Klassifizierungsregeln (regelbasiert, deterministisch):
   P2 Dringend  – Qualitätsproblem, Wartung überfällig, Teileengpass
   P3 Routine   – Planmäßige Wartung, Dokumentation, Kleinreparaturen
 
-Analog zu ESC/AHA/SSC-Leitlinien aus Monorepo-X,
-aber statt klinischer Leitlinien: Daimler Buses Prozessrichtlinien.
+Regelbasiert, deterministisch – keine externen Leitlinien.
+Maßstab: Daimler Buses Prozessrichtlinien (interne SOPs).
 """
 
 from __future__ import annotations
