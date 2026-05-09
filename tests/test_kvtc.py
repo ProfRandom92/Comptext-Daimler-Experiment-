@@ -22,10 +22,7 @@ def test_compress_returns_result(strategy):
 
 def test_token_reduction(strategy):
     long_text = "\n".join(
-        [
-            f"Historischer Eintrag {i}: keine relevanten Informationen hier."
-            for i in range(100)
-        ]
+        [f"Historischer Eintrag {i}: keine relevanten Informationen hier." for i in range(100)]
     )
     result = strategy.compress(long_text)
     assert result.token_reduction_pct > 0

@@ -28,9 +28,7 @@ def test_produktionsstopp_ist_p1(triage):
 
 
 def test_sperrung_ist_p1(triage):
-    doc = _doc(
-        "Gesamt-Bewertung: SPERRUNG – kritischer Mangel", DocumentType.QA_PRUEFBERICHT
-    )
+    doc = _doc("Gesamt-Bewertung: SPERRUNG – kritischer Mangel", DocumentType.QA_PRUEFBERICHT)
     result = triage.classify(doc)
     assert result.prioritaet == ProcessPriority.P1_KRITISCH
 

@@ -36,24 +36,12 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         ProcessPriority.P1_KRITISCH,
         "Zündanlage",
     ),
-    "P0301": OBDCodeInfo(
-        "P0301", "Zündaussetzer Zylinder 1", ProcessPriority.P1_KRITISCH, "Zündanlage"
-    ),
-    "P0302": OBDCodeInfo(
-        "P0302", "Zündaussetzer Zylinder 2", ProcessPriority.P1_KRITISCH, "Zündanlage"
-    ),
-    "P0303": OBDCodeInfo(
-        "P0303", "Zündaussetzer Zylinder 3", ProcessPriority.P1_KRITISCH, "Zündanlage"
-    ),
-    "P0304": OBDCodeInfo(
-        "P0304", "Zündaussetzer Zylinder 4", ProcessPriority.P1_KRITISCH, "Zündanlage"
-    ),
-    "P0305": OBDCodeInfo(
-        "P0305", "Zündaussetzer Zylinder 5", ProcessPriority.P1_KRITISCH, "Zündanlage"
-    ),
-    "P0306": OBDCodeInfo(
-        "P0306", "Zündaussetzer Zylinder 6", ProcessPriority.P1_KRITISCH, "Zündanlage"
-    ),
+    "P0301": OBDCodeInfo("P0301", "Zündaussetzer Zylinder 1", ProcessPriority.P1_KRITISCH, "Zündanlage"),
+    "P0302": OBDCodeInfo("P0302", "Zündaussetzer Zylinder 2", ProcessPriority.P1_KRITISCH, "Zündanlage"),
+    "P0303": OBDCodeInfo("P0303", "Zündaussetzer Zylinder 3", ProcessPriority.P1_KRITISCH, "Zündanlage"),
+    "P0304": OBDCodeInfo("P0304", "Zündaussetzer Zylinder 4", ProcessPriority.P1_KRITISCH, "Zündanlage"),
+    "P0305": OBDCodeInfo("P0305", "Zündaussetzer Zylinder 5", ProcessPriority.P1_KRITISCH, "Zündanlage"),
+    "P0306": OBDCodeInfo("P0306", "Zündaussetzer Zylinder 6", ProcessPriority.P1_KRITISCH, "Zündanlage"),
     "P0335": OBDCodeInfo(
         "P0335",
         "Kurbelwellenpositionssensor A – Signalkreis",
@@ -61,9 +49,7 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         "Motorsensor",
     ),
     # ── P1: Schmier- / Kühlsystem ─────────────────────────────────────────────
-    "P0217": OBDCodeInfo(
-        "P0217", "Motorüberhitzung erkannt", ProcessPriority.P1_KRITISCH, "Kühlsystem"
-    ),
+    "P0217": OBDCodeInfo("P0217", "Motorüberhitzung erkannt", ProcessPriority.P1_KRITISCH, "Kühlsystem"),
     "P0520": OBDCodeInfo(
         "P0520",
         "Motoröldrucksensor – Signalkreis Fehlfunktion",
@@ -76,9 +62,7 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         ProcessPriority.P1_KRITISCH,
         "Schmiersystem",
     ),
-    "P0524": OBDCodeInfo(
-        "P0524", "Motoröldruck zu niedrig", ProcessPriority.P1_KRITISCH, "Schmiersystem"
-    ),
+    "P0524": OBDCodeInfo("P0524", "Motoröldruck zu niedrig", ProcessPriority.P1_KRITISCH, "Schmiersystem"),
     # ── P1: Steuergeräte / Kommunikation ─────────────────────────────────────
     "P0600": OBDCodeInfo(
         "P0600",
@@ -231,12 +215,8 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         ProcessPriority.P2_DRINGEND,
         "Fahrdynamik",
     ),
-    "P0562": OBDCodeInfo(
-        "P0562", "Systemspannung zu niedrig", ProcessPriority.P2_DRINGEND, "Elektrik"
-    ),
-    "P0563": OBDCodeInfo(
-        "P0563", "Systemspannung zu hoch", ProcessPriority.P2_DRINGEND, "Elektrik"
-    ),
+    "P0562": OBDCodeInfo("P0562", "Systemspannung zu niedrig", ProcessPriority.P2_DRINGEND, "Elektrik"),
+    "P0563": OBDCodeInfo("P0563", "Systemspannung zu hoch", ProcessPriority.P2_DRINGEND, "Elektrik"),
     "P0700": OBDCodeInfo(
         "P0700",
         "Getriebesteuerung – Fehlfunktion erkannt",
@@ -359,9 +339,7 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         ProcessPriority.P1_KRITISCH,
         "ABS/ESP",
     ),
-    "C0045": OBDCodeInfo(
-        "C0045", "ABS – Regelkreis Fehlfunktion", ProcessPriority.P1_KRITISCH, "ABS"
-    ),
+    "C0045": OBDCodeInfo("C0045", "ABS – Regelkreis Fehlfunktion", ProcessPriority.P1_KRITISCH, "ABS"),
     "C0051": OBDCodeInfo(
         "C0051",
         "Lenkwinkelsensor – Signalkreis Fehlfunktion",
@@ -374,9 +352,7 @@ OBD_DATABASE: Final[dict[str, OBDCodeInfo]] = {
         ProcessPriority.P1_KRITISCH,
         "Bremsanlage",
     ),
-    "C0121": OBDCodeInfo(
-        "C0121", "ABS-Ventil – Relaisfehler", ProcessPriority.P1_KRITISCH, "ABS"
-    ),
+    "C0121": OBDCodeInfo("C0121", "ABS-Ventil – Relaisfehler", ProcessPriority.P1_KRITISCH, "ABS"),
     # ── B0xxx: Karosserie / SRS ───────────────────────────────────────────────
     "B0001": OBDCodeInfo(
         "B0001",

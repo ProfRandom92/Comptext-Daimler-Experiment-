@@ -41,9 +41,7 @@ _EMAIL = re.compile(r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}")
 # Telefon (diverse Formate)
 _TELEFON = re.compile(r"(\+49|0)\s?[\d\s\-/]{8,18}")
 # Kundennamen-Hinweise (Zeilen die mit "Kunde:", "Auftraggeber:" beginnen)
-_KUNDEN_ZEILE = re.compile(
-    r"(Kunde|Auftraggeber|Besteller|Halter)\s*:\s*.+", re.IGNORECASE
-)
+_KUNDEN_ZEILE = re.compile(r"(Kunde|Auftraggeber|Besteller|Halter)\s*:\s*.+", re.IGNORECASE)
 
 # Typ-Erkennung nach Schlüsselwörtern
 _TYPE_PATTERNS: list[tuple[re.Pattern[str], DocumentType]] = [
