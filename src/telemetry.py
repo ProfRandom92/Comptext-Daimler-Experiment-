@@ -20,7 +20,7 @@ from src.utils.logging import get_logger
 
 log = get_logger("comptext.telemetry")
 
-_TINYBIRD_URL = "https://eu.tinybird.co/v0/events"
+_TINYBIRD_URL = "https://api.gcp-europe-west2.tinybird.co/v0/events"
 _TINYBIRD_TOKEN = os.getenv("TINYBIRD_TOKEN", "")
 _OTEL_EXPORTER_OTLP_ENDPOINT = os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "")
 _TIMEOUT_SEC = 2.0

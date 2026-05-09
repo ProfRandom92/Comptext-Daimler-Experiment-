@@ -54,7 +54,7 @@ export default function App() {
       {/* Top progress bar */}
       <motion.div
         className="absolute top-0 left-0 h-[2px] z-50"
-        style={{ background: 'linear-gradient(90deg, #00A0DC, #0DCFFF)' }}
+        style={{ background: 'linear-gradient(90deg, #38708B, #0DCFFF)' }}
         animate={{ width: `${((page + 1) / SLIDES.length) * 100}%` }}
         transition={{ duration: 0.5, ease: 'easeInOut' }}
       />

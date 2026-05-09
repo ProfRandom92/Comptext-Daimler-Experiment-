@@ -12,17 +12,25 @@
 }
 
 :root {
-  --c-bg: #121212;
+  /* Kernfarben Daimler Truck */
+  --c-bg: #000000;          /* Primärfarbe für Text & Hintergründe */
+  --dt-white: #FFFFFF;      /* Reinweiß für Kontrastflächen */
+  --c-blue: #38708B;        /* Offizielles Daimler Truck Calypso Blau */
+
+  /* Graustufen & Metallics */
+  --c-card: #1E1E1E;        /* Card-Hintergründe */
+  --c-silver: #A6A6A6;      /* Mercedes-Benz Truck Silber */
+  --c-platinum: #E6E6E6;    /* Hellgraue Trennelemente */
+
+  /* Produkt-Akzent */
+  --c-red: #E30613;         /* Das klassische LKW-Rot */
+
   --c-navy: #1A1A2E;
-  --c-card: #1E1E1E;
-  --c-blue: #0067B1;
-  --c-blue-dim: rgba(0, 160, 220, 0.15);
-  --c-red: #E40520;
   --c-orange: #E66000;
   --c-green: #00C853;
   --c-text: #F0F4F8;
   --c-muted: #8899AA;
-  --c-border: rgba(0, 160, 220, 0.18);
+  --c-border: rgba(56, 112, 139, 0.3); /* Based on new blue */
 }
 
 * {
@@ -44,17 +52,17 @@ html, body, #root {
 /* Grid background */
 .grid-bg {
   background-image:
-    linear-gradient(rgba(0, 160, 220, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 160, 220, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(56, 112, 139, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 112, 139, 0.1) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
 /* Glow effects */
 .glow-blue {
-  box-shadow: 0 0 16px rgba(0, 103, 177, 0.4), 0 0 64px rgba(0, 103, 177, 0.15);
+  box-shadow: 0 0 16px rgba(56, 112, 139, 0.4), 0 0 64px rgba(56, 112, 139, 0.15);
 }
 .glow-red {
-  box-shadow: 0 0 16px rgba(228, 5, 32, 0.5), 0 0 64px rgba(228, 5, 32, 0.2);
+  box-shadow: 0 0 16px rgba(227, 6, 19, 0.5), 0 0 64px rgba(227, 6, 19, 0.2);
 }
 .glow-green {
   box-shadow: 0 0 16px rgba(0, 200, 83, 0.4), 0 0 64px rgba(0, 200, 83, 0.15);
@@ -65,13 +73,13 @@ html, body, #root {
 
 /* Text gradient */
 .text-gradient {
-  background: linear-gradient(135deg, #00A0DC 0%, #0DCFFF 50%, #00A0DC 100%);
+  background: linear-gradient(135deg, #38708B 0%, #A6A6A6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .text-gradient-red {
-  background: linear-gradient(135deg, #E40520 0%, #FF4060 100%);
+  background: linear-gradient(135deg, #E30613 0%, #FF4060 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -95,7 +103,7 @@ html, body, #root {
 }
 .dot.active {
   background: var(--c-blue);
-  box-shadow: 0 0 8px rgba(0,160,220,0.8);
+  box-shadow: 0 0 8px rgba(56, 112, 139, 0.8);
   width: 24px;
   border-radius: 8px;
 }
@@ -174,7 +182,7 @@ canvas.particles {
   color: white;
 }
 .primary.darken-3 {
-  background-color: #004d80;
+  background-color: #2a5568;
   color: white;
 }
 .secondary {

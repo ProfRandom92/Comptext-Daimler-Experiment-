@@ -14,7 +14,7 @@
 **Fortgeschrittene Token-Komprimierung + DSGVO-Sanitisierung für Industrie 4.0**
 **4-Layer KVTC-Algorithmus · Multi-Agent-Pipeline · Air-Gap-Ready**
 
-**Render Live Link:** https://comptext-daimler-api.onrender.com
+**Render Live Link:** https://comptext-daimler-buses.onrender.com
 
 **KVTC Compression Efficiency:** 94%
 
@@ -380,6 +380,12 @@ curl -X POST http://localhost:8000/analyze \
 
 ---
 
+
+
+## 🌍 Deployment & Telemetry
+
+- **Render Region**: Deployed in **Frankfurt, Germany (eu-central)** for GDPR (DSGVO) compliance and local data sovereignty.
+- **Tinybird Telemetry**: Integrated with Tinybird (`comptext_metrics` datasource) for real-time tracking of token savings and latency. Requires `TINYBIRD_TOKEN` to be set.
 ## 🚀 Schnellstart
 
 ### Lokal (Mock-Modus)
