@@ -1,17 +1,14 @@
 version: "3.9"
 
 services:
-  dashboard:
-    build: .
+  frontend:
+    build:
+      context: ./showcase
+      dockerfile: Dockerfile.frontend
     ports:
-      - "8501:8501"
-    environment:
-      - LLM_BACKEND=ollama_gemma
-      - OLLAMA_URL=http://ollama:11434
-      - LOG_LEVEL=INFO
-      - LOG_FORMAT=json
+      - "5173:80"
     depends_on:
-      - ollama
+      - api
 
   api:
     build: .

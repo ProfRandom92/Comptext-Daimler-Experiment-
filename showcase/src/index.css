@@ -12,9 +12,9 @@
 }
 
 :root {
-  --c-bg: #080C14;
-  --c-navy: #0D1526;
-  --c-card: #111827;
+  --c-bg: #121212;
+  --c-navy: #1A1A2E;
+  --c-card: #1E1E1E;
   --c-blue: #0067B1;
   --c-blue-dim: rgba(0, 160, 220, 0.15);
   --c-red: #E40520;

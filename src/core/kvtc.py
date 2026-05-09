@@ -219,7 +219,7 @@ class IndustrialKVTCStrategy:
 
 def run_benchmark(test_cases: list[dict[str, str]]) -> dict[str, Any]:
     strategy = IndustrialKVTCStrategy()
-    results = [
+    results: list[dict[str, Any]] = [
         {
             "label": case.get("label", ""),
             "original_tokens": r.original_tokens,

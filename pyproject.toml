@@ -26,8 +26,7 @@ dev = [
 ]
 
 [project.scripts]
-comptext-api       = "api:main"
-comptext-dashboard = "dashboard:main"
+comptext-api = "api:main"
 
 [tool.ruff]
 line-length = 110
@@ -48,4 +47,4 @@ addopts      = "-v --tb=short"
 
 [tool.coverage.run]
 source = ["src"]
-omit   = ["tests/*", "dashboard.py", "api.py"]
+omit   = ["tests/*", "api.py"]

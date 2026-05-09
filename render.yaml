@@ -4,6 +4,7 @@ services:
     runtime: docker
     region: frankfurt
     plan: free
+    dockerCommand: uvicorn api:app --host 0.0.0.0 --port $PORT --workers 2
     disk:
       name: cache
       mountPath: /cache
@@ -15,7 +16,11 @@ services:
         value: "256"
       - key: LOG_LEVEL
         value: INFO
+      - key: LOG_FORMAT
+        value: json
       - key: ALLOWED_ORIGINS
         value: "https://comptext-daimler-api.onrender.com"
       - key: TINYBIRD_TOKEN
+        sync: false
+      - key: OTEL_EXPORTER_OTLP_ENDPOINT
         sync: false

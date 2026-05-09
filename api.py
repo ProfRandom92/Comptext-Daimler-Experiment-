@@ -63,8 +63,13 @@ app = FastAPI(
 
 
 @app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request, exc):
-    return JSONResponse(status_code=400, content={"detail": exc.errors()})
+async def validation_exception_handler(request: Any, exc: RequestValidationError) -> JSONResponse:
+    # Strip raw input values from validation errors to prevent PII leaks
+    safe_errors = [
+        {"loc": e.get("loc"), "msg": e.get("msg"), "type": e.get("type")}
+        for e in exc.errors()
+    ]
+    return JSONResponse(status_code=400, content={"detail": safe_errors})
 
 
 app.add_middleware(
@@ -74,7 +79,7 @@ app.add_middleware(
         "https://comptext-daimler-api.onrender.com,http://localhost:5173,http://localhost:3000",
     ).split(","),
     allow_methods=["GET", "POST"],
-    allow_headers=["*"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 # ---------------------------------------------------------------------------
@@ -558,6 +563,14 @@ def dedup_supply_chain(req: SupplyChainRequest) -> dict[str, Any]:
             recovery_hint="Check updates list format. Trigger n8n Recovery Workflow: supply-chain-fallback.",
         )
 
+
+# ---------------------------------------------------------------------------
+# /api/ route aliases (React frontend convention)
+# ---------------------------------------------------------------------------
+
+app.post("/api/xentry/optimize")(optimize_xentry)
+app.post("/api/mo360/filter")(filter_mo360)
+app.post("/api/supply-chain/dedup")(dedup_supply_chain)
 
 # ---------------------------------------------------------------------------
 # Main

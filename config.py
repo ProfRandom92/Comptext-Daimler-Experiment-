@@ -28,10 +28,6 @@ class AppConfig:
     kvtc_header_lines: int = int(os.getenv("KVTC_HEADER_LINES", "10"))
     kvtc_window_lines: int = int(os.getenv("KVTC_WINDOW_LINES", "15"))
 
-    # Dashboard
-    dashboard_title: str = "Daimler Buses – Prozessautomatisierung CompText"
-    dashboard_port: int = int(os.getenv("DASHBOARD_PORT", "8501"))
-
     # Logging
     log_level: str = os.getenv("LOG_LEVEL", "INFO")
 
