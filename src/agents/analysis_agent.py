@@ -38,9 +38,7 @@ class AnalysisConfig:
     anthropic_model: str = "claude-haiku-4-5-20251001"
     ollama_base_url: str = "http://localhost:11434"
     max_tokens: int = 512
-    temperature: float = (
-        0.1  # low = deterministic; LLMs for process docs should not hallucinate
-    )
+    temperature: float = 0.1  # low = deterministic; LLMs for process docs should not hallucinate
     enable_prompt_cache: bool = True  # Anthropic ephemeral prompt caching
 
 
@@ -73,9 +71,7 @@ _ERROR_PAYLOAD: dict[str, Any] = {
 
 
 def _error_response(message: str) -> str:
-    return json.dumps(
-        {**_ERROR_PAYLOAD, "zusammenfassung": message}, ensure_ascii=False
-    )
+    return json.dumps({**_ERROR_PAYLOAD, "zusammenfassung": message}, ensure_ascii=False)
 
 
 class AnalysisAgent:
@@ -85,9 +81,7 @@ class AnalysisAgent:
         cache: Any | None = None,
     ) -> None:
         self._config = config or AnalysisConfig()
-        self._anthropic_client: Any = (
-            None  # lazy singleton, avoids per-call client creation
-        )
+        self._anthropic_client: Any = None  # lazy singleton, avoids per-call client creation
         self._cache = cache  # AnalysisResultCache | None; None = disabled
 
     def analyze(
@@ -125,9 +119,7 @@ class AnalysisAgent:
 
         return result
 
-    def _build_prompt(
-        self, dokument: EingabeDokument, kvtc: KVTCResult, triage: TriageResult
-    ) -> str:
+    def _build_prompt(self, dokument: EingabeDokument, kvtc: KVTCResult, triage: TriageResult) -> str:
         return (
             f"DOKUMENT-TYP: {dokument.doc_type.value}\n"
             f"PRIORITÄT (Triage): {triage.prioritaet.value}\n"
@@ -204,11 +196,7 @@ class AnalysisAgent:
                 {
                     "type": "text",
                     "text": _SYSTEM_PROMPT,
-                    **(
-                        {"cache_control": {"type": "ephemeral"}}
-                        if self._config.enable_prompt_cache
-                        else {}
-                    ),
+                    **({"cache_control": {"type": "ephemeral"}} if self._config.enable_prompt_cache else {}),
                 }
             ]
             message = self._anthropic_client.messages.create(
@@ -233,9 +221,7 @@ class AnalysisAgent:
         except Exception as e:
             return _error_response(f"Anthropic-API-Fehler: {e}")
 
-    def _parse_output(
-        self, raw: str, fallback_priority: ProcessPriority
-    ) -> dict[str, Any]:
+    def _parse_output(self, raw: str, fallback_priority: ProcessPriority) -> dict[str, Any]:
         match = _JSON_BLOCK.search(raw)
         if not match:
             return {

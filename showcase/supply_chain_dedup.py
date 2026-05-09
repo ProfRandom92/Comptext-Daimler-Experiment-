@@ -68,9 +68,7 @@ def main():
     print(f"Unique Updates:        {len(deduplicated_updates)}")
     print(f"Original Tokens:       {orig_tokens}")
     print(f"Compressed Tokens:      {result.compressed_tokens}")
-    print(
-        f"Reduction Ratio:        {round((1 - result.compressed_tokens / orig_tokens) * 100, 2)}%"
-    )
+    print(f"Reduction Ratio:        {round((1 - result.compressed_tokens / orig_tokens) * 100, 2)}%")
     print(f"Processing Latency:     {duration:.2f} ms")
     print("-" * 60)
     print("INCREMENTAL UPDATES (POL Deduplicated):")

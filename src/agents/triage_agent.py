@@ -96,9 +96,7 @@ class TriageAgent:
                     eskalations_hinweis=f"Sofortige Eskalation: {hit.code} ({hit.komponente})",
                 )
 
-        p2_hits = [
-            f"P2-Regel: '{m.group(0)}'" for p in _P2_PATTERNS if (m := p.search(text))
-        ]
+        p2_hits = [f"P2-Regel: '{m.group(0)}'" for p in _P2_PATTERNS if (m := p.search(text))]
         for hit in obd_hits:
             if hit.schweregrad == ProcessPriority.P2_DRINGEND:
                 p2_hits.append(f"OBD-DB P2: {hit.code} – {hit.beschreibung}")
