@@ -23,6 +23,27 @@ const evidence = [
   'Render entrypoint tested in CI',
 ]
 
+const criticChecks = [
+  { label: 'Corpus integrity', value: 'versioned', detail: 'scenario mix, fixture count, hash, synthetic-only boundary' },
+  { label: 'Repeatability', value: 'replayable', detail: 'commit SHA, runner version, environment notes, CI command trail' },
+  { label: 'Distribution', value: 'p50/p95/p99', detail: 'sample count, warmups, variance, weak-case exposure' },
+  { label: 'Quality gate', value: 'not just %', detail: 'token reduction plus semantic retention proxy and family coverage' },
+]
+
+const benchmarkRows = [
+  { case: 'repetitive_xentry_2k', reduction: '99.59%', coverage: '100.00%', p95: '1.12s', decision: 'pass', caveat: 'Best-case repeated families; strong value but not sufficient alone.' },
+  { case: 'mixed_obd_workshop_1_5k', reduction: '98.88%', coverage: '100.00%', p95: '0.61s', decision: 'pass', caveat: 'Realistic structured middle case; keep replay checks attached.' },
+  { case: 'high_entropy_json_750', reduction: '99.46%', coverage: '1.60%', p95: '0.54s', decision: 'warn', caveat: 'Compression is misleading here; low family coverage must be visible.' },
+  { case: 'short_sparse_3', reduction: '65.22%', coverage: '100.00%', p95: '0.002s', decision: 'pass', caveat: 'Micro-frame avoids overhead dominating tiny inputs.' },
+]
+
+const qualityGates = [
+  { name: 'Synthetic-only sanitizer', state: 'pass', note: 'No raw production logs, secrets, tokens, cookies, or customer payloads.' },
+  { name: 'Regression policy', state: 'warn', note: 'Fail only on clear regressions with baseline; otherwise show insufficient baseline.' },
+  { name: 'Weak-case transparency', state: 'pass', note: 'High-entropy case remains visible and explicitly caveated.' },
+  { name: 'Artifact traceability', state: 'pass', note: 'Reports and docs remain diffable under docs/reports and docs/*.md.' },
+]
+
 const scenarios = [
   {
     title: 'XENTRY diagnostic compression',
@@ -45,7 +66,7 @@ function formatJson(value) {
   return JSON.stringify(value, null, 2)
 }
 
-function ResultPanel({ status, result, error }) {
+function ResultPanel({ result, error }) {
   if (error) {
     return <pre className="result error">{error}</pre>
   }
@@ -57,6 +78,78 @@ function ResultPanel({ status, result, error }) {
       <span>Ready</span>
       <p>Run the synthetic analysis request to verify the deployed API and showcase connection.</p>
     </div>
+  )
+}
+
+function DecisionBadge({ value }) {
+  return <span className={`decision-badge ${value}`}>{value}</span>
+}
+
+function BenchmarkEvidenceCenter() {
+  return (
+    <section id="benchmark-evidence" className="evidence-center span-3">
+      <div className="evidence-hero">
+        <div>
+          <p className="eyebrow">Benchmark evidence center</p>
+          <h2>Built for hostile review, not marketing screenshots.</h2>
+          <p>
+            The dashboard separates compression claims from repeatability, corpus integrity,
+            weak-case visibility, and regression policy. A critic should be able to reproduce
+            the run, inspect the caveats, and understand what the numbers do not prove.
+          </p>
+        </div>
+        <div className="evidence-score">
+          <span>review posture</span>
+          <strong>HOLD-READY</strong>
+          <small>Promote only with current artifacts and visible caveats.</small>
+        </div>
+      </div>
+
+      <div className="critic-grid">
+        {criticChecks.map((check) => (
+          <article className="critic-card" key={check.label}>
+            <span>{check.label}</span>
+            <strong>{check.value}</strong>
+            <p>{check.detail}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="benchmark-table-wrap">
+        <div className="table-title">
+          <div>
+            <p className="eyebrow">Distribution and caveat table</p>
+            <h3>Representative benchmark cases</h3>
+          </div>
+          <a href="/benchmark">Open live /benchmark</a>
+        </div>
+        <div className="benchmark-table">
+          <div className="benchmark-row benchmark-head">
+            <span>Case</span><span>Reduction</span><span>Coverage</span><span>p95</span><span>Decision</span><span>Caveat</span>
+          </div>
+          {benchmarkRows.map((row) => (
+            <div className="benchmark-row" key={row.case}>
+              <strong>{row.case}</strong>
+              <span>{row.reduction}</span>
+              <span>{row.coverage}</span>
+              <span>{row.p95}</span>
+              <DecisionBadge value={row.decision} />
+              <p>{row.caveat}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="gate-grid">
+        {qualityGates.map((gate) => (
+          <article className="gate-card" key={gate.name}>
+            <DecisionBadge value={gate.state} />
+            <h3>{gate.name}</h3>
+            <p>{gate.note}</p>
+          </article>
+        ))}
+      </div>
+    </section>
   )
 }
 
@@ -101,6 +194,7 @@ export default function App() {
             </div>
           </div>
           <div className="nav-actions">
+            <a href="#benchmark-evidence">Evidence</a>
             <a href="/health">Health</a>
             <a href="/docs">API Docs</a>
             <a href="/benchmark">Benchmark</a>
@@ -117,6 +211,7 @@ export default function App() {
             </p>
             <div className="hero-actions">
               <button onClick={analyze} disabled={status === 'loading'}>{status === 'loading' ? 'Analyzing…' : 'Run synthetic demo'}</button>
+              <a href="#benchmark-evidence">Review evidence</a>
               <a href="#demo">Open workbench</a>
             </div>
           </motion.div>
@@ -135,6 +230,8 @@ export default function App() {
       </section>
 
       <section className="content-grid">
+        <BenchmarkEvidenceCenter />
+
         <article className="card span-2">
           <div className="section-heading">
             <p className="eyebrow">System overview</p>
@@ -204,7 +301,7 @@ export default function App() {
                 <span>API result</span>
                 <small>POST /analyze</small>
               </div>
-              <ResultPanel status={status} result={result} error={error} />
+              <ResultPanel result={result} error={error} />
             </div>
           </div>
         </section>
