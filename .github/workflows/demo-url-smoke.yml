@@ -1,0 +1,30 @@
+name: Demo URL Smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      frontend_url:
+        description: Public Vercel frontend URL
+        required: false
+        default: https://comptext-daimler-experiment.vercel.app
+      backend_url:
+        description: Public API backend URL
+        required: false
+        default: https://comptext-daimler-api-jules.onrender.com
+
+jobs:
+  demo-url-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Check public demo URLs
+        run: |
+          python scripts/check_demo_urls.py \
+            --frontend-url "${{ github.event.inputs.frontend_url || 'https://comptext-daimler-experiment.vercel.app' }}" \
+            --backend-url "${{ github.event.inputs.backend_url || 'https://comptext-daimler-api-jules.onrender.com' }}"
