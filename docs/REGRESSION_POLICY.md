@@ -27,12 +27,30 @@ The initial workflow is intentionally report-oriented and conservative. It gener
 
 CI should warn, report, or request human review when:
 
-- Locust is unavailable and the benchmark status is `tool unavailable`.
+- Locust is unavailable and the benchmark status is `tool_unavailable`.
 - No live local server is available.
 - Fewer than two benchmark reports exist.
 - The latest run uses different users, spawn rate, duration, endpoint, or host characteristics.
 - Metrics are missing, non-numeric, or clearly affected by CI resource contention.
 - The change is limited to documentation, sanitizer rules, or benchmark harness maintenance.
+
+
+## Contract-compatible summaries
+
+Regression reporting emits both Markdown and JSON artifacts:
+
+- `docs/reports/benchmark-summary.json` records the latest synthetic benchmark metrics and `tool_unavailable` status when optional Locust tooling is not installed.
+- `docs/reports/regression-summary.json` records baseline availability, regression detection, compared runs, thresholds, decision, and notes.
+- `docs/reports/sanitization-summary.json` records scanned path names and masked-finding counts without raw suspicious values.
+- `docs/reports/report-contract-validation-report.md` records structural validation results for the generated JSON summaries.
+
+These outputs are designed for compatibility with Comptextv7's machine-readable contracts while avoiding runtime coupling: this repository must not import Comptextv7 code, require a live Comptextv7 checkout, or copy production data.
+
+Validate the generated summaries with:
+
+```bash
+python scripts/validate_report_contracts.py
+```
 
 ## Reviewing benchmark changes
 
@@ -43,6 +61,11 @@ Reviewers should confirm that:
 - Benchmark parameters are documented and comparable to the intended baseline.
 - Regression summaries explain whether a failure, warning, or insufficient-baseline state is appropriate.
 - Findings that affect runtime behavior are filed or linked back to `ProfRandom92/Comptextv7` with sanitized reproduction steps.
+
+
+## Synthetic-only policy
+
+All benchmark, regression, and sanitization summaries must be synthetic-safe. Do not include real Daimler payloads, customer identifiers, secrets, tokens, cookies, API keys, raw production logs, or proprietary documents in Markdown or JSON reports. Sanitization reports may include masked review prompts only; JSON summaries must remain aggregate and structural.
 
 ## Avoiding false positives
 

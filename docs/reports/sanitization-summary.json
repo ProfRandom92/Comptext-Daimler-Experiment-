@@ -1,0 +1,19 @@
+{
+  "findings_count": 0,
+  "findings_masked": 0,
+  "generated_at": "2026-05-11T09:46:56+00:00",
+  "notes": [
+    "Report-only scan; raw suspicious findings, secrets, and customer identifiers are never written to JSON.",
+    "Use synthetic fixtures only and review masked Markdown findings before committing."
+  ],
+  "report_type": "sanitization_summary",
+  "scanned_paths": [
+    "fixtures",
+    "data",
+    "samples",
+    "docs/reports"
+  ],
+  "source_repo": "ProfRandom92/Comptext-Daimler-Experiment-",
+  "status": "pass",
+  "synthetic": true
+}
