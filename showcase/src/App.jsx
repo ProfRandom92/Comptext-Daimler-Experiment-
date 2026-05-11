@@ -1,117 +1,230 @@
-import { useState, useEffect, useCallback } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import HeroSlide from './slides/HeroSlide.jsx'
-import ProblemSlide from './slides/ProblemSlide.jsx'
-import ScenariosSlide from './slides/ScenariosSlide.jsx'
-import ArchitectureSlide from './slides/ArchitectureSlide.jsx'
-import KVTCSlide from './slides/KVTCSlide.jsx'
-import SecuritySlide from './slides/SecuritySlide.jsx'
-import MetricsSlide from './slides/MetricsSlide.jsx'
-import DemoSlide from './slides/DemoSlide.jsx'
+import { useMemo, useState } from 'react'
+import { motion } from 'framer-motion'
 
-const SLIDES = [
-  { id: 'hero',         component: HeroSlide,         label: 'Start' },
-  { id: 'problem',      component: ProblemSlide,       label: 'Challenge' },
-  { id: 'scenarios',    component: ScenariosSlide,     label: 'Szenarien' },
-  { id: 'architecture', component: ArchitectureSlide,  label: 'Architektur' },
-  { id: 'kvtc',         component: KVTCSlide,          label: 'KVTC' },
-  { id: 'security',     component: SecuritySlide,      label: 'DSGVO' },
-  { id: 'metrics',      component: MetricsSlide,       label: 'Metriken' },
-  { id: 'demo',         component: DemoSlide,          label: 'Live Demo' },
+const DEFAULT_TEXT = `Wartungsauftrag 2026-05-11
+Fahrzeug: eCitaro Testflotte
+FIN: WDB906232N3123456
+Kilometerstand: 145000 km
+Fehlercode: P0300 - Zündaussetzer Zylinder 1
+Zusatz: Kunde meldet Leistungsverlust nach Werkstatt-Testfahrt
+Maßnahme: Zündkerzen prüfen, Sensorwerte vergleichen, Diagnose sichern`
+
+const apiCards = [
+  { label: 'Health', path: '/health', method: 'GET', tone: 'good' },
+  { label: 'Analyze', path: '/analyze', method: 'POST', tone: 'accent' },
+  { label: 'Benchmark', path: '/benchmark', method: 'GET', tone: 'info' },
+  { label: 'Docs', path: '/docs', method: 'GET', tone: 'muted' },
 ]
 
-const variants = {
-  enter: (dir) => ({ x: dir > 0 ? '100%' : '-100%', opacity: 0 }),
-  center: { x: 0, opacity: 1 },
-  exit:  (dir) => ({ x: dir > 0 ? '-100%' : '100%', opacity: 0 }),
+const evidence = [
+  'Synthetic-only showcase payloads',
+  'FastAPI health endpoint preserved',
+  'Docker image bundles React build',
+  'Render entrypoint tested in CI',
+]
+
+const scenarios = [
+  {
+    title: 'XENTRY diagnostic compression',
+    metric: 'fault-focused',
+    body: 'Condenses repetitive workshop and diagnostic logs into compact KVTC frames for review and replay.',
+  },
+  {
+    title: 'MO360 shift signal filtering',
+    metric: 'noise-aware',
+    body: 'Separates production-shift deviations from routine status chatter using deterministic synthetic fixtures.',
+  },
+  {
+    title: 'Supply-chain deduplication',
+    metric: 'semantic merge',
+    body: 'Groups repeated supplier updates before downstream analysis without requiring real customer payloads.',
+  },
+]
+
+function formatJson(value) {
+  return JSON.stringify(value, null, 2)
+}
+
+function ResultPanel({ status, result, error }) {
+  if (error) {
+    return <pre className="result error">{error}</pre>
+  }
+  if (result) {
+    return <pre className="result">{formatJson(result)}</pre>
+  }
+  return (
+    <div className="empty-result">
+      <span>Ready</span>
+      <p>Run the synthetic analysis request to verify the deployed API and showcase connection.</p>
+    </div>
+  )
 }
 
 export default function App() {
-  const [[page, dir], setPage] = useState([0, 0])
+  const [text, setText] = useState(DEFAULT_TEXT)
+  const [source, setSource] = useState('Werkstatt-SAP')
+  const [status, setStatus] = useState('idle')
+  const [result, setResult] = useState(null)
+  const [error, setError] = useState('')
 
-  const goTo = useCallback((next) => {
-    setPage(([cur]) => {
-      const clamped = Math.max(0, Math.min(SLIDES.length - 1, next))
-      return [clamped, next > cur ? 1 : -1]
-    })
-  }, [])
+  const tokenEstimate = useMemo(() => Math.max(1, Math.round(text.trim().split(/\s+/).filter(Boolean).length * 1.25)), [text])
 
-  useEffect(() => {
-    const handler = (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ')
-        goTo(page + 1)
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp')
-        goTo(page - 1)
+  async function analyze() {
+    setStatus('loading')
+    setError('')
+    setResult(null)
+    try {
+      const response = await fetch('/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, quelle: source }),
+      })
+      const payload = await response.json()
+      if (!response.ok) throw new Error(formatJson(payload))
+      setResult(payload)
+      setStatus('success')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err))
+      setStatus('error')
     }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  }, [page, goTo])
-
-  const SlideComponent = SLIDES[page].component
+  }
 
   return (
-    <div className="relative w-full h-full overflow-hidden grid-bg select-none">
-      {/* Top progress bar */}
-      <motion.div
-        className="absolute top-0 left-0 h-[2px] z-50"
-        style={{ background: 'linear-gradient(90deg, #38708B, #0DCFFF)' }}
-        animate={{ width: `${((page + 1) / SLIDES.length) * 100}%` }}
-        transition={{ duration: 0.5, ease: 'easeInOut' }}
-      />
+    <main className="app-shell">
+      <section className="hero-panel">
+        <nav className="topbar">
+          <div className="brand-lockup">
+            <span className="brand-mark">CT</span>
+            <div>
+              <strong>CompText Daimler Experiment</strong>
+              <small>Synthetic benchmark and showcase environment</small>
+            </div>
+          </div>
+          <div className="nav-actions">
+            <a href="/health">Health</a>
+            <a href="/docs">API Docs</a>
+            <a href="/benchmark">Benchmark</a>
+          </div>
+        </nav>
 
-      {/* Slide area */}
-      <AnimatePresence mode="wait" custom={dir}>
-        <motion.div
-          key={page}
-          custom={dir}
-          variants={variants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0"
-        >
-          <SlideComponent />
-        </motion.div>
-      </AnimatePresence>
+        <div className="hero-grid">
+          <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
+            <p className="eyebrow">Render-ready industrial AI middleware</p>
+            <h1>Token compression, triage, and safe diagnostic replay.</h1>
+            <p className="hero-copy">
+              A polished synthetic showcase for CompText/KVTC workflows: FastAPI endpoints,
+              React frontend, Docker deployment, benchmark gates, and no real Daimler payloads.
+            </p>
+            <div className="hero-actions">
+              <button onClick={analyze} disabled={status === 'loading'}>{status === 'loading' ? 'Analyzing…' : 'Run synthetic demo'}</button>
+              <a href="#demo">Open workbench</a>
+            </div>
+          </motion.div>
 
-      {/* Bottom navigation */}
-      <div className="absolute bottom-6 left-0 right-0 flex items-center justify-center gap-6 z-50">
-        {/* Prev */}
-        <button
-          onClick={() => goTo(page - 1)}
-          disabled={page === 0}
-          className="text-sm font-medium text-[#8899AA] hover:text-white transition-colors disabled:opacity-20 disabled:cursor-not-allowed px-3 py-1"
-        >
-          ← Zurück
-        </button>
-
-        {/* Dots */}
-        <div className="flex items-center gap-2">
-          {SLIDES.map((s, i) => (
-            <button
-              key={s.id}
-              onClick={() => goTo(i)}
-              title={s.label}
-              className={`dot ${i === page ? 'active' : ''}`}
-            />
-          ))}
+          <motion.aside className="signal-card" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.45, delay: 0.08 }}>
+            <span className="status-pill">Live deployment</span>
+            <div className="signal-metric">94%</div>
+            <p>Target compression posture for structured synthetic diagnostics.</p>
+            <div className="signal-grid">
+              <span>Docker</span><strong>bundled UI</strong>
+              <span>API</span><strong>FastAPI</strong>
+              <span>Data</span><strong>synthetic</strong>
+            </div>
+          </motion.aside>
         </div>
+      </section>
 
-        {/* Next */}
-        <button
-          onClick={() => goTo(page + 1)}
-          disabled={page === SLIDES.length - 1}
-          className="text-sm font-medium text-[#8899AA] hover:text-white transition-colors disabled:opacity-20 disabled:cursor-not-allowed px-3 py-1"
-        >
-          Weiter →
-        </button>
-      </div>
+      <section className="content-grid">
+        <article className="card span-2">
+          <div className="section-heading">
+            <p className="eyebrow">System overview</p>
+            <h2>One service, two surfaces</h2>
+          </div>
+          <div className="pipeline">
+            <div><span>01</span><strong>React showcase</strong><p>Professional reviewer-facing interface served from /.</p></div>
+            <div><span>02</span><strong>FastAPI backend</strong><p>Health, benchmark, analyze, compress, and triage endpoints.</p></div>
+            <div><span>03</span><strong>CI evidence</strong><p>React build, Render entrypoint check, Docker build, benchmark checks.</p></div>
+          </div>
+        </article>
 
-      {/* Slide counter */}
-      <div className="absolute top-4 right-6 text-xs text-[#556677] z-50 font-mono">
-        {String(page + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
-      </div>
-    </div>
+        <article className="card">
+          <div className="section-heading compact">
+            <p className="eyebrow">Safety posture</p>
+            <h2>Review-safe</h2>
+          </div>
+          <ul className="evidence-list">
+            {evidence.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+        </article>
+
+        <article className="card span-3">
+          <div className="section-heading">
+            <p className="eyebrow">Use cases</p>
+            <h2>Industrial scenarios</h2>
+          </div>
+          <div className="scenario-grid">
+            {scenarios.map((scenario) => (
+              <div className="scenario" key={scenario.title}>
+                <span>{scenario.metric}</span>
+                <h3>{scenario.title}</h3>
+                <p>{scenario.body}</p>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <section id="demo" className="workbench span-3">
+          <div className="workbench-header">
+            <div>
+              <p className="eyebrow">Live synthetic workbench</p>
+              <h2>Document analysis</h2>
+            </div>
+            <div className={`run-state ${status}`}>{status}</div>
+          </div>
+
+          <div className="workbench-grid">
+            <div className="input-panel">
+              <label htmlFor="payload">Synthetic document</label>
+              <textarea id="payload" value={text} onChange={(event) => setText(event.target.value)} />
+              <div className="form-row">
+                <label htmlFor="source">Source</label>
+                <input id="source" value={source} onChange={(event) => setSource(event.target.value)} />
+              </div>
+              <div className="input-meta">
+                <span>{tokenEstimate} estimated tokens</span>
+                <button onClick={() => setText(DEFAULT_TEXT)}>Reset sample</button>
+              </div>
+              <button className="primary-action" onClick={analyze} disabled={status === 'loading'}>
+                {status === 'loading' ? 'Running analysis…' : 'Analyze synthetic document'}
+              </button>
+            </div>
+
+            <div className="output-panel">
+              <div className="output-title">
+                <span>API result</span>
+                <small>POST /analyze</small>
+              </div>
+              <ResultPanel status={status} result={result} error={error} />
+            </div>
+          </div>
+        </section>
+
+        <article className="card span-3">
+          <div className="section-heading">
+            <p className="eyebrow">API surface</p>
+            <h2>Operational endpoints</h2>
+          </div>
+          <div className="api-grid">
+            {apiCards.map((card) => (
+              <a className={`api-card ${card.tone}`} href={card.path} key={card.path}>
+                <span>{card.method}</span>
+                <strong>{card.label}</strong>
+                <code>{card.path}</code>
+              </a>
+            ))}
+          </div>
+        </article>
+      </section>
+    </main>
   )
 }
