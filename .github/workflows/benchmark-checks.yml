@@ -19,18 +19,26 @@ jobs:
           python-version: '3.11'
 
       - name: Validate Python syntax
-        run: python -m py_compile scripts/run_benchmarks.py scripts/generate_regression_report.py scripts/sanitize_fixtures.py
+        run: python -m py_compile scripts/run_benchmarks.py scripts/generate_regression_report.py scripts/sanitize_fixtures.py scripts/validate_report_contracts.py
+
+      - name: Generate benchmark report summaries
+        run: python scripts/run_benchmarks.py
+
+      - name: Generate regression summary
+        run: python scripts/generate_regression_report.py
 
       - name: Run fixture sanitizer in report-only mode
         run: python scripts/sanitize_fixtures.py
 
-      - name: Generate regression summary
-        run: python scripts/generate_regression_report.py
+      - name: Validate report contracts
+        run: python scripts/validate_report_contracts.py
 
       - name: Upload generated reports
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: benchmark-safety-reports
-          path: docs/reports/*.md
+          path: |
+            docs/reports/*.md
+            docs/reports/*.json
           if-no-files-found: warn

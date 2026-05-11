@@ -1,0 +1,20 @@
+{
+  "endpoint": "/analyze",
+  "generated_at": "2026-05-11T09:46:40+00:00",
+  "metrics": {
+    "error_rate": null,
+    "p50_ms": null,
+    "p95_ms": null,
+    "p99_ms": null,
+    "payload_size_bytes": 173,
+    "rps": null
+  },
+  "notes": [
+    "Locust is not installed or is not on PATH; metrics are null except deterministic payload size."
+  ],
+  "report_type": "benchmark_summary",
+  "source_repo": "ProfRandom92/Comptext-Daimler-Experiment-",
+  "status": "tool_unavailable",
+  "synthetic": true,
+  "target_repo": "ProfRandom92/Comptextv7"
+}

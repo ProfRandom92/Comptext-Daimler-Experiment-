@@ -1,0 +1,28 @@
+{
+  "baseline_available": false,
+  "compared_runs": [
+    {
+      "endpoint": "/analyze",
+      "error_rate": null,
+      "generated_at": "2026-05-11T09:46:40+00:00",
+      "p95_ms": null,
+      "report_path": "docs/reports/benchmark-report-20260511T094640Z.md",
+      "status": "tool_unavailable"
+    }
+  ],
+  "decision": "insufficient_baseline",
+  "generated_at": "2026-05-11T09:46:55+00:00",
+  "notes": [
+    "Fewer than two benchmark reports are available; CI should warn only."
+  ],
+  "regression_detected": false,
+  "report_type": "regression_summary",
+  "source_repo": "ProfRandom92/Comptext-Daimler-Experiment-",
+  "synthetic": true,
+  "target_repo": "ProfRandom92/Comptextv7",
+  "thresholds": {
+    "error_rate_increase_percentage_points": 1.0,
+    "latest_error_rate_minimum_percent": 1.0,
+    "p95_latency_increase_percent": 25.0
+  }
+}

@@ -16,9 +16,11 @@ The workflow provides a deterministic, reviewable way to:
 Python 3.11 or newer is required. The scripts use the Python standard library by default. Locust is optional and is only needed for live load generation.
 
 ```bash
-python -m py_compile scripts/run_benchmarks.py scripts/generate_regression_report.py scripts/sanitize_fixtures.py
-python scripts/sanitize_fixtures.py
+python -m py_compile scripts/run_benchmarks.py scripts/generate_regression_report.py scripts/sanitize_fixtures.py scripts/validate_report_contracts.py
+python scripts/run_benchmarks.py
 python scripts/generate_regression_report.py
+python scripts/sanitize_fixtures.py
+python scripts/validate_report_contracts.py
 ```
 
 To run a live synthetic benchmark against a local Comptextv7 service, start the service separately and then run:
@@ -58,7 +60,19 @@ Benchmark reports are written to `docs/reports/benchmark-report-<timestamp>.md`.
 - Error rate when available.
 - Environment notes and safety notes.
 
-The regression summary is written to `docs/reports/regression-summary.md` and summarizes available benchmark runs using a conservative policy.
+The workflow also writes contract-compatible JSON summaries aligned with Comptextv7's machine-readable report contracts, without importing Comptextv7 code or requiring a live Comptextv7 checkout:
+
+- `docs/reports/benchmark-summary.json` contains the latest synthetic endpoint metrics, status, payload size, and notes.
+- `docs/reports/regression-summary.json` contains baseline availability, compared runs, thresholds, decision, and notes.
+- `docs/reports/sanitization-summary.json` contains scanned path names, masked-finding counts, status, and safety notes.
+
+The regression Markdown summary is written to `docs/reports/regression-summary.md` and summarizes available benchmark runs using a conservative policy. Validate all JSON summaries with:
+
+```bash
+python scripts/validate_report_contracts.py
+```
+
+Validation writes `docs/reports/report-contract-validation-report.md`.
 
 ## Interpreting metrics
 
@@ -70,6 +84,11 @@ The regression summary is written to `docs/reports/regression-summary.md` and su
 
 ## When Locust is unavailable
 
-`run_benchmarks.py` detects whether the `locust` executable is available. If Locust is missing, the script still writes a timestamped Markdown report with status `tool unavailable`. This is intentional for CI-friendly behavior: contributors can validate report generation without installing optional load-testing tools or starting a live server.
+`run_benchmarks.py` detects whether the `locust` executable is available. If Locust is missing, the script still writes a timestamped Markdown report and `docs/reports/benchmark-summary.json` with status `tool_unavailable`. This is intentional for CI-friendly behavior: contributors can validate report generation without installing optional load-testing tools or starting a live server.
 
 To enable live benchmark execution locally, install Locust in your own environment and rerun the benchmark command. Keep dependency installation outside committed reports and never add generated secrets, cookies, or real customer data.
+
+
+## Synthetic-only compatibility policy
+
+Contract-compatible summaries are synthetic-safe handoff artifacts for `ProfRandom92/Comptextv7`. They must not contain real Daimler data, customer identifiers, secrets, cookies, bearer tokens, raw production logs, or proprietary documents. Keep summaries small and structural so downstream validation can consume them without runtime coupling to Comptextv7.

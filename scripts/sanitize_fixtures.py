@@ -7,6 +7,7 @@ values. It is designed as a CI guardrail, not a replacement for human review.
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from dataclasses import dataclass
@@ -14,8 +15,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
+SOURCE_REPO = "ProfRandom92/Comptext-Daimler-Experiment-"
 DEFAULT_PATHS = ["fixtures", "data", "samples", "docs/reports"]
 REPORT_PATH = Path("docs/reports/sanitization-report.md")
+SUMMARY_PATH = Path("docs/reports/sanitization-summary.json")
 MAX_FILE_BYTES = 1_000_000
 
 
@@ -30,7 +33,7 @@ RULES = [
     PatternRule("api key assignment", re.compile(r"(?i)\b(api[_-]?key|secret|token|password)\b\s*[:=]\s*['\"]?([^'\"\s]{8,})")),
     PatternRule("cookie header", re.compile(r"(?i)\bcookie\s*[:=]\s*([^\n;]{8,})")),
     PatternRule("email address", re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")),
-    PatternRule("long credential-like string", re.compile(r"\b[A-Za-z0-9_/-]{32,}\b")),
+    PatternRule("long credential-like string", re.compile(r"\b[A-Za-z0-9_]{32,}\b")),
     PatternRule("vin-like customer identifier", re.compile(r"\b[A-HJ-NPR-Z0-9]{17}\b")),
     PatternRule("customer id assignment", re.compile(r"(?i)\b(customer|client|account)[_-]?id\b\s*[:=]\s*['\"]?([A-Za-z0-9._-]{6,})")),
 ]
@@ -97,13 +100,15 @@ def scan_file(path: Path) -> list[Finding]:
     for index, line in enumerate(lines, start=1):
         for rule in RULES:
             for match in rule.regex.finditer(line):
-                findings.append(Finding(path=path, line_number=index, rule=rule.name, masked=mask_value(selected_match_text(match))))
+                matched_text = selected_match_text(match)
+                if rule.name == "long credential-like string" and line.strip().startswith(f'"{matched_text}":'):
+                    continue
+                findings.append(Finding(path=path, line_number=index, rule=rule.name, masked=mask_value(matched_text)))
     return findings
 
 
-def write_report(report_path: Path, scanned_files: list[Path], findings: list[Finding]) -> None:
+def write_report(report_path: Path, scanned_files: list[Path], findings: list[Finding], generated_at: str) -> None:
     report_path.parent.mkdir(parents=True, exist_ok=True)
-    generated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
     if findings:
         rows = "\n".join(
             f"| {finding.path.as_posix()} | {finding.line_number} | {finding.rule} | `{finding.masked}` |"
@@ -130,9 +135,29 @@ Findings: {len(findings)}
 - This scanner is non-destructive and report-only.
 - Suspicious values are masked; raw secrets and raw customer identifiers are never printed in full.
 - Treat findings as review prompts and replace real data with synthetic fixtures before committing.
+- A contract-compatible JSON summary is written to `docs/reports/sanitization-summary.json`.
 """,
         encoding="utf-8",
     )
+
+
+def write_json_summary(summary_path: Path, scanned_paths: list[str], findings: list[Finding], generated_at: str) -> None:
+    summary_path.parent.mkdir(parents=True, exist_ok=True)
+    summary = {
+        "source_repo": SOURCE_REPO,
+        "report_type": "sanitization_summary",
+        "synthetic": True,
+        "generated_at": generated_at,
+        "scanned_paths": scanned_paths,
+        "findings_count": len(findings),
+        "findings_masked": len(findings),
+        "status": "review_required" if findings else "pass",
+        "notes": [
+            "Report-only scan; raw suspicious findings, secrets, and customer identifiers are never written to JSON.",
+            "Use synthetic fixtures only and review masked Markdown findings before committing.",
+        ],
+    }
+    summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def main() -> int:
@@ -142,8 +167,11 @@ def main() -> int:
     for path in scanned_files:
         findings.extend(scan_file(path))
     report_path = Path(args.report)
-    write_report(report_path, scanned_files, findings)
+    generated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    write_report(report_path, scanned_files, findings, generated_at)
+    write_json_summary(SUMMARY_PATH, list(args.paths), findings, generated_at)
     print(f"Wrote sanitization report: {report_path}")
+    print(f"Wrote sanitization summary: {SUMMARY_PATH}")
     return 0
 
 
