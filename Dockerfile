@@ -29,4 +29,4 @@ USER appuser
 
 EXPOSE 10000
 
-CMD ["sh", "-c", "uvicorn api:app --host 0.0.0.0 --port ${PORT}"]
+CMD ["sh", "-c", "uvicorn render_app:app --host 0.0.0.0 --port ${PORT}"]
