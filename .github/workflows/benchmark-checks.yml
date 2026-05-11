@@ -1,0 +1,36 @@
+name: Benchmark Checks
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  benchmark-safety:
+    name: Benchmark safety and report checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate Python syntax
+        run: python -m py_compile scripts/run_benchmarks.py scripts/generate_regression_report.py scripts/sanitize_fixtures.py
+
+      - name: Run fixture sanitizer in report-only mode
+        run: python scripts/sanitize_fixtures.py
+
+      - name: Generate regression summary
+        run: python scripts/generate_regression_report.py
+
+      - name: Upload generated reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmark-safety-reports
+          path: docs/reports/*.md
+          if-no-files-found: warn
