@@ -10,7 +10,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from fastapi import HTTPException
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from api import app
@@ -51,20 +51,20 @@ def _showcase_unavailable() -> JSONResponse:
     )
 
 
-def _serve_index() -> FileResponse | JSONResponse:
+def _serve_index() -> Response:
     if INDEX_HTML.is_file():
         return FileResponse(INDEX_HTML)
     return _showcase_unavailable()
 
 
-@app.get("/", include_in_schema=False)
-def showcase_root() -> FileResponse | JSONResponse:
+@app.get("/", include_in_schema=False, response_model=None)
+def showcase_root() -> Response:
     """Serve the built React showcase at the service root."""
     return _serve_index()
 
 
-@app.get("/{full_path:path}", include_in_schema=False)
-def showcase_spa_fallback(full_path: str) -> FileResponse | JSONResponse:
+@app.get("/{full_path:path}", include_in_schema=False, response_model=None)
+def showcase_spa_fallback(full_path: str) -> Response:
     """Serve static showcase files or fall back to index.html for SPA routes.
 
     API-like paths are left as 404s so missing backend endpoints do not get
