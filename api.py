@@ -49,6 +49,13 @@ log = get_logger("comptext.api")
 
 START_TIME = time.time()
 PROCESSED_COMPRESSED_BYTES = 0
+DEFAULT_ALLOWED_ORIGINS = (
+    "https://comptext-daimler-api.onrender.com,"
+    "https://comptext-daimler-api-jules.onrender.com,"
+    "http://localhost:5173,"
+    "http://localhost:3000"
+)
+DEFAULT_ALLOWED_ORIGIN_REGEX = r"https://.*\.vercel\.app"
 
 app = FastAPI(
     title="Daimler Buses CompText API",
@@ -71,11 +78,9 @@ async def validation_exception_handler(request: Any, exc: RequestValidationError
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv(
-        "ALLOWED_ORIGINS",
-        "https://comptext-daimler-api.onrender.com,http://localhost:5173,http://localhost:3000",
-    ).split(","),
-    allow_methods=["GET", "POST"],
+    allow_origins=[origin.strip() for origin in os.getenv("ALLOWED_ORIGINS", DEFAULT_ALLOWED_ORIGINS).split(",") if origin.strip()],
+    allow_origin_regex=os.getenv("ALLOWED_ORIGIN_REGEX", DEFAULT_ALLOWED_ORIGIN_REGEX),
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"],
 )
 
