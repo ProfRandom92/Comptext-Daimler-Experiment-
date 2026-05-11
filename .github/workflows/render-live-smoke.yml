@@ -1,12 +1,16 @@
-name: Render Live Smoke
+name: Demo Live Smoke
 
 on:
   workflow_dispatch:
     inputs:
-      render_url:
-        description: Public Render service URL
+      service_url:
+        description: Public service URL
         required: false
         default: https://comptext-daimler-api-jules.onrender.com
+      no_root_markers:
+        description: Set true for API-only backend checks
+        required: false
+        default: "false"
   schedule:
     - cron: '17 7 * * *'
 
@@ -21,7 +25,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Run public Render smoke checks
+      - name: Run public demo smoke checks
         run: |
-          URL="${{ github.event.inputs.render_url || 'https://comptext-daimler-api-jules.onrender.com' }}"
-          python scripts/check_render_live.py --url "$URL" --attempts 4 --delay 12 --timeout 25
+          URL="${{ github.event.inputs.service_url || 'https://comptext-daimler-api-jules.onrender.com' }}"
+          EXTRA=""
+          if [ "${{ github.event.inputs.no_root_markers || 'false' }}" = "true" ]; then
+            EXTRA="--no-root-markers"
+          fi
+          python scripts/check_render_live.py --url "$URL" --attempts 4 --delay 12 --timeout 25 $EXTRA
