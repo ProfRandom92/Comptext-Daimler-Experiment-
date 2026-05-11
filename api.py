@@ -40,6 +40,7 @@ from src.agents.analysis_agent import AnalysisAgent
 from src.agents.intake_agent import IntakeAgent
 from src.agents.triage_agent import TriageAgent
 from src.core.kvtc import IndustrialKVTCStrategy, run_benchmark
+from src.core.kvtc_v7_strategy import KVTCV7Strategy
 from src.core.result_cache import AnalysisResultCache
 from src.models.schemas import DocumentType, ProcessPriority
 from src.telemetry import tracker
@@ -89,6 +90,7 @@ app.add_middleware(
 # ---------------------------------------------------------------------------
 
 _strategy = IndustrialKVTCStrategy(DEFAULT_CONFIG.kvtc_header_lines, DEFAULT_CONFIG.kvtc_window_lines)
+_v7_strategy = KVTCV7Strategy()
 _intake = IntakeAgent(_strategy)
 _triage = TriageAgent()
 _result_cache = AnalysisResultCache(max_size=int(os.getenv("CACHE_MAX_SIZE", "256")))
@@ -249,6 +251,47 @@ def _build_analyze_response(intake_result: Any, analyse_result: Any) -> AnalyzeR
     )
 
 
+
+def _synthetic_benchmark_cases() -> list[dict[str, str]]:
+    return [
+        {
+            "label": "Synthetic maintenance note",
+            "text": "Wartungsauftrag SYN-001\nKilometerstand: 80000\nFehlercode: P0300\nStatus: INFO geprüft",
+        },
+        {
+            "label": "Synthetic diagnostic log",
+            "text": "\n".join(
+                [
+                    "2026-05-11T08:00:00 INFO bus=demo line=42 event=start",
+                    "2026-05-11T08:01:00 WARN sensor=temp value=91",
+                    "2026-05-11T08:02:00 ERROR code=P0300 module=engine",
+                    "2026-05-11T08:03:00 INFO action=synthetic-reset",
+                ]
+            ),
+        },
+        {
+            "label": "Synthetic QA checklist",
+            "text": "\n".join(f"Prüfpunkt {i}: OK value={i}" for i in range(30)),
+        },
+        {
+            "label": "Very short synthetic note",
+            "text": "OK",
+        },
+    ]
+
+
+def _v7_caveat(case_text: str, result_metadata: dict[str, Any]) -> tuple[str, str]:
+    event_count = int(result_metadata.get("event_count", 0))
+    signals = result_metadata.get("signals", {}) if isinstance(result_metadata.get("signals"), dict) else {}
+    if len(case_text) < 16:
+        return "warn", "Very short input may favor a V7 micro-frame for metadata safety over token reduction."
+    if event_count <= 1:
+        return "warn", "Low event coverage; use longer structured synthetic logs for representative comparison."
+    if not any(signals.get(key, 0) for key in ("obd_codes", "key_values", "timestamps")):
+        return "warn", "Low structured-signal coverage; compression evidence is conservative."
+    return "pass", "Synthetic benchmark only; compare trends rather than production claims."
+
+
 # ---------------------------------------------------------------------------
 # Standard Endpoints
 # ---------------------------------------------------------------------------
@@ -292,6 +335,25 @@ def compress(req: CompressRequest) -> KVTCResponse:
         )
     except Exception as e:
         log.error("compress failed", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e)) from e
+
+
+@app.post("/compress/v7", response_model=KVTCResponse)
+def compress_v7(req: CompressRequest) -> KVTCResponse:
+    global PROCESSED_COMPRESSED_BYTES
+    try:
+        result = _v7_strategy.compress(req.text)
+        PROCESSED_COMPRESSED_BYTES += len(result.frame.encode("utf-8"))
+        return KVTCResponse(
+            original_tokens=result.original_tokens,
+            compressed_tokens=result.compressed_tokens,
+            token_reduction_pct=result.token_reduction_pct,
+            frame=result.frame,
+            checksum=result.checksum,
+            latency_ms=result.latency_ms,
+        )
+    except Exception as e:
+        log.error("compress v7 failed", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
@@ -360,21 +422,70 @@ def batch_analyze(req: BatchAnalyzeRequest) -> BatchAnalyzeResponse:
 
 @app.get("/benchmark")
 def benchmark() -> dict[str, Any]:
-    cases = [
-        {
-            "label": "Wartungsprotokoll",
-            "text": "Wartungsauftrag 001\nKilometerstand: 80000\nFehlercode: P0300",
-        },
-        {
-            "label": "OBD Fehlerspeicher",
-            "text": "\n".join(f"P{1000 + i}: Sensor {i}" for i in range(20)),
-        },
-        {
-            "label": "QA Prüfbericht",
-            "text": "\n".join(f"Prüfpunkt {i}: OK" for i in range(30)),
-        },
-    ]
-    return run_benchmark(cases)
+    return run_benchmark(_synthetic_benchmark_cases()[:3])
+
+
+@app.get("/benchmark/v7")
+def benchmark_v7() -> dict[str, Any]:
+    results: list[dict[str, Any]] = []
+    for case in _synthetic_benchmark_cases():
+        result = _v7_strategy.compress(case["text"], context_metadata={"label": case["label"]})
+        frame_meta = result.zones.get("v7", {}) if isinstance(result.zones, dict) else {}
+        results.append(
+            {
+                "label": case["label"],
+                "original_tokens": result.original_tokens,
+                "compressed_tokens": result.compressed_tokens,
+                "reduction_pct": result.token_reduction_pct,
+                "latency_ms": result.latency_ms,
+                "checksum": result.checksum,
+                "v7_frame_type": result.metadata.get("frame_type"),
+                "v7_event_count": result.metadata.get("event_count"),
+                "v7_severity_counts": result.metadata.get("severity_counts", {}),
+                "v7_signals": frame_meta.get("signals", {}),
+            }
+        )
+    count = len(results)
+    return {
+        "cases": results,
+        "avg_token_reduction_pct": round(sum(r["reduction_pct"] for r in results) / count, 2) if count else 0,
+        "avg_latency_ms": round(sum(r["latency_ms"] for r in results) / count, 3) if count else 0,
+        "total_cases": count,
+        "data_policy": "synthetic-only",
+    }
+
+
+@app.get("/benchmark/compare")
+def benchmark_compare() -> dict[str, Any]:
+    cases: list[dict[str, Any]] = []
+    industrial = IndustrialKVTCStrategy(DEFAULT_CONFIG.kvtc_header_lines, DEFAULT_CONFIG.kvtc_window_lines)
+    for case in _synthetic_benchmark_cases():
+        industrial_result = industrial.compress(case["text"], context_metadata={"label": case["label"]})
+        v7_result = _v7_strategy.compress(case["text"], context_metadata={"label": case["label"]})
+        frame_meta = v7_result.zones.get("v7", {}) if isinstance(v7_result.zones, dict) else {}
+        decision, caveat = _v7_caveat(case["text"], {**v7_result.metadata, **frame_meta})
+        cases.append(
+            {
+                "label": case["label"],
+                "industrial_original_tokens": industrial_result.original_tokens,
+                "industrial_compressed_tokens": industrial_result.compressed_tokens,
+                "industrial_reduction_pct": industrial_result.token_reduction_pct,
+                "v7_original_tokens": v7_result.original_tokens,
+                "v7_compressed_tokens": v7_result.compressed_tokens,
+                "v7_reduction_pct": v7_result.token_reduction_pct,
+                "delta_reduction_pct": round(v7_result.token_reduction_pct - industrial_result.token_reduction_pct, 2),
+                "v7_frame_type": v7_result.metadata.get("frame_type"),
+                "v7_event_count": v7_result.metadata.get("event_count"),
+                "v7_severity_counts": v7_result.metadata.get("severity_counts", {}),
+                "decision": decision,
+                "caveat": caveat,
+            }
+        )
+    return {
+        "cases": cases,
+        "data_policy": "synthetic-only",
+        "caveat": "Benchmarks use deterministic synthetic fixtures and do not prove production Daimler performance.",
+    }
 
 
 # ---------------------------------------------------------------------------

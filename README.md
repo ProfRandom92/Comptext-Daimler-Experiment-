@@ -695,3 +695,9 @@ Zusammenfassung:
 ⭐ Wenn das Projekt hilfreich ist, bitte einen Star geben! ⭐
 
 </div>
+
+## Optional KVTC V7 strategy
+
+This repository includes an optional, dependency-light KVTC V7 strategy for deterministic synthetic benchmarking alongside the existing Industrial KVTC path. The default `/compress` route still uses `IndustrialKVTCStrategy`; V7 is available through `/compress/v7`, `/benchmark/v7`, and `/benchmark/compare`.
+
+See [docs/KVTC_V7_INTEGRATION.md](docs/KVTC_V7_INTEGRATION.md) for the synthetic-data-only policy, API semantics, and dashboard integration notes.

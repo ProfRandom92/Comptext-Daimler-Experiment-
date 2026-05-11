@@ -12,9 +12,6 @@ from typing import Any
 
 import requests
 from opentelemetry import trace
-from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 from src.utils.logging import get_logger
 
@@ -28,6 +25,10 @@ _TIMEOUT_SEC = 2.0
 # Initialize OpenTelemetry
 otel_tracer: trace.Tracer | None = None
 if _OTEL_EXPORTER_OTLP_ENDPOINT:
+    from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
     provider = TracerProvider()
     processor = BatchSpanProcessor(OTLPSpanExporter(endpoint=_OTEL_EXPORTER_OTLP_ENDPOINT))
     provider.add_span_processor(processor)
