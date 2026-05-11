@@ -4,7 +4,8 @@ services:
     runtime: docker
     region: frankfurt
     plan: free
-    dockerCommand: uvicorn api:app --host 0.0.0.0 --port $PORT --workers 2
+    dockerCommand: uvicorn render_app:app --host 0.0.0.0 --port $PORT --workers 2
+    healthCheckPath: /health
     disk:
       name: cache
       mountPath: /cache
@@ -19,8 +20,8 @@ services:
       - key: LOG_FORMAT
         value: json
       - key: ALLOWED_ORIGINS
-        value: "https://comptext-daimler-buses.onrender.com"
+        value: "https://comptext-daimler-buses.onrender.com,http://localhost:5173,http://localhost:3000"
       - key: TINYBIRD_TOKEN
-        value: "p.eyJ1IjogIjgyYWViMDkwLWRlODUtNGVjMy1iM2RiLTM2ZDY2NjFlZGI1MSIsICJpZCI6ICJjMDg3ZmJmMS0yYzRmLTQ1MmUtOWI4Ni1lZTFlNGRlMjI0NjEiLCAiaG9zdCI6ICJnY3AtZXVyb3BlLXdlc3QyIn0.zJ1UM1Zt2zav1iyxhPI3_FxSsF8Fkp4fi8YfAsqvZbc"
+        sync: false
       - key: OTEL_EXPORTER_OTLP_ENDPOINT
         sync: false
