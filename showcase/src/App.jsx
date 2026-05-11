@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '')
+const apiUrl = (path) => `${API_BASE_URL}${path}`
+
 const DEFAULT_TEXT = `Wartungsauftrag 2026-05-11
 Fahrzeug: eCitaro Testflotte
 FIN: WDB906232N3123456
@@ -19,8 +22,8 @@ const apiCards = [
 const evidence = [
   'Synthetic-only showcase payloads',
   'FastAPI health endpoint preserved',
-  'Docker image bundles React build',
-  'Render entrypoint tested in CI',
+  'Vercel can serve the static showcase separately from the API',
+  'Render entrypoint and Docker image remain available as API backend',
 ]
 
 const criticChecks = [
@@ -121,7 +124,7 @@ function BenchmarkEvidenceCenter() {
             <p className="eyebrow">Distribution and caveat table</p>
             <h3>Representative benchmark cases</h3>
           </div>
-          <a href="/benchmark">Open live /benchmark</a>
+          <a href={apiUrl('/benchmark')}>Open live /benchmark</a>
         </div>
         <div className="benchmark-table">
           <div className="benchmark-row benchmark-head">
@@ -167,7 +170,7 @@ export default function App() {
     setError('')
     setResult(null)
     try {
-      const response = await fetch('/analyze', {
+      const response = await fetch(apiUrl('/analyze'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, quelle: source }),
@@ -195,19 +198,19 @@ export default function App() {
           </div>
           <div className="nav-actions">
             <a href="#benchmark-evidence">Evidence</a>
-            <a href="/health">Health</a>
-            <a href="/docs">API Docs</a>
-            <a href="/benchmark">Benchmark</a>
+            <a href={apiUrl('/health')}>Health</a>
+            <a href={apiUrl('/docs')}>API Docs</a>
+            <a href={apiUrl('/benchmark')}>Benchmark</a>
           </div>
         </nav>
 
         <div className="hero-grid">
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
-            <p className="eyebrow">Render-ready industrial AI middleware</p>
+            <p className="eyebrow">Vercel-ready industrial AI dashboard</p>
             <h1>Token compression, triage, and safe diagnostic replay.</h1>
             <p className="hero-copy">
-              A polished synthetic showcase for CompText/KVTC workflows: FastAPI endpoints,
-              React frontend, Docker deployment, benchmark gates, and no real Daimler payloads.
+              A polished synthetic showcase for CompText/KVTC workflows: critic-facing benchmark evidence,
+              React frontend, API integration, regression gates, and no real Daimler payloads.
             </p>
             <div className="hero-actions">
               <button onClick={analyze} disabled={status === 'loading'}>{status === 'loading' ? 'Analyzing…' : 'Run synthetic demo'}</button>
@@ -217,12 +220,12 @@ export default function App() {
           </motion.div>
 
           <motion.aside className="signal-card" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.45, delay: 0.08 }}>
-            <span className="status-pill">Live deployment</span>
+            <span className="status-pill">Showcase deployment</span>
             <div className="signal-metric">94%</div>
             <p>Target compression posture for structured synthetic diagnostics.</p>
             <div className="signal-grid">
-              <span>Docker</span><strong>bundled UI</strong>
-              <span>API</span><strong>FastAPI</strong>
+              <span>Frontend</span><strong>Vercel</strong>
+              <span>API</span><strong>Configurable</strong>
               <span>Data</span><strong>synthetic</strong>
             </div>
           </motion.aside>
@@ -235,12 +238,12 @@ export default function App() {
         <article className="card span-2">
           <div className="section-heading">
             <p className="eyebrow">System overview</p>
-            <h2>One service, two surfaces</h2>
+            <h2>One dashboard, API backend optional</h2>
           </div>
           <div className="pipeline">
-            <div><span>01</span><strong>React showcase</strong><p>Professional reviewer-facing interface served from /.</p></div>
-            <div><span>02</span><strong>FastAPI backend</strong><p>Health, benchmark, analyze, compress, and triage endpoints.</p></div>
-            <div><span>03</span><strong>CI evidence</strong><p>React build, Render entrypoint check, Docker build, benchmark checks.</p></div>
+            <div><span>01</span><strong>Vercel showcase</strong><p>Professional reviewer-facing static frontend served from the edge.</p></div>
+            <div><span>02</span><strong>FastAPI backend</strong><p>Health, benchmark, analyze, compress, and triage endpoints via configurable API base URL.</p></div>
+            <div><span>03</span><strong>CI evidence</strong><p>React build, Render entrypoint check, Docker build, benchmark checks, live smoke checks.</p></div>
           </div>
         </article>
 
@@ -299,7 +302,7 @@ export default function App() {
             <div className="output-panel">
               <div className="output-title">
                 <span>API result</span>
-                <small>POST /analyze</small>
+                <small>POST {apiUrl('/analyze')}</small>
               </div>
               <ResultPanel result={result} error={error} />
             </div>
@@ -313,10 +316,10 @@ export default function App() {
           </div>
           <div className="api-grid">
             {apiCards.map((card) => (
-              <a className={`api-card ${card.tone}`} href={card.path} key={card.path}>
+              <a className={`api-card ${card.tone}`} href={apiUrl(card.path)} key={card.path}>
                 <span>{card.method}</span>
                 <strong>{card.label}</strong>
-                <code>{card.path}</code>
+                <code>{apiUrl(card.path)}</code>
               </a>
             ))}
           </div>
