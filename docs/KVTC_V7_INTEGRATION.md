@@ -15,9 +15,9 @@ KVTC V7 is integrated as a comparison strategy so reviewers can benchmark a depe
 
 `KVTCV7Strategy` wraps the local V7 engine and maps its result into the existing `KVTCResult` shape: `original_tokens`, `compressed_tokens`, `token_reduction_pct`, `frame`, `checksum`, and `latency_ms`.
 
-## Relationship to ProfRandom92/Comptextv7
+## Relationship to downstream runtime work
 
-The feature branch attempted to inspect `ProfRandom92/Comptextv7` from the sandbox, but GitHub access was unavailable in this environment. The local implementation therefore adapts the requested V7 concepts directly in this repository: `KVTCV7Engine`, `StructuredLogEvent`, deterministic fingerprints, severity counts, micro-frame handling, and sandwich-frame summaries.
+The local implementation adapts V7 compression concepts directly in this repository: `KVTCV7Engine`, `StructuredLogEvent`, deterministic fingerprints, severity counts, micro-frame handling, and sandwich-frame summaries.
 
 ## New API routes
 

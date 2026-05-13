@@ -2,16 +2,15 @@
 """Validate generated report summaries against local machine-readable contracts.
 
 The contracts are intentionally local and structural. This script does not import
-or call Comptextv7 and never prints raw sanitizer findings or secrets.
+or call any downstream runtime and never prints raw sanitizer findings or secrets.
 """
 from __future__ import annotations
 
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
-
 
 REPORTS_DIR = Path("docs/reports")
 VALIDATION_REPORT = REPORTS_DIR / "report-contract-validation-report.md"
@@ -165,7 +164,7 @@ def validate_summary(name: str, path: Path) -> tuple[str, list[str]]:
 
 def write_validation_report(results: dict[str, tuple[Path, str, list[str]]]) -> None:
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
-    generated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    generated_at = datetime.now(UTC).isoformat(timespec="seconds")
     rows = []
     detail_sections = []
     for name, (path, status, errors) in results.items():
@@ -180,7 +179,7 @@ def write_validation_report(results: dict[str, tuple[Path, str, list[str]]]) -> 
 
 Generated: {generated_at} UTC
 
-This report validates local synthetic JSON summaries for compatibility with the Comptextv7 machine-readable report contracts. It performs structural checks only and does not import or call Comptextv7.
+This report validates local synthetic JSON summaries for compatibility with downstream machine-readable report contracts. It performs structural checks only and does not import or call downstream runtime code.
 
 | Summary | Path | Status | Violations |
 | --- | --- | --- | ---: |
