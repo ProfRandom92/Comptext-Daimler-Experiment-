@@ -1,22 +1,22 @@
-# Replay Chain Step 02
+# Replay Chain Step 03
 
 This step evaluates one deterministic compression/replay cycle in the iterative replay chain.
 
 ## Metrics
 
-- truth_retention_score: `0.745`
-- retention_decay: `0.036`
+- truth_retention_score: `0.805`
+- retention_decay: `0.0`
 - contradiction_count: `0`
 - contradiction_accumulation: `0`
-- semantic_drift_growth: `0.233`
+- semantic_drift_growth: `0.167`
 - constraint_survival_rate: `1.0`
 - architectural_continuity_score: `1.0`
 - replay_consistency_score: `0.933`
 - goal_continuity_score: `1.0`
-- drift_stabilization_delta: `0.0`
-- replay_recovery_score: `0.0`
+- drift_stabilization_delta: `0.066`
+- replay_recovery_score: `0.167`
 - pinned_truth_retention: `1.0`
-- adaptive_continuity_score: `0.936`
+- adaptive_continuity_score: `0.948`
 - contradiction_reduction: `0`
 
 ## Stability Flags
@@ -32,9 +32,9 @@ This step evaluates one deterministic compression/replay cycle in the iterative 
 - `replay_validation_exists` (replay_continuity): `1.0` via replay, validation, evidence
 - `semantic_drift_tracking_exists` (semantic_continuity): `0.333` via semantic
 - `benchmark_evidence_pipeline_exists` (evidence_pipeline): `0.8` via benchmark, evidence, JSON, Markdown
-- `no_fake_production_claims` (workflow_constraint): `0.25` via evidence
+- `no_fake_production_claims` (workflow_constraint): `0.5` via evidence, sanitization
 - `replay_consistency_matters` (replay_continuity): `1.0` via replay, consistency, compressed, contradiction
-- `architectural_continuity_matters` (architectural_continuity): `0.833` via API, KVTC, showcase, telemetry, validation
+- `architectural_continuity_matters` (architectural_continuity): `1.0` via architecture, API, KVTC, showcase, telemetry, validation
 
 ## Replay Consistency
 

@@ -128,3 +128,29 @@ The chain metrics focus on operational continuity rather than token-count vanity
 - replay consistency score.
 
 The summary flags when constraints collapse, architecture changes, goals mutate, or replay becomes unstable.
+
+## Adaptive semantic replay stabilization
+
+The chain runner also compares the baseline chain against an adaptive stabilized chain. The adaptive mode is deterministic and repository-local; it does not call an LLM or introduce random sampling. It reinforces continuity with:
+
+- constraint anchoring for cloud-first, Render, Vercel, Docker, CI, evidence, and sanitization terms;
+- architecture reinforcement for API, KVTC, showcase, telemetry, validation, and report anchors;
+- replay weighting that prioritizes truth pins, constraints, architecture anchors, and semantic clusters;
+- semantic cluster persistence by truth category;
+- drift-triggered context expansion when retention or pinned-truth scores cross fixed thresholds;
+- high-priority truth pinning for workflow, replay-continuity, and architectural-continuity constraints.
+
+Additional generated outputs include:
+
+- `evals/chains/history/adaptive_state_vN.json`
+- `evals/chains/history/adaptive_replay_vN.json`
+- `evals/chains/history/adaptive_chain_step_NN_metrics.json`
+- `evals/chains/reports/adaptive_chain_step_NN.md`
+- `evals/chains/reports/adaptive_metrics_summary.json`
+- `evals/chains/reports/comparative_stabilization_report.json`
+- `evals/chains/reports/comparative_stabilization_report.md`
+- `evals/chains/reports/continuity_heatmap.md`
+- `evals/chains/reports/replay_degradation_curves.md`
+- `evals/chains/reports/stabilization_effectiveness_summary.md`
+
+Adaptive comparison metrics cover drift stabilization delta, replay recovery score, pinned truth retention, adaptive continuity score, contradiction reduction, continuity preservation, drift suppression, and replay longevity.

@@ -1,0 +1,61 @@
+{
+  "answers": [
+    {
+      "answer": "Position it as semantic replay fidelity under constrained context budgets with semantic continuity and replay consistency, not token-count vanity metrics.",
+      "expected_terms": [
+        "semantic replay fidelity",
+        "constrained context budgets"
+      ],
+      "id": "q_positioning",
+      "question": "How should this evaluation system be positioned?"
+    },
+    {
+      "answer": "Retain workflow constraints: cloud-first render vercel docker ci evidence sanitization. Constraint anchoring reinforces cloud-first render vercel docker ci evidence sanitization.",
+      "expected_terms": [
+        "cloud-first",
+        "CI",
+        "deployability"
+      ],
+      "id": "q_cloud_first",
+      "question": "What workflow constraint must remain intact?"
+    },
+    {
+      "answer": "Retain benchmark evidence through benchmark, evidence, JSON, Markdown, reports.",
+      "expected_terms": [
+        "benchmark",
+        "JSON",
+        "Markdown",
+        "reports"
+      ],
+      "id": "q_evidence",
+      "question": "What evidence pipeline should be retained?"
+    },
+    {
+      "answer": "Replay remains stable when replay, consistency, compressed, contradiction, retention survive without contradiction; replay weighting, truth pins, and semantic cluster persistence recover at-risk anchors.",
+      "expected_terms": [
+        "replay",
+        "consistency",
+        "contradiction",
+        "retention"
+      ],
+      "id": "q_replay",
+      "question": "What replay behavior is important after compression?"
+    },
+    {
+      "answer": "Preserve architectural continuity across Adaptive architecture reinforcement retained: API, KVTC, showcase, telemetry, validation, reports. Constraint anchoring and high-priority truth pinning preserve continuity under repeated compression. api kvtc showcase telemetry validation reports Adaptive architecture reinforcement keeps API, KVTC, showcase, telemetry, validation, and reports connected.",
+      "expected_terms": [
+        "API",
+        "KVTC",
+        "showcase",
+        "telemetry",
+        "validation"
+      ],
+      "id": "q_architecture",
+      "question": "What architectural continuity must be preserved?"
+    }
+  ],
+  "generated_at": "2026-05-13T00:00:00+00:00",
+  "iteration": 3,
+  "schema_version": 1,
+  "source_state_iteration": 3
+}

@@ -55,3 +55,48 @@ def test_replay_chain_metrics_decay_without_question_leakage() -> None:
 
     assert later["metrics"]["truth_retention_score"] < first["metrics"]["truth_retention_score"]
     assert later["metrics"]["semantic_drift_growth"] > first["metrics"]["semantic_drift_growth"]
+
+
+def test_adaptive_replay_stabilizes_late_chain_drift() -> None:
+    raw_context = minimal_raw_context()
+
+    baseline_state = replay_chain_eval.initial_state(raw_context)
+    baseline_replay = replay_chain_eval.replay_answers(baseline_state, raw_context["questions"])
+    baseline_first = replay_chain_eval.evaluate_step(raw_context, baseline_state, baseline_replay, 1.0, 0)
+    for iteration in range(2, 8):
+        baseline_state = replay_chain_eval.recompress(baseline_state, baseline_replay, raw_context, iteration)
+        baseline_replay = replay_chain_eval.replay_answers(baseline_state, raw_context["questions"])
+    baseline_late = replay_chain_eval.evaluate_step(
+        raw_context,
+        baseline_state,
+        baseline_replay,
+        baseline_first["metrics"]["truth_retention_score"],
+        0,
+    )
+
+    adaptive_state = replay_chain_eval.adaptive_initial_state(raw_context)
+    adaptive_replay = replay_chain_eval.replay_answers(adaptive_state, raw_context["questions"])
+    adaptive_first = replay_chain_eval.evaluate_step(
+        raw_context,
+        adaptive_state,
+        adaptive_replay,
+        1.0,
+        0,
+        baseline_first["metrics"],
+    )
+    for iteration in range(2, 8):
+        adaptive_state = replay_chain_eval.adaptive_recompress(adaptive_state, adaptive_replay, raw_context, iteration)
+        adaptive_replay = replay_chain_eval.replay_answers(adaptive_state, raw_context["questions"])
+    adaptive_late = replay_chain_eval.evaluate_step(
+        raw_context,
+        adaptive_state,
+        adaptive_replay,
+        adaptive_first["metrics"]["truth_retention_score"],
+        0,
+        baseline_late["metrics"],
+    )
+
+    assert adaptive_late["metrics"]["semantic_drift_growth"] < baseline_late["metrics"]["semantic_drift_growth"]
+    assert adaptive_late["metrics"]["pinned_truth_retention"] >= baseline_late["metrics"]["pinned_truth_retention"]
+    assert adaptive_late["metrics"]["drift_stabilization_delta"] > 0
+    assert adaptive_late["metrics"]["adaptive_continuity_score"] > baseline_late["metrics"]["adaptive_continuity_score"]
