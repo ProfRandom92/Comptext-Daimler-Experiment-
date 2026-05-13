@@ -6,3 +6,7 @@ This directory keeps historical reports and generated artifacts that are useful 
 - `generated-artifacts/` contains one-off generated outputs that are not part of the supported runtime path.
 
 Current reviewer-facing documentation lives in `README.md` and `docs/`.
+
+## Legacy docs
+
+Older architecture/wiki drafts that contained stale positioning have been moved to `archive/legacy-docs/`. Use the root `README.md` and lowercase docs in `docs/` for current reviewer-facing material.
