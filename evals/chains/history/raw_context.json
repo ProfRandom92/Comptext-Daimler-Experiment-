@@ -1,0 +1,199 @@
+{
+  "constraints": [
+    "real repository activity only",
+    "no lorem ipsum",
+    "no fake benchmark generators",
+    "no synthetic token spam",
+    "no fake production claims",
+    "cloud-first workflow",
+    "preserve CI stability"
+  ],
+  "corpus_sha256": "07780ae9e0eb1242b7e8636e1a7eabc1dc3ea899ee396064c283726c280ee68b",
+  "generated_at": "2026-05-13T00:00:00+00:00",
+  "goal": "Measure how long operational reasoning continuity survives repeated semantic condensation.",
+  "not_goal": "token-count vanity metrics",
+  "positioning": "semantic replay fidelity under constrained context budgets",
+  "questions": [
+    {
+      "expected_terms": [
+        "semantic replay fidelity",
+        "constrained context budgets"
+      ],
+      "id": "q_positioning",
+      "question": "How should this evaluation system be positioned?"
+    },
+    {
+      "expected_terms": [
+        "cloud-first",
+        "CI",
+        "deployability"
+      ],
+      "id": "q_cloud_first",
+      "question": "What workflow constraint must remain intact?"
+    },
+    {
+      "expected_terms": [
+        "benchmark",
+        "JSON",
+        "Markdown",
+        "reports"
+      ],
+      "id": "q_evidence",
+      "question": "What evidence pipeline should be retained?"
+    },
+    {
+      "expected_terms": [
+        "replay",
+        "consistency",
+        "contradiction",
+        "retention"
+      ],
+      "id": "q_replay",
+      "question": "What replay behavior is important after compression?"
+    },
+    {
+      "expected_terms": [
+        "API",
+        "KVTC",
+        "showcase",
+        "telemetry",
+        "validation"
+      ],
+      "id": "q_architecture",
+      "question": "What architectural continuity must be preserved?"
+    }
+  ],
+  "schema_version": 1,
+  "source_dataset": "evals/datasets/engineering_activity_replay_dataset.json",
+  "source_truths": "evals/truths/must_retain_truths.json",
+  "truths": [
+    {
+      "category": "workflow_constraint",
+      "claim": "The workflow is cloud-first and must preserve deployability for Render, Vercel, Docker, and CI-oriented handoff.",
+      "evidence_strength": 1.0,
+      "evidence_terms_found": [
+        "cloud",
+        "Render",
+        "Vercel",
+        "Docker",
+        "CI"
+      ],
+      "id": "cloud_first_workflow_required",
+      "must_retain_terms": [
+        "cloud",
+        "Render",
+        "Vercel",
+        "Docker",
+        "CI"
+      ]
+    },
+    {
+      "category": "replay_continuity",
+      "claim": "The repository documents forensic or replay validation as an evidence-producing workflow.",
+      "evidence_strength": 1.0,
+      "evidence_terms_found": [
+        "replay",
+        "validation",
+        "evidence"
+      ],
+      "id": "replay_validation_exists",
+      "must_retain_terms": [
+        "replay",
+        "validation",
+        "evidence"
+      ]
+    },
+    {
+      "category": "semantic_continuity",
+      "claim": "Semantic drift and regression tracking are first-class evaluation concerns.",
+      "evidence_strength": 0.667,
+      "evidence_terms_found": [
+        "semantic",
+        "regression"
+      ],
+      "id": "semantic_drift_tracking_exists",
+      "must_retain_terms": [
+        "semantic",
+        "drift",
+        "regression"
+      ]
+    },
+    {
+      "category": "evidence_pipeline",
+      "claim": "Benchmark evidence is generated as JSON and Markdown reports with stable contracts.",
+      "evidence_strength": 1.0,
+      "evidence_terms_found": [
+        "benchmark",
+        "evidence",
+        "JSON",
+        "Markdown",
+        "contract"
+      ],
+      "id": "benchmark_evidence_pipeline_exists",
+      "must_retain_terms": [
+        "benchmark",
+        "evidence",
+        "JSON",
+        "Markdown",
+        "contract"
+      ]
+    },
+    {
+      "category": "workflow_constraint",
+      "claim": "The project must not make fake production claims; demo and validation outputs need evidence and sanitization.",
+      "evidence_strength": 1.0,
+      "evidence_terms_found": [
+        "production",
+        "claims",
+        "evidence",
+        "sanitization"
+      ],
+      "id": "no_fake_production_claims",
+      "must_retain_terms": [
+        "production",
+        "claims",
+        "evidence",
+        "sanitization"
+      ]
+    },
+    {
+      "category": "replay_continuity",
+      "claim": "Replay consistency matters: compressed state should answer operational questions without contradiction.",
+      "evidence_strength": 0.75,
+      "evidence_terms_found": [
+        "replay",
+        "consistency",
+        "compressed"
+      ],
+      "id": "replay_consistency_matters",
+      "must_retain_terms": [
+        "replay",
+        "consistency",
+        "compressed",
+        "contradiction"
+      ]
+    },
+    {
+      "category": "architectural_continuity",
+      "claim": "Architectural continuity matters across API, KVTC, showcase, telemetry, reports, and validation pipelines.",
+      "evidence_strength": 1.0,
+      "evidence_terms_found": [
+        "architecture",
+        "API",
+        "KVTC",
+        "showcase",
+        "telemetry",
+        "validation"
+      ],
+      "id": "architectural_continuity_matters",
+      "must_retain_terms": [
+        "architecture",
+        "API",
+        "KVTC",
+        "showcase",
+        "telemetry",
+        "validation"
+      ]
+    }
+  ]
+}

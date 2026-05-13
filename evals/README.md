@@ -13,7 +13,8 @@ evals/
 ├── compressed/  # Compressed replay state used for questioning
 ├── replay/      # Replay questions and deterministic answers
 ├── reports/     # JSON and Markdown evaluation outputs
-└── scripts/     # Reproducible evaluation runner
+├── chains/      # Iterative compression/replay-chain history, metrics, and reports
+└── scripts/     # Reproducible evaluation runners
 ```
 
 ## Evaluation flow
@@ -83,3 +84,47 @@ The evaluation system follows the same project constraints as the rest of the re
 - prefer small, focused changes;
 - keep generated evidence reproducible;
 - avoid fake benchmark generators, synthetic token spam, lorem ipsum, and unsupported production claims.
+
+## Iterative replay-chain evaluation
+
+The chain runner evaluates repeated semantic condensation directly inside this repository:
+
+```text
+raw_context
+→ compressed_state_v1
+→ replay_v1
+→ recompressed_state_v2
+→ replay_v2
+→ recompressed_state_v3
+→ replay_v3
+...
+```
+
+Run it with:
+
+```bash
+python evals/scripts/replay_chain_eval.py --iterations 7
+```
+
+Generated outputs are deterministic and reproducible for the same checked-out inputs:
+
+- `evals/chains/history/raw_context.json`
+- `evals/chains/history/compressed_state_v1.json`
+- `evals/chains/history/recompressed_state_vN.json`
+- `evals/chains/history/replay_vN.json`
+- `evals/chains/history/chain_step_NN_metrics.json`
+- `evals/chains/reports/chain_step_NN.md`
+- `evals/chains/reports/metrics_summary.json`
+- `evals/chains/reports/continuity_trend_summary.md`
+- `evals/chains/reports/drift_escalation_summary.md`
+
+The chain metrics focus on operational continuity rather than token-count vanity metrics:
+
+- retention decay;
+- contradiction accumulation;
+- semantic drift growth;
+- constraint survival rate;
+- architectural continuity score;
+- replay consistency score.
+
+The summary flags when constraints collapse, architecture changes, goals mutate, or replay becomes unstable.
