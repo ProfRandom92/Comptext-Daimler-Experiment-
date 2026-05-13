@@ -106,6 +106,8 @@ Run it with:
 python evals/scripts/replay_chain_eval.py --iterations 7
 ```
 
+By default, the runner now executes `--strategy compare`, which emits the original baseline chain plus an adaptive stabilized chain. You can also run `--strategy baseline` or `--strategy adaptive` independently.
+
 Generated outputs are deterministic and reproducible for the same checked-out inputs:
 
 - `evals/chains/history/raw_context.json`
@@ -117,6 +119,12 @@ Generated outputs are deterministic and reproducible for the same checked-out in
 - `evals/chains/reports/metrics_summary.json`
 - `evals/chains/reports/continuity_trend_summary.md`
 - `evals/chains/reports/drift_escalation_summary.md`
+- `evals/chains/adaptive_history/` adaptive stabilized state, replay, and metric artifacts
+- `evals/chains/adaptive_reports/` adaptive trend, drift, and step reports
+- `evals/chains/comparative_reports/adaptive_stabilization_report.md`
+- `evals/chains/comparative_reports/adaptive_stabilization_summary.json`
+- `evals/chains/comparative_reports/continuity_heatmap.md`
+- `evals/chains/comparative_reports/replay_degradation_curves.md`
 
 The chain metrics focus on operational continuity rather than token-count vanity metrics:
 
@@ -125,6 +133,10 @@ The chain metrics focus on operational continuity rather than token-count vanity
 - semantic drift growth;
 - constraint survival rate;
 - architectural continuity score;
-- replay consistency score.
+- replay consistency score;
+- drift stabilization delta;
+- replay recovery score;
+- pinned truth retention;
+- adaptive continuity score.
 
-The summary flags when constraints collapse, architecture changes, goals mutate, or replay becomes unstable.
+Adaptive stabilization adds deterministic constraint anchoring, architecture reinforcement, replay weighting, semantic cluster persistence, drift-triggered context expansion, and high-priority truth pinning. Comparative reports measure contradiction reduction, continuity preservation, drift suppression, and replay longevity between baseline replay chains and adaptive stabilized replay chains. The summary flags when constraints collapse, architecture changes, goals mutate, or replay becomes unstable.

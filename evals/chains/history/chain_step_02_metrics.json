@@ -9,12 +9,16 @@
   "generated_at": "2026-05-13T00:00:00+00:00",
   "iteration": 2,
   "metrics": {
+    "adaptive_continuity_score": 0.916,
     "architectural_continuity_score": 1.0,
     "constraint_survival_rate": 1.0,
     "contradiction_accumulation": 0,
     "contradiction_count": 0,
+    "drift_stabilization_delta": 0.0,
     "goal_continuity_score": 1.0,
+    "pinned_truth_retention": 0.818,
     "replay_consistency_score": 0.933,
+    "replay_recovery_score": 0.917,
     "retention_decay": 0.036,
     "semantic_drift_growth": 0.233,
     "truth_retention_score": 0.745
@@ -69,6 +73,7 @@
     }
   ],
   "schema_version": 1,
+  "strategy": "baseline",
   "truth_scores": [
     {
       "category": "workflow_constraint",
