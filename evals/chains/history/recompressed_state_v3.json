@@ -1,0 +1,55 @@
+{
+  "architecture_trace": [
+    "Continuity anchors retained: API, KVTC, showcase, telemetry, validation."
+  ],
+  "generated_at": "2026-05-13T00:00:00+00:00",
+  "iteration": 3,
+  "operational_memory": {
+    "evaluation_goal": "semantic continuity, operational memory retention, replay consistency, architectural stability",
+    "not_a_goal": "token-count vanity metrics",
+    "workflow": "cloud-first render vercel docker ci evidence"
+  },
+  "positioning": "semantic replay fidelity under constrained context budgets",
+  "retained_truth_terms": {
+    "architectural_continuity_matters": [
+      "API",
+      "KVTC",
+      "showcase",
+      "telemetry",
+      "validation"
+    ],
+    "benchmark_evidence_pipeline_exists": [
+      "benchmark",
+      "evidence",
+      "JSON",
+      "Markdown"
+    ],
+    "cloud_first_workflow_required": [
+      "CI",
+      "cloud",
+      "Docker",
+      "Render"
+    ],
+    "no_fake_production_claims": [
+      "evidence"
+    ],
+    "replay_consistency_matters": [
+      "compressed",
+      "consistency",
+      "contradiction"
+    ],
+    "replay_validation_exists": [
+      "evidence",
+      "replay"
+    ],
+    "semantic_drift_tracking_exists": [
+      "semantic"
+    ]
+  },
+  "schema_version": 1,
+  "source": "replay_v2",
+  "workflow_constraints": [
+    "cloud-first workflow",
+    "preserve CI stability"
+  ]
+}

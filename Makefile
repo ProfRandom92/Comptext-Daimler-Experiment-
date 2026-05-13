@@ -1,4 +1,4 @@
-.PHONY: help install test lint format clean dev prod docker debug benchmark replay-eval security-check audit
+.PHONY: help install test lint format clean dev prod docker debug benchmark replay-eval replay-chain-eval security-check audit
 
 # Colors for output
 BLUE := \033[0;34m
@@ -137,6 +137,11 @@ replay-eval: ## Run semantic replay fidelity evaluation pipeline
 	@echo "$(BLUE)Running semantic replay fidelity evaluation...$(NC)"
 	python evals/scripts/replay_eval.py all
 	@echo "$(GREEN)✓ Replay evaluation artifacts generated in evals/reports$(NC)"
+
+replay-chain-eval: ## Run iterative replay-chain continuity evaluation
+	@echo "$(BLUE)Running iterative replay-chain evaluation...$(NC)"
+	python evals/scripts/replay_chain_eval.py --iterations 7
+	@echo "$(GREEN)✓ Replay-chain artifacts generated in evals/chains$(NC)"
 
 security-check: ## Run security checks (bandit, safety)
 	@echo "$(BLUE)Running security checks...$(NC)"

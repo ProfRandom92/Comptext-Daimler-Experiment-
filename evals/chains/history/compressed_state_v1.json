@@ -1,0 +1,71 @@
+{
+  "architecture_trace": [
+    "API, KVTC, showcase, telemetry, validation, and reports remain continuity anchors.",
+    "JSON and Markdown artifacts preserve reproducible evidence across replay steps."
+  ],
+  "generated_at": "2026-05-13T00:00:00+00:00",
+  "iteration": 1,
+  "operational_memory": {
+    "evaluation_goal": "semantic continuity, operational memory retention, replay consistency, architectural stability, and long-context reasoning continuity",
+    "not_a_goal": "token-count vanity metrics",
+    "workflow": "cloud-first Render Vercel Docker CI deployability with evidence and sanitization"
+  },
+  "positioning": "semantic replay fidelity under constrained context budgets",
+  "retained_truth_terms": {
+    "architectural_continuity_matters": [
+      "architecture",
+      "API",
+      "KVTC",
+      "showcase",
+      "telemetry",
+      "validation"
+    ],
+    "benchmark_evidence_pipeline_exists": [
+      "benchmark",
+      "evidence",
+      "JSON",
+      "Markdown",
+      "contract"
+    ],
+    "cloud_first_workflow_required": [
+      "cloud",
+      "Render",
+      "Vercel",
+      "Docker",
+      "CI"
+    ],
+    "no_fake_production_claims": [
+      "production",
+      "claims",
+      "evidence",
+      "sanitization"
+    ],
+    "replay_consistency_matters": [
+      "replay",
+      "consistency",
+      "compressed",
+      "contradiction"
+    ],
+    "replay_validation_exists": [
+      "replay",
+      "validation",
+      "evidence"
+    ],
+    "semantic_drift_tracking_exists": [
+      "semantic",
+      "drift",
+      "regression"
+    ]
+  },
+  "schema_version": 1,
+  "source": "raw_context",
+  "workflow_constraints": [
+    "real repository activity only",
+    "no lorem ipsum",
+    "no fake benchmark generators",
+    "no synthetic token spam",
+    "no fake production claims",
+    "cloud-first workflow",
+    "preserve CI stability"
+  ]
+}

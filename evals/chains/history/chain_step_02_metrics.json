@@ -1,0 +1,146 @@
+{
+  "contradictions": [],
+  "flags": {
+    "architecture_changed": false,
+    "constraints_collapsed": false,
+    "goals_mutated": false,
+    "replay_unstable": false
+  },
+  "generated_at": "2026-05-13T00:00:00+00:00",
+  "iteration": 2,
+  "metrics": {
+    "architectural_continuity_score": 1.0,
+    "constraint_survival_rate": 1.0,
+    "contradiction_accumulation": 0,
+    "contradiction_count": 0,
+    "goal_continuity_score": 1.0,
+    "replay_consistency_score": 0.933,
+    "retention_decay": 0.036,
+    "semantic_drift_growth": 0.233,
+    "truth_retention_score": 0.745
+  },
+  "question_scores": [
+    {
+      "question_id": "q_positioning",
+      "retained_terms": [
+        "semantic replay fidelity",
+        "constrained context budgets"
+      ],
+      "score": 1.0
+    },
+    {
+      "question_id": "q_cloud_first",
+      "retained_terms": [
+        "cloud-first",
+        "CI"
+      ],
+      "score": 0.667
+    },
+    {
+      "question_id": "q_evidence",
+      "retained_terms": [
+        "benchmark",
+        "JSON",
+        "Markdown",
+        "reports"
+      ],
+      "score": 1.0
+    },
+    {
+      "question_id": "q_replay",
+      "retained_terms": [
+        "replay",
+        "consistency",
+        "contradiction",
+        "retention"
+      ],
+      "score": 1.0
+    },
+    {
+      "question_id": "q_architecture",
+      "retained_terms": [
+        "API",
+        "KVTC",
+        "showcase",
+        "telemetry",
+        "validation"
+      ],
+      "score": 1.0
+    }
+  ],
+  "schema_version": 1,
+  "truth_scores": [
+    {
+      "category": "workflow_constraint",
+      "retained_terms": [
+        "cloud",
+        "Render",
+        "Vercel",
+        "Docker",
+        "CI"
+      ],
+      "score": 1.0,
+      "truth_id": "cloud_first_workflow_required"
+    },
+    {
+      "category": "replay_continuity",
+      "retained_terms": [
+        "replay",
+        "validation",
+        "evidence"
+      ],
+      "score": 1.0,
+      "truth_id": "replay_validation_exists"
+    },
+    {
+      "category": "semantic_continuity",
+      "retained_terms": [
+        "semantic"
+      ],
+      "score": 0.333,
+      "truth_id": "semantic_drift_tracking_exists"
+    },
+    {
+      "category": "evidence_pipeline",
+      "retained_terms": [
+        "benchmark",
+        "evidence",
+        "JSON",
+        "Markdown"
+      ],
+      "score": 0.8,
+      "truth_id": "benchmark_evidence_pipeline_exists"
+    },
+    {
+      "category": "workflow_constraint",
+      "retained_terms": [
+        "evidence"
+      ],
+      "score": 0.25,
+      "truth_id": "no_fake_production_claims"
+    },
+    {
+      "category": "replay_continuity",
+      "retained_terms": [
+        "replay",
+        "consistency",
+        "compressed",
+        "contradiction"
+      ],
+      "score": 1.0,
+      "truth_id": "replay_consistency_matters"
+    },
+    {
+      "category": "architectural_continuity",
+      "retained_terms": [
+        "API",
+        "KVTC",
+        "showcase",
+        "telemetry",
+        "validation"
+      ],
+      "score": 0.833,
+      "truth_id": "architectural_continuity_matters"
+    }
+  ]
+}
