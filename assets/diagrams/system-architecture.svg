@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
+  <title id="title">CompText system architecture</title>
+  <desc id="desc">Raw synthetic documents pass through FastAPI, intake, KVTC compression, triage, analysis, cache, telemetry, and benchmark artifacts.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#07111f"/><stop offset="1" stop-color="#0e172a"/></linearGradient>
+    <linearGradient id="card" x1="0" x2="1"><stop offset="0" stop-color="#12223a"/><stop offset="1" stop-color="#0f1b2d"/></linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#000" flood-opacity="0.35"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M2,2 L10,6 L2,10" fill="#38bdf8"/></marker>
+    <style>
+      .title{font:700 34px Inter,Arial,sans-serif;fill:#f8fafc}.sub{font:500 15px Inter,Arial,sans-serif;fill:#94a3b8}.h{font:700 18px Inter,Arial,sans-serif;fill:#e2e8f0}.p{font:500 13px Inter,Arial,sans-serif;fill:#a7b4c7}.tag{font:700 11px Inter,Arial,sans-serif;fill:#082f49}.line{stroke:#38bdf8;stroke-width:3;marker-end:url(#arrow);fill:none}.muted{stroke:#334155;stroke-width:1}.accent{fill:#38bdf8}.ok{fill:#22c55e}.warn{fill:#f59e0b}
+    </style>
+  </defs>
+  <rect width="1280" height="640" rx="28" fill="url(#bg)"/>
+  <text x="56" y="70" class="title">Semantic compression + replay-aware inference infrastructure</text>
+  <text x="56" y="102" class="sub">Deterministic pre-inference boundary, checksum-linked frames, synthetic benchmarks, and aggregate telemetry.</text>
+  <g filter="url(#shadow)">
+    <rect x="56" y="155" width="150" height="110" rx="18" fill="url(#card)" stroke="#233554"/>
+    <text x="82" y="194" class="h">Synthetic</text><text x="82" y="219" class="h">documents</text><text x="82" y="246" class="p">no production data</text>
+    <rect x="255" y="155" width="150" height="110" rx="18" fill="url(#card)" stroke="#233554"/>
+    <text x="291" y="194" class="h">FastAPI</text><text x="282" y="221" class="p">contracts + routing</text><text x="282" y="246" class="p">bounded endpoints</text>
+    <rect x="454" y="155" width="150" height="110" rx="18" fill="url(#card)" stroke="#233554"/>
+    <text x="494" y="194" class="h">Intake</text><text x="481" y="221" class="p">sanitize + mask</text><text x="481" y="246" class="p">privacy boundary</text>
+    <rect x="653" y="155" width="150" height="110" rx="18" fill="url(#card)" stroke="#38bdf8"/>
+    <text x="694" y="194" class="h">KVTC</text><text x="677" y="221" class="p">key/value/type/code</text><text x="677" y="246" class="p">checksum frame</text>
+    <rect x="852" y="155" width="150" height="110" rx="18" fill="url(#card)" stroke="#233554"/>
+    <text x="895" y="194" class="h">Triage</text><text x="879" y="221" class="p">rule hits + OBD</text><text x="879" y="246" class="p">priority signal</text>
+    <rect x="1051" y="155" width="150" height="110" rx="18" fill="url(#card)" stroke="#233554"/>
+    <text x="1087" y="194" class="h">Analysis</text><text x="1078" y="221" class="p">mock/local/cloud</text><text x="1078" y="246" class="p">structured result</text>
+  </g>
+  <path d="M206 210 H245" class="line"/><path d="M405 210 H444" class="line"/><path d="M604 210 H643" class="line"/><path d="M803 210 H842" class="line"/><path d="M1002 210 H1041" class="line"/>
+  <g filter="url(#shadow)">
+    <rect x="255" y="368" width="180" height="100" rx="18" fill="#0b2136" stroke="#1f3b57"/>
+    <text x="289" y="407" class="h">Result cache</text><text x="289" y="434" class="p">checksum-keyed reuse</text>
+    <rect x="506" y="368" width="180" height="100" rx="18" fill="#0b2136" stroke="#1f3b57"/>
+    <text x="540" y="407" class="h">Telemetry</text><text x="540" y="434" class="p">aggregate metrics only</text>
+    <rect x="757" y="368" width="220" height="100" rx="18" fill="#0b2136" stroke="#1f3b57"/>
+    <text x="792" y="407" class="h">Benchmarks</text><text x="792" y="434" class="p">Markdown + JSON artifacts</text>
+  </g>
+  <path d="M1126 265 C1126 415 520 308 428 368" class="line"/>
+  <path d="M728 265 C728 312 596 324 596 368" class="line"/>
+  <path d="M728 265 C728 325 867 324 867 368" class="line"/>
+  <rect x="56" y="540" width="1160" height="46" rx="23" fill="#061524" stroke="#18324f"/>
+  <circle cx="88" cy="563" r="7" class="ok"/><text x="106" y="568" class="sub">Designed for inspection: synthetic inputs, deterministic paths, replayable checksums, and explicit limitations.</text>
+</svg>
