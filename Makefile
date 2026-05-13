@@ -1,4 +1,4 @@
-.PHONY: help install test lint format clean dev prod docker debug benchmark security-check audit
+.PHONY: help install test lint format clean dev prod docker debug benchmark replay-eval security-check audit
 
 # Colors for output
 BLUE := \033[0;34m
@@ -131,6 +131,12 @@ benchmark: ## Run performance benchmark
 	result = strategy.compress(test_doc); \
 	elapsed = (time.perf_counter() - t0) * 1000; \
 	print(f'Benchmark: {elapsed:.2f}ms | Compression: {result.compression_ratio:.1%}')"
+
+
+replay-eval: ## Run semantic replay fidelity evaluation pipeline
+	@echo "$(BLUE)Running semantic replay fidelity evaluation...$(NC)"
+	python evals/scripts/replay_eval.py all
+	@echo "$(GREEN)✓ Replay evaluation artifacts generated in evals/reports$(NC)"
 
 security-check: ## Run security checks (bandit, safety)
 	@echo "$(BLUE)Running security checks...$(NC)"

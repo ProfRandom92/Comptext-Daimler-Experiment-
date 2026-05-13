@@ -1,0 +1,60 @@
+{
+  "answers": [
+    {
+      "answer": "Position it as semantic replay fidelity under constrained context budgets, not as a token reduction benchmark.",
+      "expected_terms": [
+        "semantic replay fidelity",
+        "constrained context budgets"
+      ],
+      "id": "q_positioning",
+      "question": "How should this evaluation system be positioned?"
+    },
+    {
+      "answer": "Retain the cloud-first; preserve Render, Vercel, Docker, and CI deployability while avoiding unsupported production claims constraint with CI-oriented deployability.",
+      "expected_terms": [
+        "cloud-first",
+        "CI",
+        "deployability"
+      ],
+      "id": "q_cloud_first",
+      "question": "What workflow constraint must remain intact?"
+    },
+    {
+      "answer": "Retain benchmark evidence as reproducible JSON and Markdown reports with validation contracts.",
+      "expected_terms": [
+        "benchmark",
+        "JSON",
+        "Markdown",
+        "reports"
+      ],
+      "id": "q_evidence",
+      "question": "What evidence pipeline should be retained?"
+    },
+    {
+      "answer": "Compressed replay state must preserve replay consistency, semantic drift visibility, retention of truths, and contradiction detection.",
+      "expected_terms": [
+        "replay",
+        "consistency",
+        "contradiction",
+        "retention"
+      ],
+      "id": "q_replay",
+      "question": "What replay behavior is important after compression?"
+    },
+    {
+      "answer": "Preserve architectural continuity across API surface and tests remain the executable contract.; KVTC strategies, benchmark reports, regression summaries, telemetry, and showcase UI are continuity anchors.; Validation scripts and report schemas make evidence reproducible.",
+      "expected_terms": [
+        "API",
+        "KVTC",
+        "showcase",
+        "telemetry",
+        "validation"
+      ],
+      "id": "q_architecture",
+      "question": "What architectural continuity must be preserved?"
+    }
+  ],
+  "generated_at": "2026-05-13T15:50:12.102568+00:00",
+  "schema_version": 1,
+  "source_compressed_state": "evals/compressed/compressed_replay_state.json"
+}
