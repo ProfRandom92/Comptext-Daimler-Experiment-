@@ -7,22 +7,22 @@
     "replay_unstable": false
   },
   "generated_at": "2026-05-13T00:00:00+00:00",
-  "iteration": 1,
+  "iteration": 2,
   "metrics": {
-    "adaptive_continuity_score": 0.956,
+    "adaptive_continuity_score": 0.948,
     "architectural_continuity_score": 1.0,
     "constraint_survival_rate": 1.0,
     "contradiction_accumulation": 0,
     "contradiction_count": 0,
     "contradiction_reduction": 0,
-    "drift_stabilization_delta": 0.0,
+    "drift_stabilization_delta": 0.066,
     "goal_continuity_score": 1.0,
     "pinned_truth_retention": 1.0,
-    "replay_consistency_score": 1.0,
-    "replay_recovery_score": 0.0,
+    "replay_consistency_score": 0.933,
+    "replay_recovery_score": 0.167,
     "retention_decay": 0.0,
-    "semantic_drift_growth": 0.2,
-    "truth_retention_score": 0.781
+    "semantic_drift_growth": 0.167,
+    "truth_retention_score": 0.805
   },
   "question_scores": [
     {
@@ -37,10 +37,9 @@
       "question_id": "q_cloud_first",
       "retained_terms": [
         "cloud-first",
-        "CI",
-        "deployability"
+        "CI"
       ],
-      "score": 1.0
+      "score": 0.667
     },
     {
       "question_id": "q_evidence",
@@ -140,13 +139,14 @@
     {
       "category": "architectural_continuity",
       "retained_terms": [
+        "architecture",
         "API",
         "KVTC",
         "showcase",
         "telemetry",
         "validation"
       ],
-      "score": 0.833,
+      "score": 1.0,
       "truth_id": "architectural_continuity_matters"
     }
   ]

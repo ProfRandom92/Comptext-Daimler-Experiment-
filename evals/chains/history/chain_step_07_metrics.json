@@ -9,12 +9,17 @@
   "generated_at": "2026-05-13T00:00:00+00:00",
   "iteration": 7,
   "metrics": {
+    "adaptive_continuity_score": 0.689,
     "architectural_continuity_score": 0.667,
     "constraint_survival_rate": 0.714,
     "contradiction_accumulation": 0,
     "contradiction_count": 0,
+    "contradiction_reduction": 0,
+    "drift_stabilization_delta": 0.0,
     "goal_continuity_score": 1.0,
+    "pinned_truth_retention": 0.864,
     "replay_consistency_score": 0.637,
+    "replay_recovery_score": 0.0,
     "retention_decay": 0.217,
     "semantic_drift_growth": 0.433,
     "truth_retention_score": 0.564
