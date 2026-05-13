@@ -1,0 +1,62 @@
+{
+  "adaptive_iterations": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "artifact_manifest": {
+    "adaptive_metrics_summary": "evals/chains/reports/adaptive_metrics_summary.json",
+    "baseline_metrics_summary": "evals/chains/reports/metrics_summary.json",
+    "comparative_stabilization_json": "evals/chains/reports/comparative_stabilization_report.json",
+    "comparative_stabilization_markdown": "evals/chains/reports/comparative_stabilization_report.md",
+    "compare_strategy_artifacts": "evals/chains/reports/compare_strategy_artifacts.json",
+    "continuity_heatmap": "evals/chains/reports/continuity_heatmap.md",
+    "replay_comparison_report": "evals/chains/reports/replay_comparison_report.md",
+    "replay_degradation_curves": "evals/chains/reports/replay_degradation_curves.md",
+    "stabilization_summary": "evals/chains/reports/stabilization_effectiveness_summary.md"
+  },
+  "baseline_iterations": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "comparison_iterations": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "decision": "adaptive_replay_stabilization",
+  "decision_basis": {
+    "adaptive_signal_count": 14,
+    "baseline_signal_count": 0,
+    "final_continuity_preservation_delta": 0.259,
+    "final_drift_suppression_delta": 0.266,
+    "positive_continuity_delta_iterations": 7,
+    "positive_drift_suppression_iterations": 7
+  },
+  "generated_at": "2026-05-13T00:00:00+00:00",
+  "preserved_capabilities": [
+    "adaptive replay stabilization",
+    "compare strategy",
+    "adaptive continuity metrics",
+    "replay recovery scoring",
+    "pinned truth retention",
+    "stabilization reports",
+    "replay comparison reporting",
+    "semantic reinforcement logic"
+  ],
+  "schema_version": 1,
+  "strategy": "compare"
+}
