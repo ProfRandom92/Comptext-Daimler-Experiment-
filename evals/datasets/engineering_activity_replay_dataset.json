@@ -1,0 +1,690 @@
+{
+  "commits": [
+    {
+      "body_and_stat_excerpt": "\n\n README.md                                          | 773 +++++----------------\n archive/README.md                                  |   8 +\n .../generated-artifacts}/login_screen.html         |   0\n .../legacy-reports/AUDIT_REPORT.md                 |   0\n .../legacy-reports/PROFILE_DRAFT.md                |   0\n .../legacy-reports/executive_audit_report.md       |   0\n .../legacy-reports/pre_commit_summary.txt          |   0\n .../legacy-reports/status_report.md                |   0\n .../legacy-reports/verification_audit_report.md    |   0\n docs/ARCHITECTURE.md                               |  94 +++\n docs/BENCHMARK_METHODOLOGY.md                      |  74 ++\n docs/BENCHMARK_WORKFLOW.md                         |  14 +-\n docs/ENTERPRISE_READINESS.md                       |  42 ++\n docs/FORENSIC_REPLAY.md                            |   6 +-\n docs/KVTC_V7_INTEGRATION.md                        |   4 +-\n docs/REGRESSION_POLICY.md                          |   6 +-\n docs/assets/README.md                              |  11 +\n docs/assets/screenshots/.gitkeep                   |   0\n docs/reports/benchmark-report-20260513T141241Z.md  |  31 +\n docs/reports/benchmark-summary.json                |   4 +-\n docs/reports/regression-summary.json               |  19 +-\n docs/reports/regression-summary.md                 |   8 +-\n docs/reports/report-contract-validation-report.md  |   4 +-\n docs/reports/sanitization-report.md                |   4 +-\n docs/reports/sanitization-summary.json             |   2 +-\n scripts/generate_regression_report.py              |   7 +-\n scripts/run_benchmarks.py                          |   9 +-\n scripts/sanitize_fixtures.py                       |   5 +-\n scripts/validate_report_contracts.py               |   9 +-\n 29 files changed, 497 insertions(+), 637 deletions(-)",
+      "date": "2026-05-13T17:27:47+02:00",
+      "hash": "a18cf9e65477865a4a36e2ca50f06f655257b85b",
+      "pr_numbers": [
+        "43"
+      ],
+      "short_hash": "a18cf9e",
+      "source_type": "git_commit",
+      "subject": "Refresh benchmark artifacts for downstream handoff (#43)",
+      "touched_files": [
+        "README.md",
+        "archive/README.md",
+        ".../generated-artifacts}/login_screen.html",
+        ".../legacy-reports/AUDIT_REPORT.md",
+        ".../legacy-reports/PROFILE_DRAFT.md",
+        ".../legacy-reports/executive_audit_report.md",
+        ".../legacy-reports/pre_commit_summary.txt",
+        ".../legacy-reports/status_report.md",
+        ".../legacy-reports/verification_audit_report.md",
+        "docs/ARCHITECTURE.md",
+        "docs/BENCHMARK_METHODOLOGY.md",
+        "docs/BENCHMARK_WORKFLOW.md",
+        "docs/ENTERPRISE_READINESS.md",
+        "docs/FORENSIC_REPLAY.md",
+        "docs/KVTC_V7_INTEGRATION.md",
+        "docs/REGRESSION_POLICY.md",
+        "docs/assets/README.md",
+        "docs/assets/screenshots/.gitkeep",
+        "docs/reports/benchmark-report-20260513T141241Z.md",
+        "docs/reports/benchmark-summary.json",
+        "docs/reports/regression-summary.json",
+        "docs/reports/regression-summary.md",
+        "docs/reports/report-contract-validation-report.md",
+        "docs/reports/sanitization-report.md",
+        "docs/reports/sanitization-summary.json",
+        "scripts/generate_regression_report.py",
+        "scripts/run_benchmarks.py",
+        "scripts/sanitize_fixtures.py",
+        "scripts/validate_report_contracts.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "\n\n PROFILE_DRAFT.md | 41 +++++++++++++++++++++++++++++++++++++++++\n 1 file changed, 41 insertions(+)",
+      "date": "2026-05-11T18:16:48+02:00",
+      "hash": "26029a89c38f446daaece99e418498832e661280",
+      "pr_numbers": [],
+      "short_hash": "26029a8",
+      "source_type": "git_commit",
+      "subject": "Add GitHub profile README draft",
+      "touched_files": [
+        "PROFILE_DRAFT.md"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "Adds an optional dependency-light KVTC V7 strategy, compatibility wrapper, V7 compression and benchmark comparison routes, tests, and integration documentation while preserving the existing IndustrialKVTCStrategy.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n README.md                      |   6 ++\n api.py                         | 141 +++++++++++++++++++++++---\n docs/KVTC_V7_INTEGRATION.md    |  62 ++++++++++++\n scripts/check_demo_urls.py     |  55 +++++++++++\n src/core/kvtc_v7.py            | 217 +++++++++++++++++++++++++++++++++++++++++\n src/core/kvtc_v7_strategy.py   |  40 ++++++++\n src/telemetry.py               |   7 +-\n tests/test_api_kvtc_v7.py      |  80 +++++++++++++++\n tests/test_kvtc_v7_strategy.py |  59 +++++++++++\n 9 files changed, 649 insertions(+), 18 deletions(-)",
+      "date": "2026-05-11T17:07:40+02:00",
+      "hash": "e5859dce68b28ff0e8e7eff319b7b4febeb5b1b8",
+      "pr_numbers": [],
+      "short_hash": "e5859dc",
+      "source_type": "git_commit",
+      "subject": "Add optional KVTC V7 benchmark strategy",
+      "touched_files": [
+        "Adds an optional dependency-light KVTC V7 strategy, compatibility wrapper, V7 compression and benchmark comparison routes, tests, and integration documentation while preserving the existing IndustrialKVTCStrategy.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n README.md",
+        "api.py",
+        "docs/KVTC_V7_INTEGRATION.md",
+        "scripts/check_demo_urls.py",
+        "src/core/kvtc_v7.py",
+        "src/core/kvtc_v7_strategy.py",
+        "src/telemetry.py",
+        "tests/test_api_kvtc_v7.py",
+        "tests/test_kvtc_v7_strategy.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "Hardens Vercel/Render demo readiness with Vercel-compatible CORS defaults, stricter live smoke checks for /benchmark and synthetic POST /analyze, and an API-only smoke mode.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n .github/workflows/render-live-smoke.yml |  20 ++++--\n api.py                                  |  15 +++--\n scripts/check_render_live.py            | 114 ++++++++++++++++++++++++--------\n 3 files changed, 110 insertions(+), 39 deletions(-)",
+      "date": "2026-05-11T16:19:52+02:00",
+      "hash": "00aa5db037fc5f278de10852c17306741ff1d7f4",
+      "pr_numbers": [],
+      "short_hash": "00aa5db",
+      "source_type": "git_commit",
+      "subject": "Harden demo readiness checks",
+      "touched_files": [
+        "Hardens Vercel/Render demo readiness with Vercel-compatible CORS defaults, stricter live smoke checks for /benchmark and synthetic POST /analyze, and an API-only smoke mode.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n .github/workflows/render-live-smoke.yml",
+        "api.py",
+        "scripts/check_render_live.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "Makes the showcase Vercel-ready with configurable API base URL, Vite static deployment config, SPA rewrites, and deployment documentation while preserving Render/Docker backend support.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n docs/VERCEL_SHOWCASE.md | 42 ++++++++++++++++++++++++++++++++++++++++++\n showcase/src/App.jsx    | 43 +++++++++++++++++++++++--------------------\n showcase/vercel.json    | 11 +++++++++++\n 3 files changed, 76 insertions(+), 20 deletions(-)",
+      "date": "2026-05-11T15:45:24+02:00",
+      "hash": "078a29f69ee5166145e15185ce9ee07b15d08190",
+      "pr_numbers": [],
+      "short_hash": "078a29f",
+      "source_type": "git_commit",
+      "subject": "Prepare showcase for Vercel deployment",
+      "touched_files": [
+        "Makes the showcase Vercel-ready with configurable API base URL, Vite static deployment config, SPA rewrites, and deployment documentation while preserving Render/Docker backend support.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n docs/VERCEL_SHOWCASE.md",
+        "showcase/src/App.jsx",
+        "showcase/vercel.json"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "Adds a public Render live smoke checker and manual/scheduled GitHub Actions workflow for /health, /, and API fallback validation.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n .github/workflows/render-live-smoke.yml |  27 +++++++\n scripts/check_render_live.py            | 129 ++++++++++++++++++++++++++++++++\n 2 files changed, 156 insertions(+)",
+      "date": "2026-05-11T15:30:51+02:00",
+      "hash": "312b1b52869a99e277fab1827e503def628afd16",
+      "pr_numbers": [],
+      "short_hash": "312b1b5",
+      "source_type": "git_commit",
+      "subject": "Add Render live smoke check",
+      "touched_files": [
+        "Adds a public Render live smoke checker and manual/scheduled GitHub Actions workflow for /health, /, and API fallback validation.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n .github/workflows/render-live-smoke.yml",
+        "scripts/check_render_live.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "Adds a critic-facing Benchmark Evidence Center to the Render showcase with corpus integrity, repeatability, distribution, quality gates, benchmark caveats, and conservative review posture.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n showcase/src/App.jsx   | 101 ++++++++++++++++++++++++++++++++++++++++++++++++-\n showcase/src/index.css |  65 ++++++++++++++++++++++++++-----\n 2 files changed, 155 insertions(+), 11 deletions(-)",
+      "date": "2026-05-11T15:19:28+02:00",
+      "hash": "adb51757997f20ad20e79a2c264b3b4845db994d",
+      "pr_numbers": [],
+      "short_hash": "adb5175",
+      "source_type": "git_commit",
+      "subject": "Add benchmark evidence center to showcase",
+      "touched_files": [
+        "Adds a critic-facing Benchmark Evidence Center to the Render showcase with corpus integrity, repeatability, distribution, quality gates, benchmark caveats, and conservative review posture.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n showcase/src/App.jsx",
+        "showcase/src/index.css"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "Restores Daimler-style local font aliases and design tokens for the showcase while keeping the polished responsive layout and synthetic analysis workbench.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n showcase/src/index.css | 249 ++++++++++++++++++++++++++++++-------------------\n 1 file changed, 153 insertions(+), 96 deletions(-)",
+      "date": "2026-05-11T15:01:28+02:00",
+      "hash": "5777d9bdcb6c79585e6f0499dd180ff3f8a7cf3e",
+      "pr_numbers": [],
+      "short_hash": "5777d9b",
+      "source_type": "git_commit",
+      "subject": "Restore Daimler-style showcase design tokens",
+      "touched_files": [
+        "Restores Daimler-style local font aliases and design tokens for the showcase while keeping the polished responsive layout and synthetic analysis workbench.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n showcase/src/index.css"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "Replaces the cramped tabbed showcase with a polished responsive React interface, including hero content, endpoint cards, scenario cards, safety evidence, and a live synthetic analysis workbench.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n showcase/src/App.jsx   | 323 ++++++++++++++++++++++++++-------------\n showcase/src/index.css | 408 +++++++++++++++++++++++++++----------------------\n 2 files changed, 444 insertions(+), 287 deletions(-)",
+      "date": "2026-05-11T14:44:40+02:00",
+      "hash": "47972a2981562603c6bd37656f11617276082185",
+      "pr_numbers": [],
+      "short_hash": "47972a2",
+      "source_type": "git_commit",
+      "subject": "Polish Render showcase UI",
+      "touched_files": [
+        "Replaces the cramped tabbed showcase with a polished responsive React interface, including hero content, endpoint cards, scenario cards, safety evidence, and a live synthetic analysis workbench.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n showcase/src/App.jsx",
+        "showcase/src/index.css"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "Builds the React showcase into the Docker image, serves it through a Render ASGI wrapper while preserving API routes, validates the Render entrypoint and Docker build in CI, and keeps Render secrets out of source.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n .github/workflows/ci.yml | 22 +++++++++++-\n Dockerfile               | 26 +++++++++++----\n docs/RENDER_SHOWCASE.md  | 59 ++++++++++++++++++++++++++++++++\n render.yaml              |  7 ++--\n render_app.py            | 87 ++++++++++++++++++++++++++++++++++++++++++++++++\n 5 files changed, 190 insertions(+), 11 deletions(-)",
+      "date": "2026-05-11T14:16:46+02:00",
+      "hash": "aad0f2c6a59e47d38cc4abe13b53ff6671080d88",
+      "pr_numbers": [],
+      "short_hash": "aad0f2c",
+      "source_type": "git_commit",
+      "subject": "Fix Render showcase serving",
+      "touched_files": [
+        "Builds the React showcase into the Docker image, serves it through a Render ASGI wrapper while preserving API routes, validates the Render entrypoint and Docker build in CI, and keeps Render secrets out of source.\n\nCI verified:\n- Benchmark Checks: success\n- CI: success\n\n .github/workflows/ci.yml",
+        "Dockerfile",
+        "docs/RENDER_SHOWCASE.md",
+        "render.yaml",
+        "render_app.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "Adds contract-compatible JSON benchmark, regression, and sanitization summaries, report contract validation, CI integration, and documentation for Comptextv7 handoff compatibility.\n\nCloses #32.\n\n .github/workflows/benchmark-checks.yml            |  16 +-\n docs/BENCHMARK_WORKFLOW.md                        |  27 ++-\n docs/REGRESSION_POLICY.md                         |  25 ++-\n docs/reports/benchmark-report-20260511T094640Z.md |  31 +++\n docs/reports/benchmark-summary.json               |  20 ++\n docs/reports/regression-summary.json              |  28 +++\n docs/reports/regression-summary.md                |  26 +++\n docs/reports/report-contract-validation-report.md |  28 +++\n docs/reports/sanitization-report.md               |  19 ++\n docs/reports/sanitization-summary.json            |  19 ++\n scripts/generate_regression_report.py             |  97 ++++++++--\n scripts/run_benchmarks.py                         | 146 ++++++++++++---\n scripts/sanitize_fixtures.py                      |  38 +++-\n scripts/validate_report_contracts.py              | 218 ++++++++++++++++++++++\n 14 files changed, 675 insertions(+), 63 deletions(-)",
+      "date": "2026-05-11T11:51:09+02:00",
+      "hash": "825bd4166f27df944771edd2c6c8c6e2e0a40332",
+      "pr_numbers": [
+        "32"
+      ],
+      "short_hash": "825bd41",
+      "source_type": "git_commit",
+      "subject": "Emit contract-compatible benchmark and regression summaries",
+      "touched_files": [
+        "Adds contract-compatible JSON benchmark, regression, and sanitization summaries, report contract validation, CI integration, and documentation for Comptextv7 handoff compatibility.\n\nCloses #32.\n\n .github/workflows/benchmark-checks.yml",
+        "docs/BENCHMARK_WORKFLOW.md",
+        "docs/REGRESSION_POLICY.md",
+        "docs/reports/benchmark-report-20260511T094640Z.md",
+        "docs/reports/benchmark-summary.json",
+        "docs/reports/regression-summary.json",
+        "docs/reports/regression-summary.md",
+        "docs/reports/report-contract-validation-report.md",
+        "docs/reports/sanitization-report.md",
+        "docs/reports/sanitization-summary.json",
+        "scripts/generate_regression_report.py",
+        "scripts/run_benchmarks.py",
+        "scripts/sanitize_fixtures.py",
+        "scripts/validate_report_contracts.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "\n\n .github/workflows/benchmark-checks.yml |  36 ++++++\n docs/BENCHMARK_WORKFLOW.md             |  75 +++++++++++++\n docs/FORENSIC_REPLAY.md                |  55 +++++++++\n docs/REGRESSION_POLICY.md              |  56 ++++++++++\n scripts/generate_regression_report.py  | 152 +++++++++++++++++++++++++\n scripts/run_benchmarks.py              | 199 +++++++++++++++++++++++++++++++++\n scripts/sanitize_fixtures.py           | 151 +++++++++++++++++++++++++\n 7 files changed, 724 insertions(+)",
+      "date": "2026-05-11T11:02:37+02:00",
+      "hash": "416cc88bab827a6479fdb2b0ee9eea7013d91a08",
+      "pr_numbers": [
+        "31"
+      ],
+      "short_hash": "416cc88",
+      "source_type": "git_commit",
+      "subject": "Add benchmark regression workflow foundation (#31)",
+      "touched_files": [
+        ".github/workflows/benchmark-checks.yml",
+        "docs/BENCHMARK_WORKFLOW.md",
+        "docs/FORENSIC_REPLAY.md",
+        "docs/REGRESSION_POLICY.md",
+        "scripts/generate_regression_report.py",
+        "scripts/run_benchmarks.py",
+        "scripts/sanitize_fixtures.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "* chore: finalize deployment configuration and Daimler Truck UI styling\n\n* chore: finalize deployment configuration and Daimler Truck UI styling\n\n AUDIT_REPORT.md         | 32 ++++++++++++++++++++++++++++++++\n README.md               |  8 +++++++-\n render.yaml             |  6 +++---\n showcase/src/App.jsx    |  2 +-\n showcase/src/index.css  | 36 ++++++++++++++++++++++--------------\n src/telemetry.py        |  2 +-\n tests/test_telemetry.py |  2 +-\n 7 files changed, 67 insertions(+), 21 deletions(-)",
+      "date": "2026-05-09T21:12:56+02:00",
+      "hash": "6936fea48cf18686b32751a4616303047b2681e6",
+      "pr_numbers": [
+        "29"
+      ],
+      "short_hash": "6936fea",
+      "source_type": "git_commit",
+      "subject": "chore: finalize deployment configuration and Daimler Truck UI styling (#29)",
+      "touched_files": [
+        "* chore: finalize deployment configuration and Daimler Truck UI styling\n\n* chore: finalize deployment configuration and Daimler Truck UI styling\n\n AUDIT_REPORT.md",
+        "README.md",
+        "render.yaml",
+        "showcase/src/App.jsx",
+        "showcase/src/index.css",
+        "src/telemetry.py",
+        "tests/test_telemetry.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "* chore: verify tests and mcp integration for deployment\n\n* chore: resolve pr format comments\n\n* chore: reply to format feedback\n\n api.py                         | 44 ++++++++++----------------------------\n showcase/mo360_shift_filter.py | 15 +++----------\n showcase/supply_chain_dedup.py |  4 +---\n showcase/xentry_optimizer.py   |  4 +---\n src/agents/analysis_agent.py   | 26 ++++++-----------------\n src/agents/intake_agent.py     |  4 +---\n src/agents/triage_agent.py     |  4 +---\n src/core/kvtc.py               | 42 ++++++++----------------------------\n src/core/obd_database.py       | 48 +++++++++++-------------------------------\n src/telemetry.py               |  4 +---\n tests/test_api_batch.py        | 11 ++--------\n tests/test_kvtc.py             |  5 +----\n tests/test_obd_database.py     |  8 ++-----\n tests/test_triage_agent.py     |  4 +---\n 14 files changed, 52 insertions(+), 171 deletions(-)",
+      "date": "2026-05-09T18:07:27+02:00",
+      "hash": "8fdaffe9161f114c5a20f69e994da5c9fb8a6670",
+      "pr_numbers": [
+        "28"
+      ],
+      "short_hash": "8fdaffe",
+      "source_type": "git_commit",
+      "subject": "chore: verify tests and mcp integration for deployment (#28)",
+      "touched_files": [
+        "* chore: verify tests and mcp integration for deployment\n\n* chore: resolve pr format comments\n\n* chore: reply to format feedback\n\n api.py",
+        "showcase/mo360_shift_filter.py",
+        "showcase/supply_chain_dedup.py",
+        "showcase/xentry_optimizer.py",
+        "src/agents/analysis_agent.py",
+        "src/agents/intake_agent.py",
+        "src/agents/triage_agent.py",
+        "src/core/kvtc.py",
+        "src/core/obd_database.py",
+        "src/telemetry.py",
+        "tests/test_api_batch.py",
+        "tests/test_kvtc.py",
+        "tests/test_obd_database.py",
+        "tests/test_triage_agent.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "\n\n README.md        | 34 ++++++++++++++++++++++++----------\n api.py           |  8 ++++----\n src/core/kvtc.py |  4 ++--\n 3 files changed, 30 insertions(+), 16 deletions(-)",
+      "date": "2026-05-09T15:11:04+02:00",
+      "hash": "25c89a97285cf80006f8fd0f28a4d37c6582a203",
+      "pr_numbers": [
+        "25",
+        "27"
+      ],
+      "short_hash": "25c89a9",
+      "source_type": "git_commit",
+      "subject": "Finalize repository: PR #25 handling, README generation, Diff logs (#27)",
+      "touched_files": [
+        "README.md",
+        "api.py",
+        "src/core/kvtc.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "* Fix full repository issues\n\n* Fix full repository issues\n\n .gitignore                                | 4 ++--\n CHANGELOG.md                              | 2 +-\n Makefile                                  | 3 +++\n api.py                                    | 8 ++++----\n showcase/src/slides/ArchitectureSlide.jsx | 4 ++--\n showcase/src/slides/KVTCSlide.jsx         | 2 +-\n showcase/src/slides/SecuritySlide.jsx     | 6 +++---\n showcase/tailwind.config.js               | 1 +\n src/core/kvtc.py                          | 8 ++++++--\n 9 files changed, 23 insertions(+), 15 deletions(-)",
+      "date": "2026-05-09T14:40:18+02:00",
+      "hash": "1d83c28bb397cfdab6a0552e45e3a844468d2094",
+      "pr_numbers": [
+        "26"
+      ],
+      "short_hash": "1d83c28",
+      "source_type": "git_commit",
+      "subject": "Fix full repository issues (#26)",
+      "touched_files": [
+        "* Fix full repository issues\n\n* Fix full repository issues\n\n .gitignore",
+        "CHANGELOG.md",
+        "Makefile",
+        "api.py",
+        "showcase/src/slides/ArchitectureSlide.jsx",
+        "showcase/src/slides/KVTCSlide.jsx",
+        "showcase/src/slides/SecuritySlide.jsx",
+        "showcase/tailwind.config.js",
+        "src/core/kvtc.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "* fix: restore system stability \u2014 mypy, Streamlit cleanup, React build pipeline\n\n- Fix 3 mypy errors (kvtc.py result annotation, telemetry.py otel_tracer type)\n- Remove stale Streamlit references (pyproject.toml script, docker-compose dashboard service, config.py dashboard fields)\n- Add React frontend service + Dockerfile.frontend to docker-compose\n- Add build-react Makefile target and React build step to CI workflow\n- Enable Tailwind darkMode: 'class' and add dark class to index.html\n\nValidation: mypy 0 errors, pytest 75/75 passed, ruff clean, Vite build successful.\n\nhttps://claude.ai/code/session_01GZVWKnv3gg4593NDJVNLvN\n\n* fix: complete system stabilisation \u2014 API routes, security, dark theme, render config\n\n- Add /api/xentry/optimize, /api/mo360/filter, /api/supply-chain/dedup route aliases\n- Restrict CORS allow_headers to Content-Type + Authorization (was *)\n- Sanitize validation error handler: strip raw input values to prevent PII leaks\n- Update dark mode background to #121212 / card #1E1E1E (Mercedes Sensual Purity)\n- Sync Tailwind daimler color tokens with new dark palette\n- Add render.yaml dockerCommand (uvicorn, 2 workers) + OTEL env var slot\n\nValidation: mypy 0 errors, pytest 75/75, ruff clean, Vite build OK\n\nhttps://claude.ai/code/session_01GZVWKnv3gg4593NDJVNLvN\n\n* chore: remove legacy clinical-guidelines reference in triage_agent docstring\n\nhttps://claude.ai/code/session_01GZVWKnv3gg4593NDJVNLvN\n\n---------\n\nCo-authored-by: Claude <noreply@anthropic.com>\n\n .github/workflows/ci.yml     | 18 +++++++++++++++++-\n Makefile                     |  5 +++++\n api.py                       | 19 ++++++++++++++++---\n config.py                    |  4 ----\n docker-compose.yml           | 15 ++++++---------\n pyproject.toml               |  5 ++---\n render.yaml                  |  5 +++++\n showcase/Dockerfile.frontend | 11 +++++++++++\n showcase/index.html          |  2 +-\n showcase/src/index.css       |  6 +++---\n showcase/tailwind.config.js  |  7 ++++---\n src/agents/triage_agent.py   |  4 ++--\n src/core/kvtc.py             |  2 +-\n src/telemetry.py             |  3 +--\n 14 files changed, 74 insertions(+), 32 deletions(-)",
+      "date": "2026-05-09T13:21:22+02:00",
+      "hash": "c247cc0fcc015921689b5b3b10d342f966fdcd38",
+      "pr_numbers": [
+        "1",
+        "121212",
+        "24"
+      ],
+      "short_hash": "c247cc0",
+      "source_type": "git_commit",
+      "subject": "fix: restore system stability \u2014 mypy clean, Streamlit removal, React build pipeline (#24)",
+      "touched_files": [
+        "* fix: restore system stability \u2014 mypy, Streamlit cleanup, React build pipeline\n\n- Fix 3 mypy errors (kvtc.py result annotation, telemetry.py otel_tracer type)\n- Remove stale Streamlit references (pyproject.toml script, docker-compose dashboard service, config.py dashboard fields)\n- Add React frontend service + Dockerfile.frontend to docker-compose\n- Add build-react Makefile target and React build step to CI workflow\n- Enable Tailwind darkMode: 'class' and add dark class to index.html\n\nValidation: mypy 0 errors, pytest 75/75 passed, ruff clean, Vite build successful.\n\nhttps://claude.ai/code/session_01GZVWKnv3gg4593NDJVNLvN\n\n* fix: complete system stabilisation \u2014 API routes, security, dark theme, render config\n\n- Add /api/xentry/optimize, /api/mo360/filter, /api/supply-chain/dedup route aliases\n- Restrict CORS allow_headers to Content-Type + Authorization (was *)\n- Sanitize validation error handler: strip raw input values to prevent PII leaks\n- Update dark mode background to #121212 / card #1E1E1E (Mercedes Sensual Purity)\n- Sync Tailwind daimler color tokens with new dark palette\n- Add render.yaml dockerCommand (uvicorn, 2 workers) + OTEL env var slot\n\nValidation: mypy 0 errors, pytest 75/75, ruff clean, Vite build OK\n\nhttps://claude.ai/code/session_01GZVWKnv3gg4593NDJVNLvN\n\n* chore: remove legacy clinical-guidelines reference in triage_agent docstring\n\nhttps://claude.ai/code/session_01GZVWKnv3gg4593NDJVNLvN\n\n---------\n\nCo-authored-by: Claude <noreply@anthropic.com>\n\n .github/workflows/ci.yml",
+        "Makefile",
+        "api.py",
+        "config.py",
+        "docker-compose.yml",
+        "pyproject.toml",
+        "render.yaml",
+        "showcase/Dockerfile.frontend",
+        "showcase/index.html",
+        "showcase/src/index.css",
+        "showcase/tailwind.config.js",
+        "src/agents/triage_agent.py",
+        "src/core/kvtc.py",
+        "src/telemetry.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "* feat: prepare repository for Monday rollout (Showcase-Ready)\n\n- Refactored README: Updated header, added Render Live Link, removed Streamlit references, updated Security section.\n- Cleaned up Streamlit files, dependencies, and configuration.\n- Configured render.yaml with ALLOWED_ORIGINS, TINYBIRD_TOKEN, Frankfurt region, and 10GB persistent disk.\n- Validated PROJECT_WIKI.md against README infrastructure changes.\n\n* chore: final cleanup for PR #23 (Daimler Compliance & React Refactor)\n\n- Fixed numbering error in README.md.\n- Replaced missed Streamlit references with React in README and WIKI.\n- Hardened CORS configuration to strictly allow Render and React dev URLs.\n- Purged all legacy medical-domain code (MedGemma, clinical, etc.) from the repository.\n- Updated Makefile with React frontend build/deploy commands.\n\n* chore: final cleanup for PR #23 (Daimler Compliance & React Refactor)\n\n- Fixed numbering error in README.md.\n- Replaced missed Streamlit references with React in README and WIKI.\n- Hardened CORS configuration to strictly allow Render and React dev URLs.\n- Purged all legacy medical-domain code (MedGemma, clinical, etc.) from the repository.\n- Updated Makefile with React frontend build/deploy commands.\n\n* fix: address PR review comments\n\n- Fixed numbering in 'Bekannte Limitations' in README.md.\n- Updated ALLOWED_ORIGINS default to remove legacy Streamlit port and add React port (3000).\n- Updated Makefile 'dev' target to call 'dev-api' properly.\n- Removed legacy medical/clinical file `src/api/main.py`.\n\n .streamlit/config.toml                |  14 --\n CHANGELOG.md                          |   5 +-\n CONTRIBUTING.md                       |   2 -\n Makefile                              |  14 +-\n PROJECT_WIKI.md                       |   7 +\n README.md                             |  47 ++--\n SECURITY.md                           |   2 +-\n SETUP_GUIDE.md                        |   6 +-\n api.py                                |  55 ++--\n dashboard.py                          | 409 ------------------------------\n pre_commit_summary.txt                |  23 +-\n pyproject.toml                        |   1 -\n render.yaml                           |   4 +\n requirements.txt                      |   1 -\n showcase/mo360_shift_filter.py        |  15 +-\n showcase/src/slides/DemoSlide.jsx     |   2 +-\n showcase/supply_chain_dedup.py        |   6 +-\n showcase/xentry_optimizer.py          |   4 +-\n src/agents/analysis_agent.py          |  33 ++-\n src/agents/intake_agent.py            |  16 +-\n src/agents/triage_agent.py            |   6 +-\n src/api/main.py                       | 458 ----------------------------------\n src/core/kvtc.py                      |  44 +++-\n src/core/obd_database.py              | 180 ++++++++++---\n src/telemetry.py                      |   4 +-\n tests/test_analysis_error_handling.py |  10 +-\n tests/test_api_batch.py               |  20 +-\n tests/test_kvtc.py                    |   5 +-\n tests/test_obd_database.py            |  15 +-\n tests/test_telemetry.py               |   5 +-\n tests/test_triage_agent.py            |  14 +-\n 31 files changed, 381 insertions(+), 1046 deletions(-)",
+      "date": "2026-05-08T22:21:01+02:00",
+      "hash": "7036c8d86ba940ed5727f54867910e1eb1d13776",
+      "pr_numbers": [
+        "23"
+      ],
+      "short_hash": "7036c8d",
+      "source_type": "git_commit",
+      "subject": "Prepare repository for Monday rollout (Showcase-Ready) (#23)",
+      "touched_files": [
+        "* feat: prepare repository for Monday rollout (Showcase-Ready)\n\n- Refactored README: Updated header, added Render Live Link, removed Streamlit references, updated Security section.\n- Cleaned up Streamlit files, dependencies, and configuration.\n- Configured render.yaml with ALLOWED_ORIGINS, TINYBIRD_TOKEN, Frankfurt region, and 10GB persistent disk.\n- Validated PROJECT_WIKI.md against README infrastructure changes.\n\n* chore: final cleanup for PR #23 (Daimler Compliance & React Refactor)\n\n- Fixed numbering error in README.md.\n- Replaced missed Streamlit references with React in README and WIKI.\n- Hardened CORS configuration to strictly allow Render and React dev URLs.\n- Purged all legacy medical-domain code (MedGemma, clinical, etc.) from the repository.\n- Updated Makefile with React frontend build/deploy commands.\n\n* chore: final cleanup for PR #23 (Daimler Compliance & React Refactor)\n\n- Fixed numbering error in README.md.\n- Replaced missed Streamlit references with React in README and WIKI.\n- Hardened CORS configuration to strictly allow Render and React dev URLs.\n- Purged all legacy medical-domain code (MedGemma, clinical, etc.) from the repository.\n- Updated Makefile with React frontend build/deploy commands.\n\n* fix: address PR review comments\n\n- Fixed numbering in 'Bekannte Limitations' in README.md.\n- Updated ALLOWED_ORIGINS default to remove legacy Streamlit port and add React port (3000).\n- Updated Makefile 'dev' target to call 'dev-api' properly.\n- Removed legacy medical/clinical file `src/api/main.py`.\n\n .streamlit/config.toml",
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
+        "Makefile",
+        "PROJECT_WIKI.md",
+        "README.md",
+        "SECURITY.md",
+        "SETUP_GUIDE.md",
+        "api.py",
+        "dashboard.py",
+        "pre_commit_summary.txt",
+        "pyproject.toml",
+        "render.yaml",
+        "requirements.txt",
+        "showcase/mo360_shift_filter.py",
+        "showcase/src/slides/DemoSlide.jsx",
+        "showcase/supply_chain_dedup.py",
+        "showcase/xentry_optimizer.py",
+        "src/agents/analysis_agent.py",
+        "src/agents/intake_agent.py",
+        "src/agents/triage_agent.py",
+        "src/api/main.py",
+        "src/core/kvtc.py",
+        "src/core/obd_database.py",
+        "src/telemetry.py",
+        "tests/test_analysis_error_handling.py",
+        "tests/test_api_batch.py",
+        "tests/test_kvtc.py",
+        "tests/test_obd_database.py",
+        "tests/test_telemetry.py",
+        "tests/test_triage_agent.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "Optimize `semantic_dedup` by removing redundant MD5 hashing.\nDuplicates are now identified directly using a set of processed\nstrings, avoiding expensive computations.\n\nBenchmark results (200k updates, 90% duplicates):\n- Original: 0.65s\n- Optimized: 0.34s (~48% faster)\n\nCo-authored-by: Claude <noreply@anthropic.com>\n\n showcase/supply_chain_dedup.py | 2 +-\n 1 file changed, 1 insertion(+), 1 deletion(-)",
+      "date": "2026-05-08T19:57:04+02:00",
+      "hash": "ab79f838f893a74618fa9fc444e0d38ca2eb3b12",
+      "pr_numbers": [
+        "19"
+      ],
+      "short_hash": "ab79f83",
+      "source_type": "git_commit",
+      "subject": "perf: optimize semantic deduplication (#19)",
+      "touched_files": [
+        "Optimize `semantic_dedup` by removing redundant MD5 hashing.\nDuplicates are now identified directly using a set of processed\nstrings, avoiding expensive computations.\n\nBenchmark results (200k updates, 90% duplicates):\n- Original: 0.65s\n- Optimized: 0.34s (~48% faster)\n\nCo-authored-by: Claude <noreply@anthropic.com>\n\n showcase/supply_chain_dedup.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "\n\n tests/test_telemetry.py | 110 ++++++++++++++++++++++++++++++++++++++++++++++++\n 1 file changed, 110 insertions(+)",
+      "date": "2026-05-08T15:12:53+02:00",
+      "hash": "feb749ff37bb0b62e21ce69e5e663ce1dcc587bc",
+      "pr_numbers": [
+        "20"
+      ],
+      "short_hash": "feb749f",
+      "source_type": "git_commit",
+      "subject": "\ud83e\uddea [testing improvement] Add missing tests for Telemetry Tracking (#20)",
+      "touched_files": [
+        "tests/test_telemetry.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "",
+      "date": "2026-05-08T15:09:36+02:00",
+      "hash": "3ac247d20fa5fb26a15fe50dd2035cf1a856b3d7",
+      "pr_numbers": [
+        "22"
+      ],
+      "short_hash": "3ac247d",
+      "source_type": "git_commit",
+      "subject": "\ud83d\udd12 Fix overly permissive CORS configuration (#22)",
+      "touched_files": []
+    },
+    {
+      "body_and_stat_excerpt": "\n\n api.py                                |  2 +-\n dashboard.py                          | 10 +++++-----\n showcase/supply_chain_dedup.py        |  5 +----\n tests/test_analysis_error_handling.py |  6 +++---\n 4 files changed, 10 insertions(+), 13 deletions(-)",
+      "date": "2026-05-08T14:37:10+02:00",
+      "hash": "6c7740cdf62a8ba416d48fb296fe5c9bbf9b1c9c",
+      "pr_numbers": [
+        "21"
+      ],
+      "short_hash": "6c7740c",
+      "source_type": "git_commit",
+      "subject": "\ud83d\udd12 [security fix] fix permissive cors policy allow_origins (#21)",
+      "touched_files": [
+        "api.py",
+        "dashboard.py",
+        "showcase/supply_chain_dedup.py",
+        "tests/test_analysis_error_handling.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "Added `tests/test_analysis_error_handling.py` to cover edge cases in LLM output parsing:\n- No JSON block found in the output (konfidenz 0.3)\n- Invalid JSON block found (konfidenz 0.2)\n- Integration test for `analyze` method with malformed LLM response.\n\n tests/test_analysis_error_handling.py | 83 +++++++++++++++++++++++++++++++++++\n 1 file changed, 83 insertions(+)",
+      "date": "2026-05-08T13:27:04+02:00",
+      "hash": "c078f989c0dfdf4270f267a44c89b69ca1d57672",
+      "pr_numbers": [
+        "18"
+      ],
+      "short_hash": "c078f98",
+      "source_type": "git_commit",
+      "subject": "\ud83e\uddea [testing improvement] add error path tests for Analysis Agent JSON decode (#18)",
+      "touched_files": [
+        "Added `tests/test_analysis_error_handling.py` to cover edge cases in LLM output parsing:\n- No JSON block found in the output (konfidenz 0.3)\n- Invalid JSON block found (konfidenz 0.2)\n- Integration test for `analyze` method with malformed LLM response.\n\n tests/test_analysis_error_handling.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "This commit addresses a security vulnerability where MD5 was used for\nKVTC frame checksums and personal number masking. MD5 is now replaced\nwith SHA-256 to provide better collision resistance and security.\n\n- Updated src/core/kvtc.py to use SHA-256 for frame checksums.\n- Updated src/agents/intake_agent.py to use SHA-256 for personal number masking (keeping 8-char truncation).\n- Updated showcase/supply_chain_dedup.py to use SHA-256 for semantic deduplication.\n- Updated README.md and src/core/result_cache.py docstrings to reflect the change.\n- Verified that API and Dashboard components handle the 64-character hash length correctly.\n\n README.md                      | 19 ++++++++++---------\n showcase/supply_chain_dedup.py |  2 +-\n src/agents/intake_agent.py     |  6 +++---\n src/core/kvtc.py               |  2 +-\n src/core/result_cache.py       |  2 +-\n 5 files changed, 16 insertions(+), 15 deletions(-)",
+      "date": "2026-05-08T13:25:04+02:00",
+      "hash": "68cdaf721dc5f083b3e19d3a78863426a58314c8",
+      "pr_numbers": [
+        "17"
+      ],
+      "short_hash": "68cdaf7",
+      "source_type": "git_commit",
+      "subject": "security: replace MD5 with SHA-256 for checksums and anonymization (#17)",
+      "touched_files": [
+        "This commit addresses a security vulnerability where MD5 was used for\nKVTC frame checksums and personal number masking. MD5 is now replaced\nwith SHA-256 to provide better collision resistance and security.\n\n- Updated src/core/kvtc.py to use SHA-256 for frame checksums.\n- Updated src/agents/intake_agent.py to use SHA-256 for personal number masking (keeping 8-char truncation).\n- Updated showcase/supply_chain_dedup.py to use SHA-256 for semantic deduplication.\n- Updated README.md and src/core/result_cache.py docstrings to reflect the change.\n- Verified that API and Dashboard components handle the 64-character hash length correctly.\n\n README.md",
+        "showcase/supply_chain_dedup.py",
+        "src/agents/intake_agent.py",
+        "src/core/kvtc.py",
+        "src/core/result_cache.py"
+      ]
+    },
+    {
+      "body_and_stat_excerpt": "\n\n PROJECT_WIKI.md  | 27 +++++++++++++++++++++++++++\n setup.sh         | 37 +++++++++++++++++++++++++++++++++++++\n src/core/kvtc.py | 32 +++++++++++++++++++++++---------\n 3 files changed, 87 insertions(+), 9 deletions(-)",
+      "date": "2026-05-08T13:24:50+02:00",
+      "hash": "547a3afd6a874d972c657c5511be61184378fa50",
+      "pr_numbers": [
+        "16"
+      ],
+      "short_hash": "547a3af",
+      "source_type": "git_commit",
+      "subject": "Optimize KVTC index, add setup.sh and PROJECT_WIKI.md (#16)",
+      "touched_files": [
+        "PROJECT_WIKI.md",
+        "setup.sh",
+        "src/core/kvtc.py"
+      ]
+    }
+  ],
+  "constraints": [
+    "real repository activity only",
+    "no lorem ipsum",
+    "no fake benchmark generators",
+    "no synthetic token spam",
+    "no fake production claims",
+    "cloud-first workflow",
+    "preserve CI stability"
+  ],
+  "corpus_sha256": "ed3d962278dda0240a2696f2ac8837f986dfeb9f753a349771fda15542df22c8",
+  "documents": [
+    {
+      "excerpt": "# CompText Daimler Experiment\n\n<div align=\"center\">\n\n![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)\n![FastAPI](https://img.shields.io/badge/FastAPI-API%20runtime-009688?logo=fastapi&logoColor=white)\n![React](https://img.shields.io/badge/React-showcase-61DAFB?logo=react&logoColor=111)\n![Docker](https://img.shields.io/badge/Docker-build%20ready-2496ED?logo=docker&logoColor=white)\n![CI](https://img.shields.io/badge/CI-tests%20%2B%20lint%20%2B%20build-0A7)\n![License](https://img.shields.io/badge/License-Apache--2.0-blue)\n\n**Semantic compression + replay-aware AI infrastructure research.**\n\nA compact systems-engineering showcase for token reduction, semantic retention,\nstructured triage, synthetic benchmarking, and privacy-aware AI inference flows.\n\n</div>\n\n---\n\n## Why this exists\n\nModern AI systems are increasingly constrained by context cost, latency, and auditability rather than raw model access. Enterprise workflows often send verbose logs, diagnostics, shift notes, or process records into LLMs even when the model only needs a small amount of structured signal.\n\nCompText explores a pre-inference optimization layer that transforms noisy industrial-style text into compact, typed, replayable frames before analysis. The goal is not to claim universal compression. The goal is to make token reduction measurable, inspectable, and safe enough to review.\n\n**Research framing:** semantic compression + replay-aware AI infrastructure.\n\n**Practical framing:** reduce irrelevant tokens, preserve operational meaning, validate the transformation, and keep enough metadata to reproduce decisions.\n\n---\n\n## System at a glance\n\n| Layer | Responsibility | Review signal |\n|---|---|---|\n| Intake | sanitize input, mask sensitive identifiers, build a KVTC frame | privacy boundary before model calls |\n| Compression | split documents into zones and extract key/value/type/code structure | token reduction with checksums |\n| Triage | classify priority with deterministic rules and an OBD code database | explainable pre-LLM routing |\n| Analysis | call mock, local Ollama, or Anthropic backend through a common agent | swappable inference path |\n| Cache | reuse analysis results keyed by compressed-frame checksum | lower repeated inference cost |\n| Telemetry | emit aggregate token, latency, and scenario metrics only | observability without raw payloads |\n| Benchmarks | generate synthetic reports and machine-readable summaries | reproducible regression evidence |\n\n```mermaid\nflowchart LR\n    A[Raw synthetic document] --> B[IntakeAgent]\n    B --> C[Sanitized text]\n    C --> D[KVTC compression]\n    D --> E[Checksum + frame]\n    E --> F[TriageAgent]\n    F --> G[AnalysisAgent]\n    G --> H{Backend}\n    H -->|mock| I[Deterministic test output]\n    H -->|ollama_gemma| J[Local model]\n    H -->|anthropic| K[Cloud model]\n    G --> L[Result cache]\n    G --> M[Telemetry metrics]\n    E --> N[Replay / validation artifacts]\n```\n\n---\n\n## Core concept: KVTC semantic compression\n\nKVTC means **Key \u00b7 Value \u00b7 Type \u00b7 Code**. The compressor estimates token volume, separates the document into zones, extracts structured fields, and serializes a compact frame.\n\n| Component | What it preserves | Why it matters |\n|---|---|---|\n| `K` | field names and labels | keeps business/diagnostic context |\n| `V` | selected values | keeps decision-relevant facts |\n| `T` | inferred types such as date, numeric, enum, OBD code | enables validation and replay checks |\n| `C` | structured identifiers such as OBD, SAP-like numbers, FIN fragments | preserves high-signal operational codes |\n\nThe strategy is intentionally transparent: generated frames include checksums, token estimates, latency, and zone metadata so reviewers can inspect what was retained and what was discarded.\n\n---\n\n## Semantic retention, replay, and validation\n\nToken reduction is only useful when the retained representation can still support the downstream decision. This repository treats compression as an auditable transformation rather than a magic summarizer.\n\n**Retention controls**\n\n- lossless header/window zones for context and current diagnostic state;\n- aggressive middle-zone filtering for older or lower-density lines;\n- typed extraction for operational fields and diagnostic codes;\n- deterministic triage before generative analysis.\n\n**Replay controls**\n\n- every compressed frame is hashed with SHA-256;\n- benchmark summaries are written as Markdown and JSON artifacts;\n- report-contract validation checks whether generated summaries keep the expected shape;\n- synthetic-only fixtures make reproduction possible without production data.\n\n**Known limitation:** semantic retention is workload-dependent. The current implementation is a research prototype and should be validated on task-specific gold sets before production use.\n\n---\n\n## Repository map\n\n```text\n.\n\u251c\u2500\u2500 api.py                         # FastAPI surface for compression, triage, analysis, benchmarks\n\u251c\u2500\u2500 render_app.py                  # Render/static showcase entrypoint\n\u251c\u2500\u2500 src/\n\u2502   \u251c\u2500\u2500 agents/                    # intake, triage, analysis agents\n\u2502   \u251c\u2500\u2500 core/                      # KVTC strategies, cache, OBD database\n\u2502   \u251c\u2500\u2500 models/                    # Pydantic/domain schemas\n\u2502   \u2514\u2500\u2500 telemetry.py               # aggregate metrics exporter\n\u251c\u2500\u2500 tests/                         # unit and API behavior tests\n\u251c\u2500\u2500 scripts/                       # benchmark, sanitization, regression, smoke-check tooling\n\u251c\u2500\u2500 docs/\n\u2502   \u251c\u2500\u2500 ARCHITECTURE.md            # architecture and data-flow details\n\u2502   \u251c\u2500\u2500 BENCHMARK_METHODOLOGY.md   # benchmark design and interpretation\n\u2502   \u251c\u2500\u2500 BENCHMARK_WORKFLOW.md      # runnable report workflow\n\u2502   \u251c\u2500\u2500 FORENSIC_REPLAY.md         # replay-oriented validation notes\n\u2502   \u2514\u2500\u2500 reports/                   # generated synthetic report artifacts\n\u251c\u2500\u2500 showcase/                      # React/Vite visual showcase\n\u2514\u2500\u2500 archive/                       # historical reports and one-off generated artifacts\n```\n\n",
+      "matched_themes": [
+        "architecture",
+        "benchmark",
+        "ci",
+        "cloud",
+        "replay",
+        "validation"
+      ],
+      "path": "README.md",
+      "sha256": "6c6beed17462c0bb78ea04aa60968c30490bc54f0749a0185027b8430c618958",
+      "source_type": "repository_file"
+    },
+    {
+      "excerpt": "# SYSTEM_ARCHITECTURE.md - CompText Mercedes-Benz Ecosystem\n\n## Agentic Loop & Orchestration\n\n```mermaid\ngraph LR\n    A[Jules (Dev)] -- Deploy/Optimize --> B[Render MCP (Ops)]\n    B -- Hosts --> C[CompText Kernel (API)]\n    C -- Analyzes/Compresses --> D[n8n (Orchestration)]\n    D -- Delivers Insights --> E[Mercedes-Benz Strategy (ROI)]\n    E -- Feedback --> A\n```\n\nThe loop represents the continuous integration and delivery of AI-driven insights into the Daimler Truck value chain. Jules (the AI Engineer) leverages the Render MCP to manage the lifecycle of the CompText Kernel. The Kernel provides high-efficiency token processing, which is then orchestrated by n8n to provide actionable data for truck maintenance and production.\n\n## Token Efficiency Impact (KVTC Specifications)\n\nThe following table demonstrates the theoretical and empirical efficiency gains using the Key-Value-Type-Code (KVTC) multi-layer compression strategy.\n\n| Scenario | Raw Data (Bytes) | Compressed Frame (Bytes) | Token Reduction (%) | Efficiency Impact |\n| :--- | :--- | :--- | :--- | :--- |\n| **Maintenance Protocol (4 pages)** | 12,485B | 1,240B | ~89% | High (Cost & Context Savings) |\n| **OBD Error Message (1 line)** | 256B | 82B | ~67% | Medium (Edge Latency) |\n| **QA Report (6 pages)** | 18,932B | 1,456B | ~92% | Extreme (Massive Scale) |\n| **Production Order (2 pages)** | 8,764B | 1,089B | ~88% | High (Workflow Optimization) |\n| **Average Across Scenarios** | - | - | **~88%** | **Significant ROI** |\n\n### KVTC Layer Breakdown:\n- **K (Key)**: Extraction of field identifiers.\n- **V (Value)**: Extraction of field values.\n- **T (Type)**: Data type categorization (Numeric, Code, Text, Date).\n- **C (Code)**: Structured identification (OBD codes, SAP IDs, FIN fragments).\n\nThis strategy ensures that the most critical industrial information is preserved while minimizing the token footprint, enabling larger context windows and reducing LLM inference costs.\n\n## Industrial Use Case Scenarios\n\n| Scenario | Core Benefit | Visualization / Impact |\n| :--- | :--- | :--- |\n| **Token Reduction** | Cost Optimization | **90% cost savings** on LLM input by compressing 10MB logs to 1.2MB KVTC frames. |\n| **Data Protection** | GDPR Compliance | PII (FIN, Names) is masked *before* leaving the local intake layer (Privacy-by-Design). |\n| **Security** | Air-Gap Ready | 100% offline analysis with **Ollama Gemma 2B** prevents data leakage to public clouds. |\n| **Performance** | Real-Time Triage | **< 20ms latency** for critical OBD error classification (P1_KRITISCH) at the edge. |\n\n## Strategic Alignment: Mercedes-Benz \"Lead in Electric & Software\"\n\nCompText acts as a **Pre-LLM Optimization Layer (POL)**, supporting the transformation to a software-defined company (MB.OS).\n\n- **Cost Control**: Decouples AI usage growth from IT budget expansion (60-90% saving).\n- **Digital Trust**: Ensures compliance with **ISO 21434** and **GDPR Art. 25** at the intake level.\n- **Productivity**: Contributes to the **20% efficiency target** by providing 3.24x faster inference through relevant-only data.\n",
+      "matched_themes": [
+        "architecture",
+        "ci",
+        "cloud"
+      ],
+      "path": "SYSTEM_ARCHITECTURE.md",
+      "sha256": "464c611763f267ef2728636fae2d0fea6796b55ceee889e0ea434fce6c3c86bf",
+      "source_type": "repository_file"
+    },
+    {
+      "excerpt": "# CompText-Daimler-Experiment (V6) Knowledge Base\n\n## Architecture\nThe V6 Kernel features a highly optimized 4-Layer Key-Value-Type-Code (KVTC) Compression structure designed specifically for industrial logs.\n- **Compression Efficiency**: Achieves up to 94% reduction in token count while preserving structured elements like OBD codes and SAP numbers.\n- **Layers**:\n  - **K (Key)**: Extracts field labels.\n  - **V (Value)**: Extracts field values.\n  - **T (Type)**: Identifies data type categories (Numbers, Codes, Text, Dates).\n  - **C (Code)**: Retains structured codes like OBD, SAP numbers, and FIN fragments.\n- **Sandwich Zones**:\n  - **Header (Lossless)**: Preserves critical SOPs, vehicle master data, and system context.\n  - **Middle (Aggressive)**: Compresses historical maintenance entries and old production data by retaining only high-density information.\n  - **Window (Lossless)**: Preserves current diagnostic data and open orders.\n\n## Design DNA\nThe UI/UX is built to seamlessly blend with the Mercedes-Benz corporate identity:\n- **Grid System**: Strict adherence to an 8px grid system for layout consistency.\n- **Typography**: Complete integration of the **MB Corpo** font family for all text elements.\n- **Color Palette**:\n  - Primary Brand Blue: `#0067B1`\n  - Warning/Accent Orange: `#E66000`\n\n## Security\nThe platform incorporates enterprise-grade security measures suitable for Daimler's operational requirements:\n- **Sanitization**: Advanced `nh3` HTML sanitization logic is used to neutralize potential XSS and injection attacks on inputs and rendered markdown.\n- **Data Privacy**: Complete **DSGVO-compliant telemetry routing**, ensuring all PII (such as FIN numbers) is masked or stripped before transmission to analytics backends or LLM providers. OpenTelemetry configuration securely manages distributed tracing without leaking sensitive context.\n\n## Infrastructure\nThe backend is deployed via Render, and the frontend is built with React.\n- **Live Demo:** https://comptext-daimler-api.onrender.com\n- **Region:** Frankfurt\n- **Persistent Cache:** 10GB disk mounted at `/cache`\n- **Security Hardening:** Strict CORS enforced via `ALLOWED_ORIGINS`. Checksum hashing utilizes collision-resistant SHA-256 (replaced MD5).\n",
+      "matched_themes": [
+        "architecture",
+        "ci"
+      ],
+      "path": "PROJECT_WIKI.md",
+      "sha256": "42fd6b992383945f2051205a14e63108be0ccddacc74958c591b836ac9c71ca3",
+      "source_type": "repository_file"
+    },
+    {
+      "excerpt": "# Changelog\n\nAlle wichtigen \u00c4nderungen an diesem Projekt werden in dieser Datei dokumentiert.\n\nDas Format basiert auf [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).\n\n---\n\n## [2.0.0] \u2013 2026-04-23 \u2013 Feature-Complete Release\n\n### \u2728 Added (Neu)\n- **OBD Error Code Database**: 70+ Daimler Buses-spezifische Fehlercodes mit Schweregrad-Mapping (P1/P2/P3)\n- **Result Caching**: LRU-Cache mit SHA-256-Checksummen f\u00fcr Performance (256 Slots, Thread-Safe)\n- **Batch Analysis API**: Verarbeitung von bis zu 10 Dokumenten pro Request mit Fehlertoleranz\n- **Anthropic Claude Integration**: Prompt Caching f\u00fcr h\u00f6here Analysequalit\u00e4t (Claude Haiku)\n- **FastAPI Dashboard**: Professionelle REST-API mit 6 Endpunkten + OpenAPI/Swagger\n- **Docker & Docker-Compose**: Production-Ready Containerization mit Ollama\n- **Comprehensive Test Suite**: 62 Tests f\u00fcr KVTC, Agents, OBD-DB, Cache, Batch-API\n- **Structured JSON Logging**: ELK/Azure-kompatible Logs f\u00fcr Enterprise-Audits\n- **Challenge-Focused README**: Security-Testing-Guide mit 7 Exploit-Szenarien\n\n### \ud83d\udd27 Changed (Ge\u00e4ndert)\n- **Branch Cleanup**: Reorganisiert alte Feature-Branches, Merge der besten Features in Main\n- **README Upgrade**: Von technisch zu Challenge-fokussiert (Performance-Benchmarks, Security-Audit)\n- **Code Quality**: Ruff Linting Applied, Type Hints konsistent, Docstrings verbessert\n\n### \u26a0\ufe0f Deprecated (Deprecated)\n- **Branch: claude/analyze-repos-features-hV4f3**: Unvollst\u00e4ndiger Cleanup (NICHT verwenden)\n\n### \ud83d\udc1b Fixed (Repariert)\n- Merge-Konflikt in `analysis_agent.py` (Logging-Import-Deduplication)\n- False-Positive OBD-Code-Matches (Regex-Pattern-Verbesserung)\n- Cache-Thread-Safety-Issues (OrderedDict + Lock)\n\n### \ud83d\udee1\ufe0f Security (Sicherheit)\n- \u2705 **DSGVO Art. 25**: Privacy-by-Design zertifiziert\n- \u2705 **PII-Masking**: FIN, Personalnummern, E-Mails, Telefonnummern bereinigt\n- \u2705 **Injection-Testing**: KVTC-Frames, OBD-Codes, LLM-Prompts getestet\n- \u2705 **Air-Gap Ready**: Ollama-Backend funktioniert ohne externe APIs\n\n### \ud83d\udcca Performance\n- **Kompression**: ~89% Token-Reduktion (durchschnittlich 1,847 \u2192 187 Tokens)\n- **Latenz**: 12ms (KVTC) + 8ms (Triage) + 320ms (Claude) + 850ms (Gemma)\n- **Cache-Hit-Rate**: 35-45% (Produktions-Daten)\n- **Batch API**: 10 Dokumente in ~3.2 Sekunden (Mock-Backend)\n\n---\n\n## [1.0.0] \u2013 2026-04-15 \u2013 Initial Release\n\n### \u2728 Added\n- **CompText Pipeline**: IntakeAgent \u2192 TriageAgent \u2192 AnalysisAgent\n- **KVTC 4-Layer Compression**: Key-Value-Type-Code Sandwich-Algorithmus\n- **Multi-LLM Backend**: Support f\u00fcr Ollama (Gemma 2B) und Claude Haiku\n- **Unit Tests**: 62 Tests f\u00fcr alle Core-Module\n\n### \ud83d\udd27 Changed\n- Initial project setup mit FastAPI und React\n\n---\n\n## Repository-Status\n\n| Branch | Status | Aktion |\n|--------|--------|--------|\n| `main` | \u2705 **AKTUELL** | Alle wertvollen Features integriert |\n| `claude/cleanup-branches-s2HIi` | \u2705 **GEL\u00d6SCHT** | Merge zu Main durchgef\u00fchrt |\n| `claude/analyze-repos-features-ue8HQ` | \u2705 **GEMERGT** | Features integriert (Main) |\n| `claude/analyze-repos-features-hV4f3` | \u26a0\ufe0f **DEPRECATED** | Unvollst\u00e4ndig, NICHT verwenden |\n\n---\n\n## Versionierungsschema\n\nDieses Projekt folgt [Semantic Versioning](https://semver.org/):\n- **MAJOR** (z.B. 2.0.0): Breaking Changes (z.B. neue OBD-DB-Schema)\n- **MINOR** (z.B. 2.1.0): Neue Features (z.B. neue LLM-Backends)\n- **PATCH** (z.B. 2.0.1): Bug-Fixes (z.B. Regex-Verbesserungen)\n\n---\n\n## Zuk\u00fcnftige Releases (Roadmap)\n\n### [2.1.0] (Q2 2026)\n- [ ] Redis-Backend f\u00fcr Result-Cache (TTL-Support)\n- [ ] Rate-Limiting (Pro-IP, Pro-API-Key)\n- [ ] SHA-256 f\u00fcr Checksummen (statt MD5)\n- [ ] Streaming-Response f\u00fcr gro\u00dfe Batch-Analysen\n\n### [2.2.0] (Q3 2026)\n- [ ] Multi-Language Support (DE/EN/FR)\n- [ ] GraphQL API Alternative\n- [ ] Kubernetes Deployment Manifests\n- [ ] Prometheus Metrics Export\n\n### [3.0.0] (Q4 2026)\n- [ ] Fine-Tuned LLM Models f\u00fcr Daimler-spezifische Diagnosen\n- [ ] Explainability Features (LIME/SHAP f\u00fcr LLM-Outputs)\n- [ ] Federated Learning f\u00fcr dezentrale Daimler-Standorte\n\n---\n\n## Support & Contakt\n\n- \ud83d\udc1b **Issues**: https://github.com/ProfRandom92/comptext-daimler-experiment-/issues\n- \ud83d\udcac **Discussions**: https://github.com/ProfRandom92/comptext-daimler-experiment-/discussions\n- \ud83d\udce7 **Security**: security@example.com\n\n---\n\n*Last Updated: 2026-04-23*\n",
+      "matched_themes": [
+        "benchmark",
+        "readme"
+      ],
+      "path": "CHANGELOG.md",
+      "sha256": "b03c8b36f1b4651046a70ab9b3603c28024b473c7884dfbc31585712f8cb590e",
+      "source_type": "repository_file"
+    },
+    {
+      "excerpt": "# Architecture\n\nCompText is organized as a small AI systems pipeline: sanitize, compress, classify, analyze, cache, observe, and benchmark. The design goal is reviewer-grade inspectability rather than maximal abstraction.\n\n## Runtime data flow\n\n```mermaid\nsequenceDiagram\n    participant Client\n    participant API as FastAPI\n    participant Intake as IntakeAgent\n    participant KVTC as KVTC Strategy\n    participant Triage as TriageAgent\n    participant Analysis as AnalysisAgent\n    participant Cache as Result Cache\n    participant Metrics as Telemetry\n\n    Client->>API: POST /analyze synthetic text\n    API->>Intake: raw document\n    Intake->>Intake: sanitize identifiers and HTML\n    Intake->>KVTC: sanitized text + metadata\n    KVTC-->>Intake: frame, zones, checksum, token estimates\n    API->>Triage: document type + sanitized text\n    Triage-->>API: deterministic priority and rule hits\n    API->>Analysis: document + frame + triage result\n    Analysis->>Cache: lookup by frame checksum\n    alt cache miss\n        Analysis->>Analysis: build constrained prompt\n        Analysis-->>API: structured analysis result\n        Analysis->>Cache: store result\n    else cache hit\n        Cache-->>Analysis: prior analysis result\n    end\n    API->>Metrics: aggregate token/latency event\n    API-->>Client: JSON response\n```\n\n## Components\n\n| Component | File | Responsibility |\n|---|---|---|\n| API application | `api.py` | HTTP contracts, request validation, endpoint orchestration, CORS |\n| Intake agent | `src/agents/intake_agent.py` | sensitive-data masking, HTML sanitization, KVTC invocation |\n| KVTC strategy | `src/core/kvtc.py` | zone splitting, typed extraction, frame serialization, checksum generation |\n| KVTC v7 strategy | `src/core/kvtc_v7_strategy.py` | alternate strategy path used for comparison endpoints |\n| Triage agent | `src/agents/triage_agent.py` | deterministic priority classification with rule hits and OBD lookup |\n| OBD database | `src/core/obd_database.py` | curated synthetic code-to-priority mapping |\n| Analysis agent | `src/agents/analysis_agent.py` | backend dispatch, prompt construction, structured output parsing |\n| Result cache | `src/core/result_cache.py` | bounded LRU cache keyed by compressed-frame checksum |\n| Telemetry | `src/telemetry.py` | aggregate-only metric events and optional OpenTelemetry setup |\n\n## Compression boundary\n\nThe compression boundary is intentionally before any LLM call. This makes it possible to inspect the exact payload sent to a model backend, compare token estimates, and replay a decision from the checksum-linked frame.\n\n```mermaid\nflowchart TD\n    A[Raw document] --> B[Sanitization boundary]\n    B --> C[Sanitized document]\n    C --> D[Zone split]\n    D --> E[Header zone: retained]\n    D --> F[Middle zone: density filtered]\n    D --> G[Window zone: retained]\n    E --> H[KVTC extraction]\n    F --> H\n    G --> H\n    H --> I[Serialized frame]\n    I --> J[SHA-256 checksum]\n    I --> K[LLM prompt payload]\n```\n\n## Backend modes\n\n| Backend | Environment | Best use |\n|---|---|---|\n| `mock` | `LLM_BACKEND=mock` | deterministic tests, CI, local demos without keys |\n| `ollama_gemma` | local Ollama service and model | offline/local inference experiments |\n| `anthropic` | `ANTHROPIC_API_KEY` and configured model | cloud model quality experiments |\n\n## Design constraints\n\n- Keep preprocessing deterministic and testable.\n- Keep benchmark fixtures synthetic-only.\n- Never emit raw payloads through telemetry.\n- Prefer explicit Markdown/JSON artifacts over implicit local state.\n- Avoid production claims unless backed by reproducible evidence.\n\n## Review checklist\n\n1. Run tests and report validation.\n2. Inspect a `/compress` response for frame shape, checksum, latency, and token estimates.\n3. Inspect `/triage` rule hits for deterministic explainability.\n4. Run benchmark scripts and review `docs/reports/` updates.\n5. Verify that any new fixture or screenshot contains synthetic data only.\n",
+      "matched_themes": [
+        "architecture",
+        "benchmark",
+        "ci",
+        "cloud",
+        "replay",
+        "validation"
+      ],
+      "path": "docs/ARCHITECTURE.md",
+      "sha256": "e02e45de59e89c3f469d7bd29dfc5012b1c276348b41694fff3b93b182104269",
+      "source_type": "repository_file"
+    },
+    {
+      "excerpt": "# Benchmark Workflow\n\nThis repository is the experiment, benchmark, forensic replay, and synthetic fixture environment for CompText semantic-compression research. The benchmark workflow exists to measure runtime behavior with safe synthetic inputs before changes are presented for review or promoted into downstream applications.\n\n## Purpose\n\nThe workflow provides a deterministic, reviewable way to:\n\n- Exercise a Comptext-compatible endpoint with synthetic benchmark traffic.\n- Capture latency, throughput, and error-rate metrics in Markdown reports under `docs/reports/`.\n- Keep Daimler-related context safe by excluding real payloads, raw production logs, secrets, cookies, bearer tokens, and proprietary customer data.\n- Give future agents a repeatable baseline for regression review without requiring access to real Daimler systems.\n\n## Local setup\n\nPython 3.11 or newer is required. The scripts use the Python standard library by default. Locust is optional and is only needed for live load generation.\n\n```bash\npython -m py_compile scripts/run_benchmarks.py scripts/generate_regression_report.py scripts/sanitize_fixtures.py scripts/validate_report_contracts.py\npython scripts/run_benchmarks.py\npython scripts/generate_regression_report.py\npython scripts/sanitize_fixtures.py\npython scripts/validate_report_contracts.py\n```\n\nTo run a live synthetic benchmark against a local service, start the service separately and then run:\n\n```bash\npython scripts/run_benchmarks.py --host http://localhost:8000 --endpoint /analyze\npython scripts/generate_regression_report.py\n```\n\nCustom benchmark parameters are supported:\n\n```bash\npython scripts/run_benchmarks.py \\\n  --host http://localhost:8000 \\\n  --users 50 \\\n  --spawn-rate 10 \\\n  --duration 15s \\\n  --endpoint /analyze \\\n  --output-dir docs/reports\n```\n\n## Relationship to downstream runtimes\n\nThis repository should not duplicate production data from any runtime system. It should hold synthetic fixtures, benchmark harnesses, forensic replay procedures, and regression reports that can guide safe changes into downstream applications.\n\nWhen a benchmark or replay finding suggests a runtime issue, document sanitized reproduction steps, synthetic input shape, observed metrics, and links to the relevant experiment reports. Do not copy raw Daimler payloads, customer documents, or proprietary logs into this repository.\n\n## Expected reports\n\nBenchmark reports are written to `docs/reports/benchmark-report-<timestamp>.md`. Each report includes:\n\n- Host and endpoint.\n- User count, spawn rate, and duration.\n- Benchmark status.\n- p50, p95, and p99 latency values when available.\n- Requests per second (RPS) when available.\n- Error rate when available.\n- Environment notes and safety notes.\n\nThe workflow also writes contract-compatible JSON summaries aligned with downstream machine-readable report contracts, without importing runtime code or requiring a separate checkout:\n\n- `docs/reports/benchmark-summary.json` contains the latest synthetic endpoint metrics, status, payload size, and notes.\n- `docs/reports/regression-summary.json` contains baseline availability, compared runs, thresholds, decision, and notes.\n- `docs/reports/sanitization-summary.json` contains scanned path names, masked-finding counts, status, and safety notes.\n\nThe regression Markdown summary is written to `docs/reports/regression-summary.md` and summarizes available benchmark runs using a conservative policy. Validate all JSON summaries with:\n\n```bash\npython scripts/validate_report_contracts.py\n```\n\nValidation writes `docs/reports/report-contract-validation-report.md`.\n\n## Interpreting metrics\n\n- **p50 latency** is the median response time. Half of measured requests were faster, and half were slower.\n- **p95 latency** is the 95th percentile response time. It is useful for understanding slower user-visible behavior without focusing only on the worst outliers.\n- **p99 latency** is the 99th percentile response time. It highlights tail latency and should be reviewed carefully because it can also be noisy in small runs.\n- **RPS** means requests per second and approximates throughput under the selected user count, spawn rate, and duration.\n- **Error rate** is the percentage of failed requests. Any non-zero value should be reviewed, but CI should fail only when comparable baseline data shows a clear regression.\n\n## When Locust is unavailable\n\n`run_benchmarks.py` detects whether the `locust` executable is available. If Locust is missing, the script still writes a timestamped Markdown report and `docs/reports/benchmark-summary.json` with status `tool_unavailable`. This is intentional for CI-friendly behavior: contributors can validate report generation without installing optional load-testing tools or starting a live server.\n\nTo enable live benchmark execution locally, install Locust in your own environment and rerun the benchmark command. Keep dependency installation outside committed reports and never add generated secrets, cookies, or real customer data.\n\n\n## Synthetic-only compatibility policy\n\nContract-compatible summaries are synthetic-safe handoff artifacts. They must not contain real Daimler data, customer identifiers, secrets, cookies, bearer tokens, raw production logs, or proprietary documents. Keep summaries small and structural so downstream validation can consume them without runtime coupling.\n",
+      "matched_themes": [
+        "benchmark",
+        "ci",
+        "replay",
+        "validation"
+      ],
+      "path": "docs/BENCHMARK_WORKFLOW.md",
+      "sha256": "f0fb58aadcede0a87a1fd5699000a48ac1d0e2eaa705c5fb066d3405a60efe6c",
+      "source_type": "repository_file"
+    },
+    {
+      "excerpt": "# Benchmark Methodology\n\nThis project measures the behavior of a semantic compression and analysis pipeline with synthetic inputs. The methodology favors reproducibility, safety, and comparability over optimistic headline metrics.\n\n## Objectives\n\nBenchmarks should answer four questions:\n\n1. How many approximate input tokens were reduced before inference?\n2. What latency did the compression or endpoint path add?\n3. Did generated artifacts keep the expected report contract?\n4. Did a change produce a clear regression against the latest synthetic baseline?\n\n## What is measured\n\n| Metric | Meaning | Caveat |\n|---|---|---|\n| Original tokens | estimated token count before compression | current estimator is approximate |\n| Compressed tokens | estimated token count after KVTC serialization | should be validated against target model tokenizers for production |\n| Token reduction | `1 - compressed / original` | not equivalent to semantic quality |\n| Latency | wall-clock runtime for compression or endpoint path | noisy on shared CI runners |\n| Error rate | failed requests during live load mode | meaningful only with a running target service |\n| Report status | whether scripts produced expected Markdown/JSON artifacts | contract health, not model quality |\n\n## Local benchmark flow\n\n```bash\npython -m py_compile scripts/run_benchmarks.py scripts/generate_regression_report.py scripts/sanitize_fixtures.py scripts/validate_report_contracts.py\npython scripts/run_benchmarks.py\npython scripts/generate_regression_report.py\npython scripts/sanitize_fixtures.py\npython scripts/validate_report_contracts.py\n```\n\n`run_benchmarks.py` is CI-friendly. If Locust is unavailable, it still writes an artifact with status `tool_unavailable` so report generation and contract validation can be tested without optional load-testing dependencies.\n\n## Live endpoint mode\n\nStart a local API separately and run:\n\n```bash\nLLM_BACKEND=mock uvicorn api:app --port 8000\npython scripts/run_benchmarks.py --host http://localhost:8000 --endpoint /analyze\npython scripts/generate_regression_report.py\n```\n\nUse mock mode for baseline comparisons unless the purpose of the benchmark is explicitly model-backend evaluation.\n\n## Interpreting results\n\n- A high token-reduction percentage is useful only if semantic retention remains sufficient for the task.\n- p95 and p99 latency should be compared over repeated runs; single-run tail latency can be misleading.\n- Non-zero error rates require inspection before conclusions are drawn.\n- Synthetic benchmarks should be labeled as synthetic and should not be generalized to production without representative evaluation.\n\n## Semantic retention evaluation plan\n\nThe current repository does not yet include a full gold-set retention harness. A credible next step is to add fixtures with expected retained fields:\n\n| Fixture type | Expected retained signals |\n|---|---|\n| Diagnostic log | OBD codes, active symptoms, safety-critical words, mileage |\n| Shift report | station, deviation type, blocked step, timestamp |\n| QA note | defect category, part identifier, severity, disposition |\n| Supply-chain update | supplier, part number, delay reason, ETA |\n\nA retention test should fail if required codes or fields disappear from the frame or if deterministic triage changes unexpectedly.\n\n## Safety rules\n\n- Do not benchmark with real customer documents.\n- Do not commit raw production logs, secrets, cookies, bearer tokens, VINs, or employee identifiers.\n- Sanitize generated artifacts before review.\n- Keep benchmark reports small enough for code review.\n",
+      "matched_themes": [
+        "benchmark",
+        "ci",
+        "validation"
+      ],
+      "path": "docs/BENCHMARK_METHODOLOGY.md",
+      "sha256": "d20532d2fce73a9b9f602880430835a3f5b91c56437d4e84b50f8e5590128fa7",
+      "source_type": "repository_file"
+    },
+    {
+      "excerpt": "# Forensic Replay\n\nForensic replay in this repository is a safe, synthetic-only process for reproducing behavior observed in Comptext/Daimler experiments without preserving or redistributing sensitive data.\n\n## Goals\n\n- Recreate failure shapes, latency patterns, and analysis edge cases with synthetic fixtures.\n- Preserve enough context for future agents to understand the issue and validate fixes.\n- Feed sanitized, actionable findings back into the relevant downstream runtime.\n- Avoid committing real Daimler payloads, proprietary customer identifiers, raw logs, secrets, API keys, bearer tokens, cookies, or credentials.\n\n## Synthetic-only replay policy\n\nAll replay inputs must be synthetic. A replay fixture may mirror the structure of an observed issue, but field values must be invented and clearly marked as synthetic. Use placeholder case identifiers such as `synthetic-case-0001`, fake diagnostic codes, and generic descriptions that do not identify real vehicles, customers, employees, dealers, suppliers, or production systems.\n\nNever paste raw production requests, raw response bodies, real stack traces containing customer context, or exported telemetry into this repository. If a real incident inspired the replay, document only the sanitized symptom pattern and the synthetic reproduction steps.\n\n## Safe payload handling\n\nBefore committing replay assets:\n\n1. Replace all customer, account, vehicle, employee, dealer, supplier, and system identifiers with synthetic values.\n2. Remove secrets, API keys, bearer tokens, cookies, session identifiers, and credentials.\n3. Run the fixture sanitizer:\n\n   ```bash\n   python scripts/sanitize_fixtures.py\n   ```\n\n4. Review `docs/reports/sanitization-report.md` and resolve suspicious findings before requesting review.\n5. Keep replay reports concise and avoid raw payload dumps even when the payload is synthetic.\n\n## Feeding findings back into downstream runtimes\n\nWhen replay identifies a likely runtime issue, create a sanitized downstream handoff that includes:\n\n- The synthetic fixture or synthetic input shape.\n- Expected behavior and observed behavior.\n- Benchmark or replay report links from this repository.\n- Any relevant p50, p95, p99, RPS, or error-rate changes.\n- A statement that no real Daimler data is required to reproduce the issue.\n\nThe main application repository should receive code fixes and runtime changes. This experiment repository should retain the synthetic evidence, replay workflow, and regression context.\n\n## What must never be committed\n\nDo not commit:\n\n- Real Daimler payloads or raw production logs.\n- API keys, tokens, passwords, cookies, session IDs, or private certificates.\n- Proprietary customer, employee, dealer, supplier, account, or vehicle identifiers.\n- Data copied from live systems, customer environments, browser sessions, or private support channels.\n- Reports that include raw sensitive payloads, even if the report is generated by a tool.\n\nIf sensitive data is accidentally staged, stop immediately, remove it, rotate the exposed credential if applicable, and ask a maintainer whether repository history cleanup is required.\n",
+      "matched_themes": [
+        "benchmark",
+        "ci",
+        "replay"
+      ],
+      "path": "docs/FORENSIC_REPLAY.md",
+      "sha256": "1f829136a831236ee7c23f4ef8081d6e6f6c9538d1affa15dfef70d09a778101",
+      "source_type": "repository_file"
+    },
+    {
+      "excerpt": "# Regression Policy\n\nThis policy defines how benchmark results in this experiment repository should be reviewed before findings are promoted to downstream runtimes.\n\n## Baseline definition\n\nA baseline is the most recent comparable benchmark report generated with the same endpoint, similar host class, user count, spawn rate, duration, and synthetic payload shape. Baselines must come from `docs/reports/benchmark-report-<timestamp>.md` files and must not rely on real Daimler data.\n\nIf no comparable prior run exists, the result has insufficient baseline data. It may still be useful for trend discovery, but it should not fail CI.\n\n## Regression thresholds\n\nUse conservative thresholds because short CI-friendly benchmark runs can be noisy:\n\n- Treat a p95 latency increase of 25% or more against a comparable baseline as a regression candidate.\n- Treat an error-rate increase of at least 1 percentage point, when the latest error rate is above 1%, as a regression candidate.\n- Treat missing p50, p95, p99, RPS, or error-rate values as insufficient data unless the missing metric itself is the behavior under investigation.\n- Prefer repeated confirmation before labeling p99-only changes as regressions because tail latency is sensitive to machine noise.\n\n## When CI should fail\n\nCI should fail only on clear regressions when comparable baseline data exists and the signal is strong enough to outweigh benchmark noise. Examples include repeated p95 degradation above the threshold, a meaningful error-rate increase, or a benchmark status that changes from successful to consistently failing under the same synthetic conditions.\n\nThe initial workflow is intentionally report-oriented and conservative. It generates summaries that future maintainers can extend into hard gates once stable baselines exist.\n\n## When CI should warn only\n\nCI should warn, report, or request human review when:\n\n- Locust is unavailable and the benchmark status is `tool_unavailable`.\n- No live local server is available.\n- Fewer than two benchmark reports exist.\n- The latest run uses different users, spawn rate, duration, endpoint, or host characteristics.\n- Metrics are missing, non-numeric, or clearly affected by CI resource contention.\n- The change is limited to documentation, sanitizer rules, or benchmark harness maintenance.\n\n\n## Contract-compatible summaries\n\nRegression reporting emits both Markdown and JSON artifacts:\n\n- `docs/reports/benchmark-summary.json` records the latest synthetic benchmark metrics and `tool_unavailable` status when optional Locust tooling is not installed.\n- `docs/reports/regression-summary.json` records baseline availability, regression detection, compared runs, thresholds, decision, and notes.\n- `docs/reports/sanitization-summary.json` records scanned path names and masked-finding counts without raw suspicious values.\n- `docs/reports/report-contract-validation-report.md` records structural validation results for the generated JSON summaries.\n\nThese outputs are designed for compatibility with downstream machine-readable contracts while avoiding runtime coupling: this repository must not import downstream runtime code, require a separate runtime checkout, or copy production data.\n\nValidate the generated summaries with:\n\n```bash\npython scripts/validate_report_contracts.py\n```\n\n## Reviewing benchmark changes\n\nReviewers should confirm that:\n\n- Reports use synthetic payloads only.\n- No secrets, cookies, bearer tokens, raw customer data, or real Daimler payloads are included.\n- Benchmark parameters are documented and comparable to the intended baseline.\n- Regression summaries explain whether a failure, warning, or insufficient-baseline state is appropriate.\n- Findings that affect runtime behavior are filed or linked back to the relevant downstream runtime with sanitized reproduction steps.\n\n\n## Synthetic-only policy\n\nAll benchmark, regression, and sanitization summaries must be synthetic-safe. Do not include real Daimler payloads, customer identifiers, secrets, tokens, cookies, API keys, raw production logs, or proprietary documents in Markdown or JSON reports. Sanitization reports may include masked review prompts only; JSON summaries must remain aggregate and structural.\n\n## Avoiding false positives\n\nTo avoid false positives:\n\n- Compare like-for-like benchmark runs.\n- Prefer p95 and error rate over single outlier values.\n- Repeat suspicious runs locally before opening a blocking runtime issue.\n- Keep synthetic payloads stable unless the purpose of the change is to test a new scenario.\n- Do not treat unavailable optional tools as runtime regressions.\n- Avoid network-dependent CI assumptions beyond normal tool and dependency checks.\n",
+      "matched_themes": [
+        "benchmark",
+        "ci",
+        "validation"
+      ],
+      "path": "docs/REGRESSION_POLICY.md",
+      "sha256": "4a523b52b08b6aa6af4179927731c29810f6136f88d9615c72f83e0e73f098ae",
+      "source_type": "repository_file"
+    },
+    {
+      "excerpt": "# Enterprise Readiness Notes\n\nThis document separates implemented engineering evidence from work that would still be required before production deployment.\n\n## Evidence already present\n\n| Area | Evidence |\n|---|---|\n| API contracts | FastAPI request/response models and endpoint tests |\n| Determinism | mock backend and deterministic triage path |\n| Privacy boundary | intake-layer masking and telemetry allow-listing |\n| Reproducibility | benchmark, regression, sanitization, and contract-validation scripts |\n| CI | Python lint/tests/coverage, React build, Docker build, benchmark checks |\n| Deployment paths | Docker, Render configuration, Vercel/showcase configuration |\n\n## Production hardening still required\n\n| Area | Required next work |\n|---|---|\n| Security | independent threat model, dependency review, abuse-case tests, rate limits |\n| Data governance | approved data classification, retention policy, DPA/vendor review |\n| Model governance | model-card selection, evaluation criteria, rollback plan, prompt review |\n| Semantic quality | labeled gold sets, retention metrics, false-positive/false-negative triage review |\n| Operations | SLOs, dashboards, alerting, incident runbooks, capacity testing |\n| Compliance | legal review before any claim of certification or regulated deployment readiness |\n\n## Enterprise reviewer questions this repo should answer\n\n1. What exactly is sent to the model after compression?\n2. Can a reviewer reproduce the benchmark artifacts without private data?\n3. What data is emitted to telemetry?\n4. How does the system behave when compression loses context?\n5. Which claims are measured, and which claims are roadmap items?\n\n## Recommended demo path\n\n1. Run the API with `LLM_BACKEND=mock`.\n2. Send a synthetic diagnostic note to `/compress` and inspect the frame.\n3. Send the same note to `/triage` and inspect rule hits.\n4. Run `/analyze` and verify the checksum-linked result.\n5. Generate benchmark artifacts and contract-validation reports.\n6. Show the React showcase only after the backend behavior is understood.\n",
+      "matched_themes": [
+        "benchmark",
+        "ci",
+        "validation"
+      ],
+      "path": "docs/ENTERPRISE_READINESS.md",
+      "sha256": "abc0643514f507dec653ebe9f31f7f57b5b037173bdf026782dc8508e9ade1e1",
+      "source_type": "repository_file"
+    },
+    {
+      "excerpt": "{\n  \"endpoint\": \"/analyze\",\n  \"generated_at\": \"2026-05-13T14:12:41+00:00\",\n  \"metrics\": {\n    \"error_rate\": null,\n    \"p50_ms\": null,\n    \"p95_ms\": null,\n    \"p99_ms\": null,\n    \"payload_size_bytes\": 173,\n    \"rps\": null\n  },\n  \"notes\": [\n    \"Locust is not installed or is not on PATH; metrics are null except deterministic payload size.\"\n  ],\n  \"report_type\": \"benchmark_summary\",\n  \"source_repo\": \"ProfRandom92/Comptext-Daimler-Experiment-\",\n  \"status\": \"tool_unavailable\",\n  \"synthetic\": true,\n  \"target_repo\": \"downstream-runtime\"\n}\n",
+      "matched_themes": [
+        "benchmark"
+      ],
+      "path": "docs/reports/benchmark-summary.json",
+      "sha256": "562dac6bc604babdc106644ba32bb23adba5e4c38e43e45cd82bb097402e0b1b",
+      "source_type": "repository_file"
+    },
+    {
+      "excerpt": "{\n  \"baseline_available\": true,\n  \"compared_runs\": [\n    {\n      \"endpoint\": \"/analyze\",\n      \"error_rate\": null,\n      \"generated_at\": \"2026-05-11T09:46:40+00:00\",\n      \"p95_ms\": null,\n      \"report_path\": \"docs/reports/benchmark-report-20260511T094640Z.md\",\n      \"status\": \"tool_unavailable\"\n    },\n    {\n      \"endpoint\": \"/analyze\",\n      \"error_rate\": null,\n      \"generated_at\": \"2026-05-13T14:12:41+00:00\",\n      \"p95_ms\": null,\n      \"report_path\": \"docs/reports/benchmark-report-20260513T141241Z.md\",\n      \"status\": \"tool_unavailable\"\n    }\n  ],\n  \"decision\": \"no_clear_regression\",\n  \"generated_at\": \"2026-05-13T14:12:48+00:00\",\n  \"notes\": [\n    \"p95 comparison unavailable; missing numeric baseline or latest values.\",\n    \"Error-rate comparison unavailable; missing numeric baseline or latest values.\"\n  ],\n  \"regression_detected\": false,\n  \"report_type\": \"regression_summary\",\n  \"source_repo\": \"ProfRandom92/Comptext-Daimler-Experiment-\",\n  \"synthetic\": true,\n  \"target_repo\": \"downstream-runtime\",\n  \"thresholds\": {\n    \"error_rate_increase_percentage_points\": 1.0,\n    \"latest_error_rate_minimum_percent\": 1.0,\n    \"p95_latency_increase_percent\": 25.0\n  }\n}\n",
+      "matched_themes": [
+        "benchmark",
+        "ci"
+      ],
+      "path": "docs/reports/regression-summary.json",
+      "sha256": "0e8f8a2a2ab6d456b8d0d5e862b63447fbfb493249c970e9bc9f7494c9fd3baa",
+      "source_type": "repository_file"
+    },
+    {
+      "excerpt": "{\n  \"findings_count\": 0,\n  \"findings_masked\": 0,\n  \"generated_at\": \"2026-05-13T14:12:49+00:00\",\n  \"notes\": [\n    \"Report-only scan; raw suspicious findings, secrets, and customer identifiers are never written to JSON.\",\n    \"Use synthetic fixtures only and review masked Markdown findings before committing.\"\n  ],\n  \"report_type\": \"sanitization_summary\",\n  \"scanned_paths\": [\n    \"fixtures\",\n    \"data\",\n    \"samples\",\n    \"docs/reports\"\n  ],\n  \"source_repo\": \"ProfRandom92/Comptext-Daimler-Experiment-\",\n  \"status\": \"pass\",\n  \"synthetic\": true\n}\n",
+      "matched_themes": [
+        "ci"
+      ],
+      "path": "docs/reports/sanitization-summary.json",
+      "sha256": "5fc97a796d24c7177d572ec58c8d87cdf1d73bc6531ad96e4f01e5665f953614",
+      "source_type": "repository_file"
+    },
+    {
+      "excerpt": "# Benchmark Report\n\n<!-- benchmark-metadata: {\"duration\": \"15s\", \"endpoint\": \"/analyze\", \"error_rate\": null, \"generated_at_utc\": \"2026-05-13T14:12:41+00:00\", \"host\": \"http://localhost:8000\", \"p50_ms\": null, \"p95_ms\": null, \"p99_ms\": null, \"report\": \"benchmark-report-20260513T141241Z.md\", \"rps\": null, \"spawn_rate\": 10, \"status\": \"tool_unavailable\", \"users\": 50} -->\n\n| Field | Value |\n| --- | --- |\n| Host | http://localhost:8000 |\n| Endpoint | /analyze |\n| Users | 50 |\n| Spawn rate | 10 |\n| Duration | 15s |\n| Status | tool_unavailable |\n| p50 | unavailable |\n| p95 | unavailable |\n| p99 | unavailable |\n| RPS | unavailable |\n| Error rate | unavailable |\n| Payload size | 173 bytes |\n\n## Contract-compatible JSON summary\n\nThis run also writes `docs/reports/benchmark-summary.json` for machine-readable contract validation.\n\n## Environment notes\n\n- Locust is not installed or is not on PATH; metrics are null except deterministic payload size.\n\n## Safety\n\n- This report was generated with synthetic benchmark payloads only.\n- Raw request bodies, secrets, cookies, bearer tokens, and proprietary customer data are intentionally excluded.\n",
+      "matched_themes": [
+        "benchmark",
+        "validation"
+      ],
+      "path": "docs/reports/benchmark-report-20260513T141241Z.md",
+      "sha256": "317dd0a8ee8b3125584558a5f419b229acfb680691a41d6a473c6c4587e95fcb",
+      "source_type": "repository_file"
+    }
+  ],
+  "generated_at": "2026-05-13T15:50:12.072027+00:00",
+  "notes": [
+    "The local git history contains PR references that are recorded verbatim; missing PR numbers are not fabricated.",
+    "Repository files and generated reports are hashed so replay inputs are reproducible."
+  ],
+  "observed_pr_numbers": [
+    1,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    31,
+    32,
+    43,
+    121212
+  ],
+  "positioning": "semantic replay fidelity under constrained context budgets",
+  "requested_pr_range": [
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43
+  ],
+  "schema_version": 1,
+  "token_count_estimate": 5704
+}
