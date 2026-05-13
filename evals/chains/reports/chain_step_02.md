@@ -13,6 +13,10 @@ This step evaluates one deterministic compression/replay cycle in the iterative 
 - architectural_continuity_score: `1.0`
 - replay_consistency_score: `0.933`
 - goal_continuity_score: `1.0`
+- drift_stabilization_delta: `0.0`
+- replay_recovery_score: `0.917`
+- pinned_truth_retention: `0.818`
+- adaptive_continuity_score: `0.916`
 
 ## Stability Flags
 

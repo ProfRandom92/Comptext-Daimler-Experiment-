@@ -1,0 +1,177 @@
+{
+  "adaptive_context": {
+    "architecture_reinforcement": [
+      "api",
+      "kvtc",
+      "showcase",
+      "telemetry",
+      "validation",
+      "reports"
+    ],
+    "constraint_anchoring": [
+      "cloud-first",
+      "render",
+      "vercel",
+      "docker",
+      "ci",
+      "evidence",
+      "sanitization"
+    ],
+    "drift_triggered_context_expansion": false,
+    "high_priority_truth_pinning": [
+      "architectural_continuity_matters",
+      "cloud_first_workflow_required",
+      "no_fake_production_claims",
+      "replay_consistency_matters",
+      "replay_validation_exists"
+    ],
+    "previous_replay_consistency_score": 1.0,
+    "previous_semantic_drift_growth": 0.0,
+    "replay_weighting": "pinned replay terms receive deterministic priority",
+    "semantic_cluster_persistence": "truth terms are persisted by category"
+  },
+  "architecture_trace": [
+    "API, KVTC, showcase, telemetry, validation, and reports remain continuity anchors.",
+    "JSON and Markdown artifacts preserve reproducible evidence across replay steps."
+  ],
+  "generated_at": "2026-05-13T00:00:00+00:00",
+  "iteration": 1,
+  "operational_memory": {
+    "evaluation_goal": "semantic continuity, operational memory retention, replay consistency, architectural stability, and long-context reasoning continuity",
+    "not_a_goal": "token-count vanity metrics",
+    "workflow": "cloud-first Render Vercel Docker CI deployability with evidence and sanitization"
+  },
+  "positioning": "semantic replay fidelity under constrained context budgets",
+  "retained_truth_terms": {
+    "architectural_continuity_matters": [
+      "architecture",
+      "API",
+      "KVTC",
+      "showcase",
+      "telemetry",
+      "validation"
+    ],
+    "benchmark_evidence_pipeline_exists": [
+      "benchmark",
+      "evidence",
+      "JSON",
+      "Markdown",
+      "contract"
+    ],
+    "cloud_first_workflow_required": [
+      "cloud",
+      "Render",
+      "Vercel",
+      "Docker",
+      "CI"
+    ],
+    "no_fake_production_claims": [
+      "production",
+      "claims",
+      "evidence",
+      "sanitization"
+    ],
+    "replay_consistency_matters": [
+      "replay",
+      "consistency",
+      "compressed",
+      "contradiction"
+    ],
+    "replay_validation_exists": [
+      "replay",
+      "validation",
+      "evidence"
+    ],
+    "semantic_drift_tracking_exists": [
+      "semantic",
+      "drift",
+      "regression"
+    ]
+  },
+  "schema_version": 1,
+  "semantic_clusters": {
+    "architectural_continuity": [
+      "API",
+      "architecture",
+      "KVTC",
+      "showcase",
+      "telemetry",
+      "validation"
+    ],
+    "evidence_pipeline": [
+      "benchmark",
+      "contract",
+      "evidence",
+      "JSON",
+      "Markdown"
+    ],
+    "replay_continuity": [
+      "compressed",
+      "consistency",
+      "contradiction",
+      "evidence",
+      "replay",
+      "validation"
+    ],
+    "semantic_continuity": [
+      "drift",
+      "regression",
+      "semantic"
+    ],
+    "workflow_constraint": [
+      "CI",
+      "claims",
+      "cloud",
+      "Docker",
+      "evidence",
+      "production",
+      "Render",
+      "sanitization",
+      "Vercel"
+    ]
+  },
+  "source": "adaptive_raw_context",
+  "truth_pins": {
+    "architectural_continuity_matters": [
+      "architecture",
+      "API",
+      "KVTC",
+      "showcase",
+      "telemetry",
+      "validation"
+    ],
+    "cloud_first_workflow_required": [
+      "cloud",
+      "Render",
+      "Vercel",
+      "Docker",
+      "CI"
+    ],
+    "no_fake_production_claims": [
+      "production",
+      "claims",
+      "evidence",
+      "sanitization"
+    ],
+    "replay_consistency_matters": [
+      "replay",
+      "consistency",
+      "compressed",
+      "contradiction"
+    ],
+    "replay_validation_exists": [
+      "replay",
+      "validation",
+      "evidence"
+    ]
+  },
+  "workflow_constraints": [
+    "real repository activity only",
+    "no lorem ipsum",
+    "no fake benchmark generators",
+    "no synthetic token spam",
+    "no fake production claims",
+    "cloud-first workflow",
+    "preserve CI stability"
+  ]
+}

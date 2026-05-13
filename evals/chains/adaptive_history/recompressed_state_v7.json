@@ -1,0 +1,179 @@
+{
+  "adaptive_context": {
+    "architecture_reinforcement": [
+      "API",
+      "KVTC",
+      "showcase",
+      "telemetry",
+      "validation",
+      "reports"
+    ],
+    "constraint_anchoring": [
+      "cloud-first",
+      "render",
+      "vercel",
+      "docker",
+      "ci",
+      "evidence",
+      "sanitization"
+    ],
+    "drift_triggered_context_expansion": false,
+    "high_priority_truth_pinning": [
+      "architectural_continuity_matters",
+      "cloud_first_workflow_required",
+      "no_fake_production_claims",
+      "replay_consistency_matters",
+      "replay_validation_exists"
+    ],
+    "previous_replay_consistency_score": 0.933,
+    "previous_semantic_drift_growth": 0.167,
+    "replay_weighting": {
+      "architectural_continuity_matters": 5,
+      "benchmark_evidence_pipeline_exists": 4,
+      "cloud_first_workflow_required": 4,
+      "no_fake_production_claims": 3,
+      "replay_consistency_matters": 3,
+      "replay_validation_exists": 2,
+      "semantic_drift_tracking_exists": 2
+    },
+    "semantic_cluster_persistence": {
+      "architectural_continuity": 6,
+      "evidence_pipeline": 5,
+      "replay_continuity": 6,
+      "semantic_continuity": 3,
+      "workflow_constraint": 9
+    }
+  },
+  "architecture_trace": [
+    "Adaptive architecture reinforcement retained: API, KVTC, showcase, telemetry, validation, reports.",
+    "Constraint anchoring, replay weighting, semantic cluster persistence, context expansion, and truth pinning are active stabilization controls."
+  ],
+  "generated_at": "2026-05-13T00:00:00+00:00",
+  "iteration": 7,
+  "operational_memory": {
+    "evaluation_goal": "semantic continuity, operational memory retention, replay consistency, architectural stability, and adaptive continuity under repeated compression",
+    "not_a_goal": "token-count vanity metrics",
+    "workflow": "cloud-first render vercel docker ci evidence sanitization"
+  },
+  "positioning": "semantic replay fidelity under constrained context budgets",
+  "retained_truth_terms": {
+    "architectural_continuity_matters": [
+      "API",
+      "architecture",
+      "KVTC",
+      "showcase",
+      "telemetry"
+    ],
+    "benchmark_evidence_pipeline_exists": [
+      "benchmark",
+      "evidence",
+      "JSON",
+      "Markdown"
+    ],
+    "cloud_first_workflow_required": [
+      "CI",
+      "cloud",
+      "Docker",
+      "Render"
+    ],
+    "no_fake_production_claims": [
+      "evidence",
+      "sanitization",
+      "CI"
+    ],
+    "replay_consistency_matters": [
+      "compressed",
+      "consistency",
+      "contradiction"
+    ],
+    "replay_validation_exists": [
+      "evidence",
+      "replay"
+    ],
+    "semantic_drift_tracking_exists": [
+      "semantic",
+      "drift"
+    ]
+  },
+  "schema_version": 1,
+  "semantic_clusters": {
+    "architectural_continuity": [
+      "API",
+      "architecture",
+      "KVTC",
+      "showcase",
+      "telemetry",
+      "validation"
+    ],
+    "evidence_pipeline": [
+      "benchmark",
+      "contract",
+      "evidence",
+      "JSON",
+      "Markdown"
+    ],
+    "replay_continuity": [
+      "compressed",
+      "consistency",
+      "contradiction",
+      "evidence",
+      "replay",
+      "validation"
+    ],
+    "semantic_continuity": [
+      "drift",
+      "regression",
+      "semantic"
+    ],
+    "workflow_constraint": [
+      "CI",
+      "claims",
+      "cloud",
+      "Docker",
+      "evidence",
+      "production",
+      "Render",
+      "sanitization",
+      "Vercel"
+    ]
+  },
+  "source": "adaptive_replay_v6",
+  "truth_pins": {
+    "architectural_continuity_matters": [
+      "architecture",
+      "API",
+      "KVTC",
+      "showcase",
+      "telemetry",
+      "validation"
+    ],
+    "cloud_first_workflow_required": [
+      "cloud",
+      "Render",
+      "Vercel",
+      "Docker",
+      "CI"
+    ],
+    "no_fake_production_claims": [
+      "production",
+      "claims",
+      "evidence",
+      "sanitization"
+    ],
+    "replay_consistency_matters": [
+      "replay",
+      "consistency",
+      "compressed",
+      "contradiction"
+    ],
+    "replay_validation_exists": [
+      "replay",
+      "validation",
+      "evidence"
+    ]
+  },
+  "workflow_constraints": [
+    "cloud-first workflow",
+    "preserve CI stability"
+  ]
+}
