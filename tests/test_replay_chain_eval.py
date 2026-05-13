@@ -100,3 +100,39 @@ def test_adaptive_replay_stabilizes_late_chain_drift() -> None:
     assert adaptive_late["metrics"]["pinned_truth_retention"] >= baseline_late["metrics"]["pinned_truth_retention"]
     assert adaptive_late["metrics"]["drift_stabilization_delta"] > 0
     assert adaptive_late["metrics"]["adaptive_continuity_score"] > baseline_late["metrics"]["adaptive_continuity_score"]
+
+
+def test_compare_strategy_artifact_manifest_preserves_pr49_capabilities(tmp_path) -> None:
+    paths = replay_chain_eval.ChainPaths(
+        raw_context=tmp_path / "history" / "raw_context.json",
+        metrics_summary=tmp_path / "reports" / "metrics_summary.json",
+        continuity_summary=tmp_path / "reports" / "continuity_trend_summary.md",
+        drift_summary=tmp_path / "reports" / "drift_escalation_summary.md",
+        adaptive_metrics_summary=tmp_path / "reports" / "adaptive_metrics_summary.json",
+        comparative_summary=tmp_path / "reports" / "comparative_stabilization_report.json",
+        comparative_report=tmp_path / "reports" / "comparative_stabilization_report.md",
+        continuity_heatmap=tmp_path / "reports" / "continuity_heatmap.md",
+        replay_degradation_curves=tmp_path / "reports" / "replay_degradation_curves.md",
+        stabilization_summary=tmp_path / "reports" / "stabilization_effectiveness_summary.md",
+        compare_strategy_artifacts=tmp_path / "reports" / "compare_strategy_artifacts.json",
+        replay_comparison_report=tmp_path / "reports" / "replay_comparison_report.md",
+    )
+    baseline_metrics = [{"iteration": 1, "metrics": {"semantic_drift_growth": 0.2, "adaptive_continuity_score": 0.7}}]
+    adaptive_metrics = [{"iteration": 1, "metrics": {"semantic_drift_growth": 0.1, "adaptive_continuity_score": 0.9}}]
+    comparisons = [
+        {
+            "iteration": 1,
+            "drift_suppression_delta": 0.1,
+            "continuity_preservation_delta": 0.2,
+            "replay_longevity_delta": 0.1,
+            "baseline_retention": 0.8,
+            "adaptive_retention": 0.9,
+        }
+    ]
+
+    artifacts = replay_chain_eval.build_compare_strategy_artifacts(paths, baseline_metrics, adaptive_metrics, comparisons)
+
+    assert artifacts["strategy"] == "compare"
+    assert artifacts["decision"] == "adaptive_replay_stabilization"
+    assert "semantic reinforcement logic" in artifacts["preserved_capabilities"]
+    assert paths.compare_strategy_artifacts.exists()

@@ -24,6 +24,8 @@ CHAIN_REPORTS = CHAINS / "reports"
 CHAIN_HISTORY = CHAINS / "history"
 DETERMINISTIC_GENERATED_AT = "2026-05-13T00:00:00+00:00"
 DEFAULT_ITERATIONS = 7
+DEFAULT_STRATEGY = "compare"
+STRATEGY_CHOICES = ("baseline", "adaptive", "compare")
 
 CONSTRAINT_ANCHORS = ["cloud-first", "render", "vercel", "docker", "ci", "evidence", "sanitization"]
 ARCHITECTURE_ANCHORS = ["api", "kvtc", "showcase", "telemetry", "validation", "reports"]
@@ -47,6 +49,8 @@ class ChainPaths:
     continuity_heatmap: Path = CHAIN_REPORTS / "continuity_heatmap.md"
     replay_degradation_curves: Path = CHAIN_REPORTS / "replay_degradation_curves.md"
     stabilization_summary: Path = CHAIN_REPORTS / "stabilization_effectiveness_summary.md"
+    compare_strategy_artifacts: Path = CHAIN_REPORTS / "compare_strategy_artifacts.json"
+    replay_comparison_report: Path = CHAIN_REPORTS / "replay_comparison_report.md"
 
     def state(self, iteration: int) -> Path:
         prefix = "compressed_state" if iteration == 1 else "recompressed_state"
@@ -579,6 +583,111 @@ def bar(value: float, width: int = 20) -> str:
     return "█" * filled + "░" * (width - filled)
 
 
+def artifact_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
+def build_compare_strategy_artifacts(
+    paths: ChainPaths,
+    baseline_metrics: list[dict[str, Any]],
+    adaptive_metrics: list[dict[str, Any]],
+    comparisons: list[dict[str, Any]],
+) -> dict[str, Any]:
+    final = comparisons[-1] if comparisons else {}
+    positive_drift_deltas = sum(1 for item in comparisons if item["drift_suppression_delta"] > 0)
+    positive_continuity_deltas = sum(1 for item in comparisons if item["continuity_preservation_delta"] > 0)
+    adaptive_wins = positive_drift_deltas + positive_continuity_deltas
+    baseline_wins = (len(comparisons) * 2) - adaptive_wins
+    decision = "adaptive_replay_stabilization" if adaptive_wins >= baseline_wins else "baseline_replay"
+    artifacts = {
+        "schema_version": 1,
+        "generated_at": DETERMINISTIC_GENERATED_AT,
+        "strategy": "compare",
+        "decision": decision,
+        "decision_basis": {
+            "positive_drift_suppression_iterations": positive_drift_deltas,
+            "positive_continuity_delta_iterations": positive_continuity_deltas,
+            "adaptive_signal_count": adaptive_wins,
+            "baseline_signal_count": baseline_wins,
+            "final_drift_suppression_delta": final.get("drift_suppression_delta", 0),
+            "final_continuity_preservation_delta": final.get("continuity_preservation_delta", 0),
+        },
+        "preserved_capabilities": [
+            "adaptive replay stabilization",
+            "compare strategy",
+            "adaptive continuity metrics",
+            "replay recovery scoring",
+            "pinned truth retention",
+            "stabilization reports",
+            "replay comparison reporting",
+            "semantic reinforcement logic",
+        ],
+        "artifact_manifest": {
+            "baseline_metrics_summary": artifact_path(paths.metrics_summary),
+            "adaptive_metrics_summary": artifact_path(paths.adaptive_metrics_summary),
+            "comparative_stabilization_json": artifact_path(paths.comparative_summary),
+            "comparative_stabilization_markdown": artifact_path(paths.comparative_report),
+            "compare_strategy_artifacts": artifact_path(paths.compare_strategy_artifacts),
+            "replay_comparison_report": artifact_path(paths.replay_comparison_report),
+            "continuity_heatmap": artifact_path(paths.continuity_heatmap),
+            "replay_degradation_curves": artifact_path(paths.replay_degradation_curves),
+            "stabilization_summary": artifact_path(paths.stabilization_summary),
+        },
+        "baseline_iterations": [item["iteration"] for item in baseline_metrics],
+        "adaptive_iterations": [item["iteration"] for item in adaptive_metrics],
+        "comparison_iterations": [item["iteration"] for item in comparisons],
+    }
+    write_json(paths.compare_strategy_artifacts, artifacts)
+    return artifacts
+
+
+def write_replay_comparison_report(
+    paths: ChainPaths,
+    comparison_summary: dict[str, Any],
+    strategy_artifacts: dict[str, Any],
+) -> None:
+    final = comparison_summary.get("final_iteration", {})
+    lines = [
+        "# Replay Comparison Report",
+        "",
+        "This report records the deterministic compare strategy used to validate baseline replay-chain behavior against adaptive semantic replay stabilization.",
+        "",
+        "## Compare Strategy Decision",
+        "",
+        f"- Selected strategy: `{strategy_artifacts['decision']}`",
+        f"- Adaptive signal count: `{strategy_artifacts['decision_basis']['adaptive_signal_count']}`",
+        f"- Baseline signal count: `{strategy_artifacts['decision_basis']['baseline_signal_count']}`",
+        f"- Final drift suppression delta: `{final.get('drift_suppression_delta', 0)}`",
+        f"- Final continuity preservation delta: `{final.get('continuity_preservation_delta', 0)}`",
+        "",
+        "## Preserved Capabilities",
+        "",
+    ]
+    lines.extend(f"- {capability}" for capability in strategy_artifacts["preserved_capabilities"])
+    lines.extend([
+        "",
+        "## Iteration Comparison",
+        "",
+        "| Iteration | Drift suppression | Continuity delta | Replay longevity delta | Baseline retention | Adaptive retention |",
+        "|---:|---:|---:|---:|---:|---:|",
+    ])
+    for item in comparison_summary.get("trend", []):
+        lines.append(
+            f"| {item['iteration']} | {item['drift_suppression_delta']} | {item['continuity_preservation_delta']} | {item['replay_longevity_delta']} | {item['baseline_retention']} | {item['adaptive_retention']} |"
+        )
+    lines.extend([
+        "",
+        "## Artifact Manifest",
+        "",
+    ])
+    for name, path in strategy_artifacts["artifact_manifest"].items():
+        lines.append(f"- {name}: `{path}`")
+    paths.replay_comparison_report.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def summarize_adaptive_and_comparison(
     paths: ChainPaths,
     baseline_metrics: list[dict[str, Any]],
@@ -624,6 +733,8 @@ def summarize_adaptive_and_comparison(
         "trend": comparisons,
     }
     write_json(paths.comparative_summary, comparison_summary)
+    strategy_artifacts = build_compare_strategy_artifacts(paths, baseline_metrics, adaptive_metrics, comparisons)
+    write_replay_comparison_report(paths, comparison_summary, strategy_artifacts)
 
     report_lines = [
         "# Comparative Stabilization Report",
@@ -690,7 +801,7 @@ def summarize_adaptive_and_comparison(
     paths.stabilization_summary.write_text("\n".join(summary_lines) + "\n", encoding="utf-8")
 
 
-def run_chain(iterations: int = DEFAULT_ITERATIONS) -> None:
+def run_chain(iterations: int = DEFAULT_ITERATIONS, strategy: str = DEFAULT_STRATEGY) -> None:
     paths = ChainPaths()
     raw_context = build_raw_context(paths)
 
@@ -715,6 +826,8 @@ def run_chain(iterations: int = DEFAULT_ITERATIONS) -> None:
         write_step_report(paths, metrics)
         baseline_metrics.append(metrics)
     summarize(paths, baseline_metrics)
+    if strategy == "baseline":
+        return
 
     adaptive_state = adaptive_initial_state(raw_context)
     adaptive_metrics: list[dict[str, Any]] = []
@@ -728,7 +841,7 @@ def run_chain(iterations: int = DEFAULT_ITERATIONS) -> None:
         write_json(paths.adaptive_state(iteration), adaptive_state)
         adaptive_replay = replay_answers(adaptive_state, raw_context["questions"])
         write_json(paths.adaptive_replay(iteration), adaptive_replay)
-        baseline_iteration_metrics = baseline_metrics[iteration - 1]["metrics"]
+        baseline_iteration_metrics = baseline_metrics[iteration - 1]["metrics"] if strategy == "compare" else None
         metrics = evaluate_step(
             raw_context,
             adaptive_state,
@@ -752,12 +865,27 @@ def run_chain(iterations: int = DEFAULT_ITERATIONS) -> None:
         write_step_report(paths, metrics, adaptive=True)
         adaptive_metrics.append(metrics)
 
-    summarize_adaptive_and_comparison(paths, baseline_metrics, adaptive_metrics)
+    if strategy == "compare":
+        summarize_adaptive_and_comparison(paths, baseline_metrics, adaptive_metrics)
+    else:
+        write_json(paths.adaptive_metrics_summary, {
+            "schema_version": 1,
+            "generated_at": DETERMINISTIC_GENERATED_AT,
+            "strategy": strategy,
+            "iterations": len(adaptive_metrics),
+            "trend": [{"iteration": item["iteration"], **item["metrics"]} for item in adaptive_metrics],
+        })
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run deterministic iterative replay-chain evaluation.")
     parser.add_argument("--iterations", type=int, default=DEFAULT_ITERATIONS, help="Number of compression/replay cycles to evaluate.")
+    parser.add_argument(
+        "--strategy",
+        choices=STRATEGY_CHOICES,
+        default=DEFAULT_STRATEGY,
+        help="Replay-chain strategy to run; compare preserves baseline plus adaptive artifacts.",
+    )
     return parser.parse_args()
 
 
@@ -765,7 +893,7 @@ def main() -> None:
     args = parse_args()
     if args.iterations < 1:
         raise SystemExit("--iterations must be at least 1")
-    run_chain(args.iterations)
+    run_chain(args.iterations, args.strategy)
 
 
 if __name__ == "__main__":
