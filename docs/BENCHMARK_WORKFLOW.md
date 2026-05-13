@@ -1,6 +1,6 @@
 # Benchmark Workflow
 
-This repository is the experiment, benchmark, forensic replay, and synthetic fixture companion for `ProfRandom92/Comptextv7`. The benchmark workflow exists to measure Comptext runtime behavior with safe synthetic inputs before changes are promoted back to the main application repository.
+This repository is the experiment, benchmark, forensic replay, and synthetic fixture environment for CompText semantic-compression research. The benchmark workflow exists to measure runtime behavior with safe synthetic inputs before changes are presented for review or promoted into downstream applications.
 
 ## Purpose
 
@@ -23,7 +23,7 @@ python scripts/sanitize_fixtures.py
 python scripts/validate_report_contracts.py
 ```
 
-To run a live synthetic benchmark against a local Comptextv7 service, start the service separately and then run:
+To run a live synthetic benchmark against a local service, start the service separately and then run:
 
 ```bash
 python scripts/run_benchmarks.py --host http://localhost:8000 --endpoint /analyze
@@ -42,11 +42,11 @@ python scripts/run_benchmarks.py \
   --output-dir docs/reports
 ```
 
-## Relationship to `ProfRandom92/Comptextv7`
+## Relationship to downstream runtimes
 
-`ProfRandom92/Comptextv7` is the main application/runtime repository. This repository should not duplicate production data from that runtime. Instead, it should hold synthetic fixtures, benchmark harnesses, forensic replay procedures, and regression reports that can guide safe changes back into Comptextv7.
+This repository should not duplicate production data from any runtime system. It should hold synthetic fixtures, benchmark harnesses, forensic replay procedures, and regression reports that can guide safe changes into downstream applications.
 
-When a benchmark or replay finding suggests a runtime issue, open or update the matching Comptextv7 issue with sanitized reproduction steps, synthetic input shape, observed metrics, and links to the relevant experiment reports. Do not copy raw Daimler payloads into either repository.
+When a benchmark or replay finding suggests a runtime issue, document sanitized reproduction steps, synthetic input shape, observed metrics, and links to the relevant experiment reports. Do not copy raw Daimler payloads, customer documents, or proprietary logs into this repository.
 
 ## Expected reports
 
@@ -60,7 +60,7 @@ Benchmark reports are written to `docs/reports/benchmark-report-<timestamp>.md`.
 - Error rate when available.
 - Environment notes and safety notes.
 
-The workflow also writes contract-compatible JSON summaries aligned with Comptextv7's machine-readable report contracts, without importing Comptextv7 code or requiring a live Comptextv7 checkout:
+The workflow also writes contract-compatible JSON summaries aligned with downstream machine-readable report contracts, without importing runtime code or requiring a separate checkout:
 
 - `docs/reports/benchmark-summary.json` contains the latest synthetic endpoint metrics, status, payload size, and notes.
 - `docs/reports/regression-summary.json` contains baseline availability, compared runs, thresholds, decision, and notes.
@@ -91,4 +91,4 @@ To enable live benchmark execution locally, install Locust in your own environme
 
 ## Synthetic-only compatibility policy
 
-Contract-compatible summaries are synthetic-safe handoff artifacts for `ProfRandom92/Comptextv7`. They must not contain real Daimler data, customer identifiers, secrets, cookies, bearer tokens, raw production logs, or proprietary documents. Keep summaries small and structural so downstream validation can consume them without runtime coupling to Comptextv7.
+Contract-compatible summaries are synthetic-safe handoff artifacts. They must not contain real Daimler data, customer identifiers, secrets, cookies, bearer tokens, raw production logs, or proprietary documents. Keep summaries small and structural so downstream validation can consume them without runtime coupling.

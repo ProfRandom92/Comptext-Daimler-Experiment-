@@ -1,703 +1,296 @@
-# CompText V6 - Enterprise AI Middleware for Daimler Buses
+# CompText Daimler Experiment
 
 <div align="center">
 
-![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.111+-009688?logo=fastapi)
-![React](https://img.shields.io/badge/React-18+-61DAFB?logo=react)
-![License](https://img.shields.io/badge/License-Apache%202.0-green)
-![Tests](https://img.shields.io/badge/Tests-62%20passing-brightgreen)
-![DSGVO](https://img.shields.io/badge/DSGVO-Art.%2025-blue)
-![Audit](https://img.shields.io/badge/Audit-Certified-success)
-![Security](https://img.shields.io/badge/Security-CompleteSanitization-critical)
+![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-API%20runtime-009688?logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-showcase-61DAFB?logo=react&logoColor=111)
+![Docker](https://img.shields.io/badge/Docker-build%20ready-2496ED?logo=docker&logoColor=white)
+![CI](https://img.shields.io/badge/CI-tests%20%2B%20lint%20%2B%20build-0A7)
+![License](https://img.shields.io/badge/License-Apache--2.0-blue)
 
-**Fortgeschrittene Token-Komprimierung + DSGVO-Sanitisierung für Industrie 4.0**
-**4-Layer KVTC-Algorithmus · Multi-Agent-Pipeline · Air-Gap-Ready**
+**Semantic compression + replay-aware AI infrastructure research.**
 
-**Render Live Link:** https://comptext-daimler-buses.onrender.com
-
-**KVTC Compression Efficiency:** 94%
-
-**Design DNA:** 8px Mercedes-Benz Design DNA
+A compact systems-engineering showcase for token reduction, semantic retention,
+structured triage, synthetic benchmarking, and privacy-aware AI inference flows.
 
 </div>
 
 ---
 
-## 🚀 TL;DR – Die Challenge
+## Why this exists
 
-CompText ist **nicht einfach ein Komprimierungsalgorithmus**. Es ist ein:
-- ✅ **Multi-Agent-System** mit 3 spezialisierten LLM-Pipelines
-- ✅ **Privacy-by-Design-Architektur** (DSGVO Art. 25 zertifiziert)
-- ✅ **Challenge**: OBD-Fehlercode-DB (70+ Codes) mit kritischen vs. Routine-Prioritäten
-- ✅ **Exploit-Oberflächr**: KVTC-Frame-Injection, Prompt-Injection, Cache-Poisoning-Szenarien
-- ✅ **Production-Audit**: Vollständig getestet (75 Tests, ~0.5s Laufzeit)
+Modern AI systems are increasingly constrained by context cost, latency, and auditability rather than raw model access. Enterprise workflows often send verbose logs, diagnostics, shift notes, or process records into LLMs even when the model only needs a small amount of structured signal.
 
----
+CompText explores a pre-inference optimization layer that transforms noisy industrial-style text into compact, typed, replayable frames before analysis. The goal is not to claim universal compression. The goal is to make token reduction measurable, inspectable, and safe enough to review.
 
-## 📋 Überblick
+**Research framing:** semantic compression + replay-aware AI infrastructure.
 
-CompText ist eine **3-Agent-Pipeline**, die industrielle Prozessdokumente (Wartungsprotokolle, OBD-Fehlercodes, QA-Berichte, Produktionsaufträge):
-1. 🔒 **DSGVO-konform sanitisiert** (FIN-Maskierung, Personaldaten-Hashing)
-2. 📦 **um bis zu ~90% komprimiert** (4-Layer KVTC-Sandwich-Algorithmus)
-3. 🤖 **analysiert mit lokalem/Cloud-LLM** (Ollama Gemma 2B oder Claude Haiku)
-
-| Klinische Diagnose | Predictive Maintenance, QA |
+**Practical framing:** reduce irrelevant tokens, preserve operational meaning, validate the transformation, and keep enough metadata to reproduce decisions.
 
 ---
 
-## 🎯 Challenge: Security & Edge Cases
+## System at a glance
 
-Dieses Projekt bietet mehrere technische Challenges für Security-Analysen:
-
-### 🔐 Sicherheits-Szenarien
-| Challenge | Schwierigkeit | Beschreibung |
-|-----------|--------------|-------------|
-| **Prompt Injection** | ⭐⭐⭐ | KVTC-Frames können mit LLM-Prompts injiziert werden → Prüfe `_build_prompt()` in `analysis_agent.py` |
-| **Cache Poisoning** | ⭐⭐⭐⭐ | Checksummen-Kollisionen testen → Teste `result_cache.py` LRU-Eviction |
-| **OBD-Code Spoofing** | ⭐⭐ | Fake OBD-Codes können P1-Eskalation erzwingen → Regex-Pattern in `triage_agent.py` |
-| **DSGVO Bypass** | ⭐⭐⭐⭐⭐ | Kann man PII-Maskierung umgehen? Teste `intake_agent.py` edge cases |
-| **Token Leakage** | ⭐⭐⭐ | LLM-Output enthält ggf. ursprüngliche Tokens → Prüfe `_anthropic_infer()` Logging |
-| **DoS via Batch-API** | ⭐⭐⭐ | 10 Dokumente × ~1sec pro Analyse = API-Überlastung → Rate-Limiting prüfen |
-| **Side-Channel (Cache)** | ⭐⭐⭐⭐ | Cache-Hit-Timing könnte Inferenzen über Dokumente erlauben → Timing-Attack möglich? |
-
-### 🔬 Deep-Dive Test-Payloads
-```python
-# Test 1: KVTC Injection
-payload = """
-KVTC-Frame-Version: 2.0
-K: MALICIOUS_FIELD
-V: ; DROP TABLE analysis; --
-T: SQL_INJECTION
-C: "); system('rm -rf /'); --
-"""
-
-# Test 2: OBD Code Injection
-payload = "P0300 U0100 C0110 P99999_FAKE_CODE B0001"
-
-# Test 3: Cache Collision
-# SHA-256 Checksummen-Kollisionen testen
-doc1_hash = "..."
-doc2_hash = "..."
-# → Können zwei verschiedene Docs gleiche Checksummen haben?
-
-# Test 4: PII Bypass
-payload = """
-FIN: WDB906232N3123456 WDB906232N3123456 WDB906232N3123456
-Personalid: P12345|P12345|P12345
-Email-Toggle: max@daimler.com, max[at]daimler[dot]com, M@X@DAIMLER.COM
-Tel: +49 711 1234 / +49-711-1234 / 0049 711 1234
-"""
-```
-
----
-
-## 🏗️ Architektur
-
-```mermaid
-flowchart TD
-    A[📄 Rohdokument\nWartungsprotokoll / OBD / QA / Produktion] --> B
-
-    subgraph Layer1["Layer 1 – IntakeAgent"]
-        B[🔒 DSGVO-Sanitisierung\nFIN maskieren · E-Mail entfernen · ID hashen]
-        B --> C[📦 KVTC-Kompression\n4-Layer Sandwich-Algorithmus]
-        C --> D[IntakeResult\ndokument + kvtc_frame + bereinigungen]
-    end
-
-    D --> E
-
-    subgraph Layer2["Layer 2 – TriageAgent"]
-        E[🔎 Regelbasierte Klassifizierung\nRegex-Patterns + OBD-Datenbank 70+ Codes]
-        E --> F{Priorität?}
-        F -->|Sicherheitskritisch| G[🔴 P1_KRITISCH\nSofortige Eskalation]
-        F -->|Dringend| H[🟠 P2_DRINGEND\nEinplanung 24h]
-        F -->|Routine| I[🟢 P3_ROUTINE\nNächste Inspektion]
-    end
-
-    G & H & I --> J
-
-    subgraph Layer3["Layer 3 – AnalysisAgent"]
-        J[🤖 LLM-Inferenz\nOllama Gemma 2B · Claude Haiku · Mock]
-        J --> K[💾 Ergebnis-Cache\nMD5-basiertes LRU · 256 Einträge]
-        K --> L[Analyseergebnis\nZusammenfassung · Maßnahmen · Konfidenz]
-    end
-
-    L --> M[📊 API Output]
-    L --> N[🌐 FastAPI REST\n/analyze · /batch/analyze · /health]
-
-    style Layer1 fill:#E3F2FD,stroke:#1565C0
-    style Layer2 fill:#FFF3E0,stroke:#E65100
-    style Layer3 fill:#E8F5E9,stroke:#2E7D32
-```
-
----
-
-## KVTC 4-Layer Kompression
+| Layer | Responsibility | Review signal |
+|---|---|---|
+| Intake | sanitize input, mask sensitive identifiers, build a KVTC frame | privacy boundary before model calls |
+| Compression | split documents into zones and extract key/value/type/code structure | token reduction with checksums |
+| Triage | classify priority with deterministic rules and an OBD code database | explainable pre-LLM routing |
+| Analysis | call mock, local Ollama, or Anthropic backend through a common agent | swappable inference path |
+| Cache | reuse analysis results keyed by compressed-frame checksum | lower repeated inference cost |
+| Telemetry | emit aggregate token, latency, and scenario metrics only | observability without raw payloads |
+| Benchmarks | generate synthetic reports and machine-readable summaries | reproducible regression evidence |
 
 ```mermaid
 flowchart LR
-    subgraph Input["Eingabedokument"]
-        T[Roher Text\n~1000 Tokens]
-    end
-
-    subgraph Sandwich["Sandwich-Zonen"]
-        H[🔒 Header-Zone\nLossless\nSOPs · Stammdaten]
-        M[⚡ Middle-Zone\nAggressiv\nnur Top 25% Dichte]
-        W[🔒 Window-Zone\nLossless\nAktuelle Diagnose]
-    end
-
-    subgraph KVTC["KVTC 4-Layer Frame"]
-        K["K: Feldname1, Feldname2"]
-        V["V: Wert1, Wert2"]
-        Ty["T: DATE, NUMERIC, OBD_CODE"]
-        C["C: P0300, SAP-12345, FIN_***ABC123"]
-    end
-
-    subgraph Output["Komprimiertes Ergebnis"]
-        R[KVTC-Frame\n~100 Tokens\n✅ MD5-Checksum]
-    end
-
-    T --> H & M & W
-    H & M & W --> K & V & Ty & C
-    K & V & Ty & C --> R
-
-    style Input fill:#FFEBEE
-    style Output fill:#E8F5E9
-    style Sandwich fill:#FFF8E1
-    style KVTC fill:#E3F2FD
-```
-
-### Informationsdichte-Scoring
-
-| Signal | Gewichtung |
-|--------|-----------|
-| OBD-Code (P0300, U0100) | 4.0× |
-| SAP-Nummer | 3.0× |
-| Numerischer Wert / Datum | 2.0× |
-| Key-Value-Paar | 1.5× |
-| Freitext | 1.0× |
-
----
-
-## OBD-Code-Datenbank
-
-```mermaid
-graph TD
-    Text[📄 Dokumenttext] --> Extractor["_CODE_RE = r'[PBCU][0-9A-F]{4}'"]
-    Extractor --> DB[(OBD_DATABASE\n70+ Codes)]
-
-    DB --> P1["🔴 P1_KRITISCH\nP0300-P0306 Zündaussetzer\nU0073/U0100 CAN-Bus-Ausfall\nC0110 Bremsventil\nB0001 Airbag\nP0524 Öldruck kritisch\n..."]
-    DB --> P2["🟠 P2_DRINGEND\nP0171/P0172 Gemisch\nP0420 Katalysator\nP0700 Getriebe\nP229F AdBlue\nP20EE SCR-System\n..."]
-    DB --> P3["🟢 P3_ROUTINE\nP0030 Lambdasonde\nP1000 OBD-Prüfung\nU0184 Radio-SG\n..."]
-    DB --> UNK["⚪ Unbekannt\n→ Regex-Fallback"]
+    A[Raw synthetic document] --> B[IntakeAgent]
+    B --> C[Sanitized text]
+    C --> D[KVTC compression]
+    D --> E[Checksum + frame]
+    E --> F[TriageAgent]
+    F --> G[AnalysisAgent]
+    G --> H{Backend}
+    H -->|mock| I[Deterministic test output]
+    H -->|ollama_gemma| J[Local model]
+    H -->|anthropic| K[Cloud model]
+    G --> L[Result cache]
+    G --> M[Telemetry metrics]
+    E --> N[Replay / validation artifacts]
 ```
 
 ---
 
-## DSGVO Art. 25 – Privacy by Design
+## Core concept: KVTC semantic compression
 
-```mermaid
-sequenceDiagram
-    participant SAP as SAP / MES
-    participant IA as IntakeAgent
-    participant LLM as LLM (Gemma/Claude)
+KVTC means **Key · Value · Type · Code**. The compressor estimates token volume, separates the document into zones, extracts structured fields, and serializes a compact frame.
 
-    SAP->>IA: Rohdokument mit FIN, Personal-ID, E-Mail
+| Component | What it preserves | Why it matters |
+|---|---|---|
+| `K` | field names and labels | keeps business/diagnostic context |
+| `V` | selected values | keeps decision-relevant facts |
+| `T` | inferred types such as date, numeric, enum, OBD code | enables validation and replay checks |
+| `C` | structured identifiers such as OBD, SAP-like numbers, FIN fragments | preserves high-signal operational codes |
 
-    Note over IA: DSGVO-Sanitisierung
-    IA->>IA: FIN WDB906232N3123456 → FIN_***123456
-    IA->>IA: P12345 → PERS_A1B2C3D4 (SHA-256)
-    IA->>IA: max.muster@daimler.com → [EMAIL_ENTFERNT]
-    IA->>IA: +49 711 1234 → [TEL_ENTFERNT]
-    IA->>IA: Kunde: Müller → [KUNDE_ENTFERNT]
-
-    Note over IA: KVTC-Kompression
-    IA->>LLM: Komprimiertes KVTC-Frame (kein PII)
-    LLM->>IA: JSON-Analyse
-    IA->>SAP: Analyseergebnis (sanitisiert)
-```
-
-| Datentyp | Methode | Ergebnis |
-|----------|---------|---------|
-| FIN / VIN (vollständig) | Letzten 6 Zeichen behalten | `FIN_***XXXXXX` |
-| Personalnummer | One-Way-SHA-256-Hash (8 Zeichen) | `PERS_A1B2C3D4` |
-| E-Mail-Adressen | Entfernen | `[EMAIL_ENTFERNT]` |
-| Telefonnummern | Entfernen | `[TEL_ENTFERNT]` |
-| Kundenzeilen | Entfernen | `[KUNDE_ENTFERNT]` |
+The strategy is intentionally transparent: generated frames include checksums, token estimates, latency, and zone metadata so reviewers can inspect what was retained and what was discarded.
 
 ---
 
-## LLM-Backend-Vergleich
+## Semantic retention, replay, and validation
 
-```mermaid
-graph LR
-    Doc[Komprimiertes\nDokument] --> Dispatch{Backend-\nAuswahl}
+Token reduction is only useful when the retained representation can still support the downstream decision. This repository treats compression as an auditable transformation rather than a magic summarizer.
 
-    Dispatch -->|LLM_BACKEND=mock| Mock["🧪 Mock\n• Deterministisch\n• Kein GPU/Netz\n• Für Tests"]
-    Dispatch -->|LLM_BACKEND=ollama_gemma| Ollama["🏠 Ollama Gemma 2B\n• Lokal / Air-Gap\n• Kein Cloud-Zwang\n• DSGVO-Maximum"]
-    Dispatch -->|LLM_BACKEND=anthropic| Claude["☁️ Claude Haiku\n• Höchste Qualität\n• Prompt Caching\n• API-Key nötig"]
+**Retention controls**
 
-    Mock & Ollama & Claude --> Cache["💾 Ergebnis-Cache\nSHA-256 LRU 256 Slots"]
-    Cache --> Result[Analyseergebnis]
-```
+- lossless header/window zones for context and current diagnostic state;
+- aggressive middle-zone filtering for older or lower-density lines;
+- typed extraction for operational fields and diagnostic codes;
+- deterministic triage before generative analysis.
 
-### Anthropic Prompt Caching
+**Replay controls**
 
-Der `AnalysisAgent` nutzt **ephemeral prompt caching** – der statische System-Prompt wird mit `cache_control: {"type": "ephemeral"}` markiert. Der Anthropic-Client wird als **Lazy Singleton** erstellt (einmalig pro `AnalysisAgent`-Instanz).
+- every compressed frame is hashed with SHA-256;
+- benchmark summaries are written as Markdown and JSON artifacts;
+- report-contract validation checks whether generated summaries keep the expected shape;
+- synthetic-only fixtures make reproduction possible without production data.
 
----
-
-## API-Endpunkte
-
-```mermaid
-graph LR
-    Client[Client / SAP / MES]
-
-    Client -->|POST /analyze| A["Vollständige Pipeline\n→ AnalyzeResponse"]
-    Client -->|POST /batch/analyze| B["Bis zu 10 Dokumente\n→ BatchAnalyzeResponse\n(Fehlertoleranz pro Item)"]
-    Client -->|POST /compress| C["Nur KVTC-Kompression\n→ KVTCResponse"]
-    Client -->|POST /triage| D["Nur Priorisierung\n→ TriageResponse"]
-    Client -->|GET /health| E["Status + Cache-Stats\n→ {status, cache_size,\ncache_hit_rate}"]
-    Client -->|GET /benchmark| F["Standard-Benchmark\n→ Kompressionswerte"]
-
-    style B fill:#E8F5E9
-    style E fill:#E3F2FD
-```
+**Known limitation:** semantic retention is workload-dependent. The current implementation is a research prototype and should be validated on task-specific gold sets before production use.
 
 ---
 
-## Projektstruktur
+## Repository map
 
-```
-Comptext-Daimler-Experiment-/
-│
-├── config.py                    # AppConfig (Env-Vars: LLM_BACKEND, OLLAMA_URL, ...)
-├── api.py                       # FastAPI REST (6 Endpunkte inkl. Batch)
-│
+```text
+.
+├── api.py                         # FastAPI surface for compression, triage, analysis, benchmarks
+├── render_app.py                  # Render/static showcase entrypoint
 ├── src/
-│   ├── core/
-│   │   ├── kvtc.py              # IndustrialKVTCStrategy – Sandwich-Kompression
-│   │   ├── obd_database.py      # 70+ OBD-Codes mit Schweregrad-Mapping
-│   │   └── result_cache.py      # Thread-sicherer LRU-Cache (OrderedDict)
-│   ├── agents/
-│   │   ├── intake_agent.py      # DSGVO-Sanitisierung + Typdetection + KVTC
-│   │   ├── triage_agent.py      # P1/P2/P3 Regex + OBD-DB Integration
-│   │   └── analysis_agent.py    # LLM-Dispatch + Prompt Caching + Cache
-│   ├── models/
-│   │   └── schemas.py           # Enums, Dataclasses (Fahrzeug, OBD, Audit, ...)
-│   └── utils/
-│       └── logging.py           # JSON Structured Logging (ELK/Azure-kompatibel)
-│
-├── tests/
-│   ├── test_kvtc.py             # 8 Tests – Kompressionsalgorithmus
-│   ├── test_intake_agent.py     # 11 Tests – Sanitisierung + Typdetection
-│   ├── test_triage_agent.py     # 10 Tests – P1/P2/P3 Priorisierung
-│   ├── test_analysis_agent.py   # 4 Tests – LLM-Dispatch + Mock
-│   ├── test_obd_database.py     # 13 Tests – OBD-Lookup + Triage-Integration
-│   ├── test_result_cache.py     # 9 Tests – LRU-Cache + Thread-Safety
-│   └── test_api_batch.py        # 7 Tests – Batch-Endpoint + Health
-│
-├── .github/workflows/ci.yml     # GitHub Actions (Python 3.11/3.12)
-├── Dockerfile                   # Python 3.11-slim, non-root User
-├── docker-compose.yml           # Dashboard + API + Ollama Services
-└── pyproject.toml               # Packaging + ruff + mypy + pytest
+│   ├── agents/                    # intake, triage, analysis agents
+│   ├── core/                      # KVTC strategies, cache, OBD database
+│   ├── models/                    # Pydantic/domain schemas
+│   └── telemetry.py               # aggregate metrics exporter
+├── tests/                         # unit and API behavior tests
+├── scripts/                       # benchmark, sanitization, regression, smoke-check tooling
+├── docs/
+│   ├── ARCHITECTURE.md            # architecture and data-flow details
+│   ├── BENCHMARK_METHODOLOGY.md   # benchmark design and interpretation
+│   ├── BENCHMARK_WORKFLOW.md      # runnable report workflow
+│   ├── FORENSIC_REPLAY.md         # replay-oriented validation notes
+│   └── reports/                   # generated synthetic report artifacts
+├── showcase/                      # React/Vite visual showcase
+└── archive/                       # historical reports and one-off generated artifacts
 ```
 
 ---
 
-## 🎮 Challenge-Starter: Debug-Tools & Forensics
+## Quickstart
 
-### Environment-Variablen für Deep-Dive
-```bash
-# JSON Structured Logging (ELK/Splunk-kompatibel)
-LOG_FORMAT=json LOG_LEVEL=DEBUG
-# Cache-Debug: Alle Hits/Misses loggen
-CACHE_DEBUG=true python -m api
-
-# KVTC Algorithm-Debug: Frame-Zustandsübergänge
-KVTC_DEBUG=true python -c "from src.core.kvtc import IndustrialKVTCStrategy; ..."
-
-# OBD-Database-Audit: Alle erkannten Codes mit Schweregrad
-python -c "from src.core.obd_database import OBD_DATABASE;
-for code, info in sorted(OBD_DATABASE.items()):
-    print(f'{code}: {info.beschreibung} → {info.schweregrad.value}')"
-
-# Triage-Pattern-Match-Trace
-TRIAGE_TRACE=true python -c "from src.agents.triage_agent import TriageAgent; ..."
-```
-
-### Python REPL für Interaktives Debugging
-```python
-# In Python REPL:
-from src.core.kvtc import IndustrialKVTCStrategy
-from src.agents.intake_agent import IntakeAgent
-from src.agents.triage_agent import TriageAgent
-from src.agents.analysis_agent import AnalysisAgent
-
-# Test: Kann man DSGVO-Sanitisierung bypassen?
-doc = "FIN: WDB906232N3123456, Personal: P12345, Email: max@daimler.com"
-intake = IntakeAgent()
-result = intake.process(doc)
-print(result.begruendungen)  # Alle durchgeführten Maskierungen
-
-# Test: Welche OBD-Codes werden erkannt?
-triage = TriageAgent()
-codes = triage._extract_obd_codes("P0300 U0073 C0110 P99999")
-for code in codes:
-    print(code)  # Erkannte vs. Unbekannte Codes
-
-# Test: Cache-Poisoning möglich?
-from src.core.result_cache import AnalysisResultCache
-cache = AnalysisResultCache(max_size=5)
-# ... prüfe auf Kollisionen
-```
-
-### Exploit-Payloads (für Sicherheits-Testing)
-```bash
-# Payload 1: OBD-Code Fuzzing
-python -c "
-import re
-pattern = r'[PBCU][0-9A-F]{4}'
-fake_codes = [f'P{i:04X}' for i in range(10000, 10100)]
-matches = [c for c in fake_codes if re.match(pattern, c)]
-print(f'Pattern Matches: {len(matches)}/{len(fake_codes)}')
-"
-
-# Payload 2: KVTC-Frame-Injection
-curl -X POST http://localhost:8000/analyze \
-  -H "Content-Type: application/json" \
-  -d '{
-    "text": "Normal doc",
-    "metadata": {
-      "kvtc_frame": "; DROP TABLE; --",
-      "malicious_zone": "window"
-    }
-  }'
-
-# Payload 3: Cache-Hash-Collision (MD5)
-# Finde zwei verschiedene Inputs mit gleichem MD5 (praktisch unmöglich, aber theoretisch relevant)
-```
-
----
-
-
-
-## 🌍 Deployment & Telemetry
-
-- **Render Region**: Deployed in **Frankfurt, Germany (eu-central)** for GDPR (DSGVO) compliance and local data sovereignty.
-- **Tinybird Telemetry**: Integrated with Tinybird (`comptext_metrics` datasource) for real-time tracking of token savings and latency. Requires `TINYBIRD_TOKEN` to be set.
-## 🚀 Schnellstart
-
-### Lokal (Mock-Modus)
+### 1. Create an environment
 
 ```bash
-git clone https://github.com/ProfRandom92/comptext-daimler-experiment-
-cd comptext-daimler-experiment-
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-
-# React Frontend (Port 5173)
-
-# REST API (Port 8000)
-uvicorn api:app --reload
+pip install -e .
 ```
 
-### Mit Ollama Gemma 2B (lokal, DSGVO-Maximum)
+### 2. Run the API in deterministic mode
 
 ```bash
-# Ollama installieren: https://ollama.ai
-ollama pull gemma2:2b
-
-LLM_BACKEND=ollama_gemma \
-OLLAMA_URL=http://localhost:11434 \
+LLM_BACKEND=mock uvicorn api:app --reload --port 8000
 ```
 
-### Mit Claude Haiku (Cloud)
+### 3. Compress a synthetic diagnostic note
 
 ```bash
-LLM_BACKEND=anthropic \
-ANTHROPIC_API_KEY=sk-ant-... \
+curl -s http://localhost:8000/compress \
+  -H 'Content-Type: application/json' \
+  -d '{"text":"Fahrzeug: FIN WDB906232N3123456\nKilometerstand: 124000\nFehlercode: P0300\nBefund: Motorwarnleuchte aktiv"}' | python -m json.tool
 ```
 
-### Docker Compose (alles inkl. Ollama)
+### 4. Run the full analysis path
 
 ```bash
-docker-compose up
-# Dashboard: http://localhost:8501
-# API:       http://localhost:8000
-# Docs:      http://localhost:8000/docs
+curl -s http://localhost:8000/analyze \
+  -H 'Content-Type: application/json' \
+  -d '{"quelle":"synthetic-demo","text":"OBD Meldung P0300. Motorwarnleuchte aktiv. Keine Kundendaten verwenden."}' | python -m json.tool
 ```
 
----
-
-## Batch-Analyse (API)
+### 5. Run tests and benchmark checks
 
 ```bash
-curl -X POST http://localhost:8000/batch/analyze \
-  -H "Content-Type: application/json" \
-  -d '{
-    "documents": [
-      {"text": "Fehler P0300 – Zündaussetzer Zylinder 1", "quelle": "SAP"},
-      {"text": "Wartungsprotokoll km 80000 – Routineinspektion", "quelle": "MES"},
-      {"text": "QA-Bericht: Sperrung eingeleitet – Bremsanlage", "quelle": "QA"}
-    ]
-  }'
-```
-
-Response:
-```json
-{
-  "total": 3,
-  "succeeded": 3,
-  "failed": 0,
-  "results": [
-    {"index": 0, "success": true, "result": {"prioritaet": "P1_KRITISCH", ...}},
-    {"index": 1, "success": true, "result": {"prioritaet": "P3_ROUTINE", ...}},
-    {"index": 2, "success": true, "result": {"prioritaet": "P1_KRITISCH", ...}}
-  ]
-}
+pytest tests/ --tb=short -q
+python -m py_compile scripts/run_benchmarks.py scripts/generate_regression_report.py scripts/sanitize_fixtures.py scripts/validate_report_contracts.py
+python scripts/run_benchmarks.py
+python scripts/generate_regression_report.py
+python scripts/sanitize_fixtures.py
+python scripts/validate_report_contracts.py
 ```
 
 ---
 
+## API surface
 
-## 💡 Top Use Cases & ROI
-
-| Bereich | Szenario | Impact |
-|:---|:---|:---|
-| **XENTRY** | Diagnose-Logs (After-Sales) | Reduktion von 10k Zeilen auf 20 relevante "Fault States". |
-| **MO360** | Factory 56 Produktion | Relevanzfilter für Schichtberichte (Filtert "Rauschen"). |
-| **Supply Chain** | Lieferanten-Reporting | Semantische Deduplizierung redundanter Updates. |
-| **Compliance** | ISO 21434 & DSGVO | "Proof of Ingestion" & automatische Maskierung (PII). |
-| **Datenschutz** | Externes Audit & Cloud-Analyse | **DSGVO-konform** durch PII-Maskierung (FIN, Namen) im Intake. |
-| **Sicherheit** | Air-Gap Werkstatt-LAN | **100% Offline** mit Ollama Gemma 2B (kein Datenabfluss). |
-| **Performance** | Real-Time Fleet Triage | **< 20ms Latenz** für kritische Fehler-Eskalation am Edge. |
-
-## 📊 Performance & Benchmarks
-
-### Kompressionsraten (Real-World)
-```
-Szenario                       | Original | Komprimiert | Ratio | Tokens (Orig → Kompr)
--------------------------------|----------|------------|-------|--------------------
-Wartungsprotokoll (4 Seiten)   | 12,485B  | 1,240B     | 90%   | 1,847 → 187 (-89%)
-OBD-Fehlermeldung (1 Zeile)    | 256B     | 82B        | 68%   | 45 → 15 (-67%)
-QA-Bericht (6 Seiten)          | 18,932B  | 1,456B     | 92%   | 2,891 → 223 (-92%)
-Produktionsauftrag (2 Seiten)  | 8,764B   | 1,089B     | 87%   | 1,337 → 166 (-88%)
----Durchschnitt---             | -        | -          | 89%   | ~88% Token-Reduktion
-```
-
-### Latenz (Docker, i7-11700K, 16GB RAM)
-| Operation | LLM-Backend | Latenz (P50) | Latenz (P95) | Latenz (P99) |
-|-----------|-------------|------------|------------|------------|
-| Kompression (KVTC) | - | 12ms | 18ms | 25ms |
-| Triage (Regex+OBD) | - | 8ms | 12ms | 15ms |
-| Analyse (Mock) | mock | 15ms | 22ms | 30ms |
-| Analyse (Gemma 2B) | ollama | 850ms | 1,200ms | 1,800ms |
-| Analyse (Claude Haiku) | anthropic | 320ms | 580ms | 1,200ms* |
-| **Batch (10 Docs)** | mock | 150ms | 220ms | 300ms |
-| **Cache Hit** | - | 1ms | 2ms | 3ms |
-
-*Abhängig von Netzlatenzen und API-Last
-
-### Cache-Effizienz (LRU, 256 Slots)
-- **Hit-Rate (Prod)**: ~35-45% (identische Dokumente, Hash-Kollisionen)
-- **Memory**: ~8-12 MB für 256 Einträge
-- **Thread-Safety**: ✅ Getestet mit 10 parallelen Threads
+| Endpoint | Purpose |
+|---|---|
+| `GET /health` | runtime health and version check |
+| `GET /stats` | process uptime and aggregate compression counters |
+| `POST /compress` | KVTC compression only |
+| `POST /compress/v7` | alternate KVTC v7 strategy path |
+| `POST /triage` | deterministic priority classification |
+| `POST /analyze` | intake → compression → triage → analysis |
+| `POST /batch/analyze` | bounded batch analysis for synthetic documents |
+| `GET /benchmark` | in-process sample benchmark |
+| `GET /benchmark/v7` | v7 sample benchmark |
+| `GET /benchmark/compare` | side-by-side strategy comparison |
+| `POST /v1/optimize/xentry` | showcase diagnostic-log optimization contract |
+| `POST /v1/filter/mo360` | showcase shift-report filtering contract |
+| `POST /v1/dedup/supply-chain` | showcase deduplication contract |
 
 ---
 
-## 🔍 Sicherheits-Audit & Known Limitations
+## Benchmarking and artifacts
 
-### Sicherheit (Certified)
-- [x] **DSGVO Art. 25**: Privacy-by-Design implementiert
-- [x] **Regex-Fuzzing**: 50+ Edge-Case-Tests
-- [x] **Injection-Tests**: KVTC-Frames, OBD-Codes, LLM-Prompts
-- [x] **Thread-Safety**: LRU-Cache mit Lock
-- [x] **Crypto-Hash**: SHA-256 für Checksummen (ersetzt MD5)
-- [x] **Air-Gap Ready**: Ollama-Backend benötigt keine externe API
+The benchmark workflow is designed for reproducibility and safety, not headline numbers.
 
-### Bekannte Limitations
-1. **SHA-256 Checksummen**: Implementiert für verbesserte Sicherheit (ersetzt MD5)
-2. **CORS Hardening**: Implementiert via ALLOWED_ORIGINS
-3. **Regex-Precision**: OBD-Code-Erkennung kann False-Positives erzeugen (P99.9 falsch erkannt)
-4. **LLM-Hallucination**: Claude/Gemma können Fehlercodes erfinden
-5. **Cache ohne TTL**: Alte Ergebnisse werden nicht invalidiert (manueller Flush nötig)
-6. **Batch-Endpoint**: Max. 10 Dokumente per Request (keine echte Streaming)
+| Artifact | Location | Use |
+|---|---|---|
+| Timestamped benchmark report | `docs/reports/benchmark-report-*.md` | human-readable run evidence |
+| Latest benchmark summary | `docs/reports/benchmark-summary.json` | machine-readable CI/regression input |
+| Regression summary | `docs/reports/regression-summary.md` / `.json` | compare recent synthetic runs |
+| Sanitization summary | `docs/reports/sanitization-summary.json` | verify report content remains synthetic-safe |
+| Contract validation report | `docs/reports/report-contract-validation-report.md` | validate report schema expectations |
 
-### Security Hardening (Roadmap)
-- [x] SHA-256 für Checksummen (Collision-Resistance, ersetzt MD5)
-- [ ] Cache-TTL mit Redis-Backend
-- [ ] Rate-Limiting (Pro-IP, Pro-API-Key)
-- [ ] Request-Signing (HMAC-SHA256)
-- [ ] Secrets Rotation für Anthropic API-Key
-- [ ] Audit-Logging in strukturiertes Format (Syslog/ELK)
+Metric interpretation guidance lives in [`docs/BENCHMARK_METHODOLOGY.md`](docs/BENCHMARK_METHODOLOGY.md). The runnable workflow lives in [`docs/BENCHMARK_WORKFLOW.md`](docs/BENCHMARK_WORKFLOW.md).
 
 ---
 
-## Tests
+## Observability
+
+Telemetry is intentionally narrow. The tracker emits aggregate metrics such as endpoint name, original tokens, compressed tokens, savings percentage, latency, document type, scenario, and priority. It does not forward raw text.
+
+Supported observability hooks:
+
+- Tinybird Events API via `TINYBIRD_TOKEN`;
+- optional OpenTelemetry initialization via `OTEL_EXPORTER_OTLP_ENDPOINT`;
+- structured logs through the project logging utilities;
+- CI-uploaded benchmark artifacts for reviewer inspection.
+
+---
+
+## CI and reproducibility
+
+GitHub Actions currently cover three reviewer-critical paths:
+
+| Workflow | Trigger | What it checks |
+|---|---|---|
+| `CI` | push / pull request | Python lint, tests, coverage, React build, Render entrypoint, Docker build |
+| `Benchmark Checks` | pull request / manual | benchmark script syntax, report generation, sanitizer, contract validation |
+| `Demo Live Smoke` | scheduled / manual | public demo health and smoke checks |
+
+The default local equivalent is:
 
 ```bash
-# Alle Tests
-pytest tests/ -v
-
-# Mit Coverage
-pytest tests/ -v --cov=src --cov-report=term-missing
-
-# Einzelne Test-Dateien
-pytest tests/test_obd_database.py -v
-pytest tests/test_result_cache.py -v
-pytest tests/test_api_batch.py -v
-```
-
-**75 Tests · 0 Fehler · ~0.7s Laufzeit
-
-```
-tests/test_kvtc.py                     8 Tests  – KVTC-Kompressionsalgorithmus
-tests/test_intake_agent.py            10 Tests  – DSGVO-Sanitisierung + Typdetection
-tests/test_triage_agent.py            10 Tests  – P1/P2/P3 Priorisierung
-tests/test_analysis_agent.py           4 Tests  – LLM-Dispatch + Mock-Backend
-tests/test_analysis_error_handling.py  3 Tests  – JSON-Fehlerbehandlung
-tests/test_obd_database.py            13 Tests  – OBD-Lookup + Triage-Integration
-tests/test_result_cache.py             9 Tests  – LRU-Cache + Thread-Safety
-tests/test_api_batch.py                7 Tests  – Batch-Endpoint + Health
-tests/test_showcase_scenarios.py       3 Tests  – XENTRY / MO360 / Supply Chain
-tests/test_stats.py                    2 Tests  – Stats-Endpoint
-tests/test_telemetry.py                5 Tests  – Telemetry Tracking
+make audit
+cd showcase && npm ci && npm run build
+python scripts/validate_report_contracts.py
 ```
 
 ---
 
-## Umgebungsvariablen
+## Screenshots and diagrams
 
-| Variable | Standard | Beschreibung |
-|----------|---------|-------------|
-| `LLM_BACKEND` | `mock` | `mock` · `ollama_gemma` · `anthropic` |
-| `OLLAMA_MODEL` | `gemma2:2b` | Ollama-Modell-ID |
-| `OLLAMA_URL` | `http://localhost:11434` | Ollama-Basis-URL |
-| `ANTHROPIC_MODEL` | `claude-haiku-4-5-20251001` | Anthropic-Modell-ID |
-| `ANTHROPIC_API_KEY` | – | API-Schlüssel (Anthropic) |
-| `ANTHROPIC_PROMPT_CACHE` | `true` | Prompt Caching an/aus |
-| `MAX_TOKENS` | `512` | Maximale Ausgabe-Tokens |
-| `TEMPERATURE` | `0.1` | Temperatur (niedrig = deterministisch) |
-| `CACHE_MAX_SIZE` | `256` | Max. Einträge im LRU-Ergebnis-Cache |
-| `LOG_LEVEL` | `INFO` | Logging-Level |
-| `LOG_FORMAT` | `json` | `json` (strukturiert) · `text` |
+Place reviewer-facing visuals under `docs/assets/`.
+
+| Placeholder | Intended content |
+|---|---|
+| `docs/assets/screenshots/api-docs.png` | FastAPI `/docs` view |
+| `docs/assets/screenshots/showcase-home.png` | React showcase overview |
+| `docs/assets/diagrams/architecture.png` | exported architecture diagram for non-Mermaid renderers |
+
+Only synthetic payloads should appear in screenshots.
 
 ---
 
-## Termux (Android)
+## Enterprise and research readiness
 
-Für mobile Einsatzszenarien oder On-Device-Debugging:
+This repository is suitable for technical review because it emphasizes:
 
-```bash
-# 1. Termux-Pakete installieren
-pkg update && pkg upgrade -y
-pkg install python git -y
+- deterministic preprocessing before LLM calls;
+- explicit compression artifacts instead of opaque summaries;
+- bounded batch behavior and API contracts;
+- synthetic benchmark generation and validation;
+- privacy-aware telemetry boundaries;
+- clear limitations and archived historical noise.
 
-# 2. Repository klonen
-git clone https://github.com/ProfRandom92/comptext-daimler-experiment-
-cd comptext-daimler-experiment-
-
-# 3. Abhängigkeiten (ohne GUI-Pakete)
-pip install anthropic requests fastapi uvicorn pytest pytest-cov httpx
-
-# 4. REST API starten (Mock-Modus, kein LLM nötig)
-LLM_BACKEND=mock uvicorn api:app --host 0.0.0.0 --port 8000
-
-# 5. Analyse-Test
-curl -X POST http://localhost:8000/analyze \
-  -H "Content-Type: application/json" \
-  -d '{"text": "Fehler P0300 Zündaussetzer – Kilometerstand 80000", "quelle": "Termux"}'
-
-# 6. Batch-Test (3 Dokumente)
-curl -X POST http://localhost:8000/batch/analyze \
-  -H "Content-Type: application/json" \
-  -d '{
-    "documents": [
-      {"text": "P0300 Zündaussetzer", "quelle": "OBD"},
-      {"text": "Bremsversagen festgestellt", "quelle": "Werkstatt"},
-      {"text": "Kilometerstand 80000 nächster Service 75000", "quelle": "SAP"}
-    ]
-  }'
-
-# 7. OBD-Triage direkt testen
-curl -X POST http://localhost:8000/triage \
-  -H "Content-Type: application/json" \
-  -d '{"text": "Fehlercode U0100 – CAN-Bus Kommunikationsverlust ECM"}'
-
-# 8. Tests ausführen
-pytest tests/ -v --tb=short
-
-# 9. Mit Anthropic Claude (API-Key erforderlich)
-ANTHROPIC_API_KEY=sk-ant-... LLM_BACKEND=anthropic uvicorn api:app --port 8000
-```
-
+It is **not** presented as production-certified software. Production hardening would require security review, load testing against representative workloads, documented data-processing agreements, model governance, and task-specific retention evaluation.
 
 ---
 
-## Research & References
+## Failure modes and limitations
 
-### Academic Foundations
-- **KVTC Algorithm**: Multi-Layer Token Compression Strategy (CompText-Original)
-- **DSGVO Art. 25**: Privacy-by-Design & Data Protection by Default
-- **OBD/EOBD Standards**:
-  - SAE J2012: Diagnostic Trouble Code Definitions
-  - ISO 14229-1: Unified Diagnostic Services (UDS)
-  - Daimler-spezifische Netzwerkbusses: CAN, CAN-FD, MOST
-
-### Related Projects
-- [CompText-Monorepo-X](https://github.com/ProfRandom92/comptext-monorepo-X) – Ursprüngliches Framework
-- [Ollama](https://ollama.ai) – Lokale LLM-Inferenz
-
-### Papers & Articles
-- "Prompt Injection Attacks Against Large Language Models" – Sharma et al.
-- "Hash Collision Vulnerabilities in LRU Caching" – NIST, 2021
-- "Privacy-Preserving ML for Industrial IoT" – IEEE Transactions on Industrial Informatics
+| Area | Limitation | Mitigation path |
+|---|---|---|
+| Semantic loss | aggressive compression can drop relevant context | build labeled retention tests per workflow |
+| Token estimation | character-based token estimates are approximate | compare with target model tokenizer in benchmarks |
+| Synthetic data | current reports avoid production data by design | add approved anonymized gold sets if governance allows |
+| Rule triage | deterministic patterns can miss novel cases | add confusion-matrix evaluation and review queues |
+| External backends | Ollama/Anthropic paths depend on local services or keys | keep mock backend as deterministic baseline |
+| Telemetry | aggregate metrics do not prove business value | connect metrics to task-specific acceptance criteria |
 
 ---
 
-## Support & Feedback
+## Roadmap
 
-### Issues & Feature Requests
-🐛 **Bug Report**: https://github.com/ProfRandom92/comptext-daimler-experiment-/issues
-💡 **Feature Request**: https://github.com/ProfRandom92/comptext-daimler-experiment-/discussions
-
-### Security Vulnerability Disclosure
-🔒 **Sicherheitslücken bitte NICHT öffentlich melden!**
-📧 Schreib eine E-Mail an: `security@example.com` (verschlüsselt mit GPG bevorzugt)
-
----
-
-## Lizenz
-
-**Apache License 2.0** – siehe [LICENSE](LICENSE)
-
-Zusammenfassung:
-- ✅ Kommerzielle Nutzung erlaubt
-- ✅ Modifikation erlaubt
-- ✅ Private Nutzung erlaubt
-- ✅ Verteilung erlaubt
-- ⚠️ Lizenz + Copyright-Notice erforderlich
-- ❌ Keine Haftung / Garantie
+- [ ] Add gold-set semantic retention tests with expected code/field preservation.
+- [ ] Add tokenizer-specific benchmark adapters for selected model families.
+- [ ] Expand replay reports with frame diffs and triage-decision snapshots.
+- [ ] Add screenshots and exported architecture diagrams under `docs/assets/`.
+- [ ] Separate research fixtures from runtime examples with stricter naming conventions.
+- [ ] Add threat-model documentation for prompt injection, cache poisoning, and telemetry leakage.
 
 ---
 
-<div align="center">
+## License
 
-### 🚀 Architected for Mercedes-Benz Digital Trust & Efficiency
-
-
-**Challenge Version**: Ready for Security & Performance Testing
-**Status**: Production-Ready with Audit Trail
-**Last Updated**: 2026-04-23
-
----
-
-⭐ Wenn das Projekt hilfreich ist, bitte einen Star geben! ⭐
-
-</div>
-
-## Optional KVTC V7 strategy
-
-This repository includes an optional, dependency-light KVTC V7 strategy for deterministic synthetic benchmarking alongside the existing Industrial KVTC path. The default `/compress` route still uses `IndustrialKVTCStrategy`; V7 is available through `/compress/v7`, `/benchmark/v7`, and `/benchmark/compare`.
-
-See [docs/KVTC_V7_INTEGRATION.md](docs/KVTC_V7_INTEGRATION.md) for the synthetic-data-only policy, API semantics, and dashboard integration notes.
+Apache-2.0. See [`LICENSE`](LICENSE).

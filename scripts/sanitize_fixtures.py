@@ -11,9 +11,8 @@ import json
 import re
 import sys
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-
 
 SOURCE_REPO = "ProfRandom92/Comptext-Daimler-Experiment-"
 DEFAULT_PATHS = ["fixtures", "data", "samples", "docs/reports"]
@@ -167,7 +166,7 @@ def main() -> int:
     for path in scanned_files:
         findings.extend(scan_file(path))
     report_path = Path(args.report)
-    generated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    generated_at = datetime.now(UTC).isoformat(timespec="seconds")
     write_report(report_path, scanned_files, findings, generated_at)
     write_json_summary(SUMMARY_PATH, list(args.paths), findings, generated_at)
     print(f"Wrote sanitization report: {report_path}")

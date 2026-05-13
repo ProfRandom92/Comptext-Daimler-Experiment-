@@ -1,12 +1,13 @@
 # Regression Summary
 
-Generated: 2026-05-11T09:46:55+00:00 UTC
+Generated: 2026-05-13T14:12:48+00:00 UTC
 
 ## Conservative policy status
 
-**Decision:** insufficient_baseline
+**Decision:** no_clear_regression
 
-- Fewer than two benchmark reports are available; CI should warn only.
+- p95 comparison unavailable; missing numeric baseline or latest values.
+- Error-rate comparison unavailable; missing numeric baseline or latest values.
 
 ## Contract-compatible JSON summary
 
@@ -17,6 +18,7 @@ This run also writes `docs/reports/regression-summary.json` for machine-readable
 | Generated | Status | Host | Endpoint | p50 | p95 | p99 | RPS | Error rate | Report |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 2026-05-11T09:46:40+00:00 | tool_unavailable | http://localhost:8000 | /analyze | unavailable | unavailable | unavailable | unavailable | unavailable | docs/reports/benchmark-report-20260511T094640Z.md |
+| 2026-05-13T14:12:41+00:00 | tool_unavailable | http://localhost:8000 | /analyze | unavailable | unavailable | unavailable | unavailable | unavailable | docs/reports/benchmark-report-20260513T141241Z.md |
 
 ## Regression policy
 

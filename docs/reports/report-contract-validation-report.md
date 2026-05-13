@@ -1,8 +1,8 @@
 # Report Contract Validation Report
 
-Generated: 2026-05-11T09:46:57+00:00 UTC
+Generated: 2026-05-13T14:12:49+00:00 UTC
 
-This report validates local synthetic JSON summaries for compatibility with the Comptextv7 machine-readable report contracts. It performs structural checks only and does not import or call Comptextv7.
+This report validates local synthetic JSON summaries for compatibility with downstream machine-readable report contracts. It performs structural checks only and does not import or call downstream runtime code.
 
 | Summary | Path | Status | Violations |
 | --- | --- | --- | ---: |

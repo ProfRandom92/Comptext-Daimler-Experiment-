@@ -6,7 +6,7 @@ Forensic replay in this repository is a safe, synthetic-only process for reprodu
 
 - Recreate failure shapes, latency patterns, and analysis edge cases with synthetic fixtures.
 - Preserve enough context for future agents to understand the issue and validate fixes.
-- Feed sanitized, actionable findings back into `ProfRandom92/Comptextv7`.
+- Feed sanitized, actionable findings back into the relevant downstream runtime.
 - Avoid committing real Daimler payloads, proprietary customer identifiers, raw logs, secrets, API keys, bearer tokens, cookies, or credentials.
 
 ## Synthetic-only replay policy
@@ -30,9 +30,9 @@ Before committing replay assets:
 4. Review `docs/reports/sanitization-report.md` and resolve suspicious findings before requesting review.
 5. Keep replay reports concise and avoid raw payload dumps even when the payload is synthetic.
 
-## Feeding findings back into Comptextv7
+## Feeding findings back into downstream runtimes
 
-When replay identifies a likely runtime issue, create a sanitized handoff for `ProfRandom92/Comptextv7` that includes:
+When replay identifies a likely runtime issue, create a sanitized downstream handoff that includes:
 
 - The synthetic fixture or synthetic input shape.
 - Expected behavior and observed behavior.

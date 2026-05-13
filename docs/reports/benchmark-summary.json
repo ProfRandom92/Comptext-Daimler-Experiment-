@@ -1,6 +1,6 @@
 {
   "endpoint": "/analyze",
-  "generated_at": "2026-05-11T09:46:40+00:00",
+  "generated_at": "2026-05-13T14:12:41+00:00",
   "metrics": {
     "error_rate": null,
     "p50_ms": null,
@@ -16,5 +16,5 @@
   "source_repo": "ProfRandom92/Comptext-Daimler-Experiment-",
   "status": "tool_unavailable",
   "synthetic": true,
-  "target_repo": "ProfRandom92/Comptextv7"
+  "target_repo": "downstream-runtime"
 }

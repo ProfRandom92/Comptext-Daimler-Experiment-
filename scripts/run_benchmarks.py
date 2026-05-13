@@ -13,23 +13,22 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-
 SOURCE_REPO = "ProfRandom92/Comptext-Daimler-Experiment-"
-TARGET_REPO = "ProfRandom92/Comptextv7"
+TARGET_REPO = "downstream-runtime"
 REPORT_PREFIX = "benchmark-report-"
 SUMMARY_NAME = "benchmark-summary.json"
 
 
 def utc_timestamp() -> str:
-    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    return datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
 
 
 def utc_iso_timestamp() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+    return datetime.now(UTC).isoformat(timespec="seconds")
 
 
 def parse_args() -> argparse.Namespace:

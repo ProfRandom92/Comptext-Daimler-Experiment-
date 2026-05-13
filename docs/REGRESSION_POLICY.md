@@ -1,6 +1,6 @@
 # Regression Policy
 
-This policy defines how benchmark results in this experiment repository should be reviewed before findings are promoted to `ProfRandom92/Comptextv7`.
+This policy defines how benchmark results in this experiment repository should be reviewed before findings are promoted to downstream runtimes.
 
 ## Baseline definition
 
@@ -44,7 +44,7 @@ Regression reporting emits both Markdown and JSON artifacts:
 - `docs/reports/sanitization-summary.json` records scanned path names and masked-finding counts without raw suspicious values.
 - `docs/reports/report-contract-validation-report.md` records structural validation results for the generated JSON summaries.
 
-These outputs are designed for compatibility with Comptextv7's machine-readable contracts while avoiding runtime coupling: this repository must not import Comptextv7 code, require a live Comptextv7 checkout, or copy production data.
+These outputs are designed for compatibility with downstream machine-readable contracts while avoiding runtime coupling: this repository must not import downstream runtime code, require a separate runtime checkout, or copy production data.
 
 Validate the generated summaries with:
 
@@ -60,7 +60,7 @@ Reviewers should confirm that:
 - No secrets, cookies, bearer tokens, raw customer data, or real Daimler payloads are included.
 - Benchmark parameters are documented and comparable to the intended baseline.
 - Regression summaries explain whether a failure, warning, or insufficient-baseline state is appropriate.
-- Findings that affect runtime behavior are filed or linked back to `ProfRandom92/Comptextv7` with sanitized reproduction steps.
+- Findings that affect runtime behavior are filed or linked back to the relevant downstream runtime with sanitized reproduction steps.
 
 
 ## Synthetic-only policy

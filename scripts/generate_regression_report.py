@@ -6,13 +6,12 @@ import argparse
 import json
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-
 SOURCE_REPO = "ProfRandom92/Comptext-Daimler-Experiment-"
-TARGET_REPO = "ProfRandom92/Comptextv7"
+TARGET_REPO = "downstream-runtime"
 METADATA_RE = re.compile(r"<!--\s*benchmark-metadata:\s*(\{.*?\})\s*-->")
 SUMMARY_NAME = "regression-summary.md"
 JSON_SUMMARY_NAME = "regression-summary.json"
@@ -30,7 +29,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def utc_iso_timestamp() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+    return datetime.now(UTC).isoformat(timespec="seconds")
 
 
 def load_benchmark_runs(reports_dir: Path) -> list[dict[str, Any]]:
